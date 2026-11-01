@@ -5,6 +5,7 @@
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="fonts/fonts.css">
 <link rel="stylesheet" href="lan-companion.css?v=20261101-ux20">
+<link rel="stylesheet" href="ui-skin.css?v=20261101-ux21">
 <style>
   :root {
     --ink: #1d1a22;
@@ -356,9 +357,12 @@ applyStaticLang();
 <script src="lan-model.js?v=20261101-46"></script>
 <script src="lan-room.js?v=20261101-lc2"></script>
 <script src="lan-theme.js?v=20261101"></script>
+<script src="scene-extras.js?v=20261101"></script>
+<script src="lan-face.js?v=20261101"></script>
 <!-- 朗读/聊天共用同一个 <audio>：直接用 live2d 那份播放器，不复制第二份实现 -->
 <script src="../live2d/companion-playback.js"></script>
-<script src="lan-companion.js?v=20261101-ux20"></script>
+<script src="lan-companion.js?v=20261101-ux21"></script>
+<script src="ui-skin.js?v=20261101-ux21"></script>
 <script>
 function start() {
 const V3 = THREE.Vector3, UP = new V3(0, 1, 0);
@@ -2050,6 +2054,20 @@ const W = { cloud: 0, rain: 0, snow: 0, fog: 0, wind: 2, gust: 3, temp: 20, flas
 const L0 = L.clone(), Ldir = L.clone(), sunL = L.clone();
 /* ---------- Lan's seaside theme: ocean outside, cream/wood/mist-blue inside ---------- */
 const lanTheme = window.createLanTheme({ scene, THREE, mat, GY, ground, hillMats, leafMats, trunkMat, rockMat, W, skyU });
+/* ---------- 画面元素：窗光柱 / 浮尘 / 玻璃雨 / 夜萤 ----------
+   全部是增量：只读 W（天气）和 world.altDeg（太阳高度），不接管任何状态。
+   构建失败就什么都不做，房间和以前一模一样（见 scene-extras.js 的 catch）。
+   ?fx=0 可关；window.__lanFx 是给无头验收脚本用的句柄。 */
+const sceneExtras = (() => {
+  if (Q0.get('fx') === '0') { console.info('[fx] off by ?fx=0'); return null; }
+  try {
+    return window.createSceneExtras({ scene, THREE, W, sun, world, camera, quality: 'high' });
+  } catch (e) {
+    console.warn('[fx] disabled:', (e && e.message) || e);
+    return null;
+  }
+})();
+window.__lanFx = sceneExtras;
 const fmt = d => d ? d.toLocaleTimeString(LANG === 'en' ? 'en-GB' : 'zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false }) : '--:--';
 function hud() {
   const el = document.getElementById('wx'), l = world.loc, w = world.wx, tt = world.times;
@@ -4192,7 +4210,9 @@ lanModel.ready.then(() => {
 (function loop() {
   try {
     const dt = Math.min(clk.getDelta(), 0.05);
-    update(dt); if (tvMode === 0) controls.update(); composer.render(dt);
+    update(dt); if (tvMode === 0) controls.update();
+    if (sceneExtras) sceneExtras.update(dt, PR);
+    composer.render(dt);
   } catch (e) {
     window.__loopErr = window.__loopErr || (String(e && e.message || e) + ' | ' + String(e && e.stack || '').slice(0, 400));
     console.error('room loop died', e);

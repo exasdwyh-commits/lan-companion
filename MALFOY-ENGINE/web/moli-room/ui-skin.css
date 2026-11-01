@@ -1,0 +1,338 @@
+/* WORLD-UX-21 · 界面收口
+ *
+ * 上一版（lan-companion.css WORLD-UX-20）把字体、纸张质感和面板做对了，
+ * 但浮层各自为政：右上角两颗光秃秃的文字按钮、底栏「文字胶囊 + 图标方块」混排、
+ * 聊天条压在房间正中、提示语和版权行叠在一起。960×540 的窗口里，
+ * 这些加起来吃掉了画面下方三分之一。
+ *
+ * 这一版只做三件事，不做新玩法：
+ *   1. 底栏统一成一条 dock：所有入口都是 38px 图标 + 悬停提示，不再有文字胶囊。
+ *   2. 所有浮层咬合到同一套网格（--pad / --dock-h / --gap），互不重叠。
+ *   3. 闲置 3.6s 后 dock / 聊天条 / 版权行自动退场，鼠标一动就回来——
+ *      画面是主角，控件是客人。
+ *
+ * 尺寸全部由 CSS 变量驱动，ui-skin.js 只负责加 class，不写内联样式。
+ */
+
+:root {
+  --pad: 14px;                 /* 屏幕内边距 */
+  --gap: 8px;                  /* 控件间距 */
+  --dock-h: 50px;              /* 底栏总高（含内衬） */
+  --dock-b: 14px;              /* 底栏离底 */
+  --chat-h: 44px;              /* 聊天条高 */
+  --r-card: 14px;
+  --r-dock: 16px;
+  --r-btn: 10px;
+  --glass: rgba(250, 248, 241, .82);
+  --glass-strong: rgba(250, 248, 241, .96);
+  --glass-line: rgba(255, 255, 255, .55);
+  --ui-ink: #26414c;
+  --ui-mute: #6d8079;
+  --ui-shadow: 0 8px 28px rgba(20, 45, 55, .13), 0 1px 3px rgba(20, 45, 55, .10);
+  --ui-shadow-lift: 0 14px 44px rgba(20, 45, 55, .20), 0 2px 6px rgba(20, 45, 55, .10);
+  --ui-ease: cubic-bezier(.22, .61, .36, 1);
+}
+
+/* ───────── 脸：墨线覆盖层 ─────────
+   画在 #stage canvas 之上、所有控件之下；不吃事件，不参与布局。 */
+#lanFace {
+  position: fixed; inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  mix-blend-mode: normal;
+}
+
+/* ───────── 底栏：一条 dock ───────── */
+nav.bar {
+  left: 50% !important;
+  right: auto !important;
+  bottom: calc(var(--dock-b) + env(safe-area-inset-bottom, 0px)) !important;
+  transform: translateX(-50%);
+  gap: 3px !important;
+  padding: 6px;
+  border-radius: var(--r-dock);
+  background: var(--glass);
+  border: 1px solid var(--glass-line);
+  box-shadow: var(--ui-shadow);
+  backdrop-filter: blur(18px) saturate(1.1);
+  -webkit-backdrop-filter: blur(18px) saturate(1.1);
+  width: auto !important;
+  flex-wrap: nowrap !important;
+  transition: opacity .34s var(--ui-ease), transform .34s var(--ui-ease);
+}
+body.lc-panel-open nav.bar {
+  left: var(--pad) !important;
+  transform: none;
+}
+nav.bar button {
+  width: 38px; height: 38px;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: var(--r-btn);
+  background: transparent !important;
+  display: grid; place-items: center;
+  font-size: 0 !important;             /* 文字标签全部让位给图标 */
+  color: var(--ui-ink) !important;
+  letter-spacing: 0 !important;
+  position: relative;
+  transition: background .16s var(--ui-ease), color .16s var(--ui-ease);
+}
+nav.bar button:hover { background: rgba(38, 65, 76, .09) !important; }
+nav.bar button[aria-pressed="true"] { background: var(--ui-ink) !important; color: #f7f6ec !important; }
+nav.bar button svg {
+  width: 19px; height: 19px;
+  fill: none; stroke: currentColor; stroke-width: 1.7;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+/* 分隔线：游戏/看澜 和 环境控件之间留一口气 */
+nav.bar button[data-sep]::before {
+  content: ''; position: absolute; left: -3px; top: 9px; bottom: 9px;
+  width: 1px; background: rgba(38, 65, 76, .13);
+}
+/* 提示气泡：沿用旧的 ::after 机制，但改成更小的浮标 */
+nav.bar button::after {
+  content: attr(data-tip);
+  position: absolute; bottom: calc(100% + 7px); left: 50%;
+  transform: translate(-50%, 3px);
+  padding: 3px 8px; border-radius: 7px;
+  font: 500 11px/1.4 var(--body);
+  letter-spacing: .02em; white-space: nowrap;
+  color: #f6f5ea; background: rgba(24, 42, 50, .88);
+  box-shadow: 0 4px 12px rgba(15, 30, 38, .22);
+  opacity: 0; pointer-events: none;
+  transition: opacity .14s, transform .14s;
+}
+nav.bar button:hover::after,
+nav.bar button:focus-visible::after { opacity: 1; transform: translate(-50%, 0); }
+nav.bar button[aria-pressed="true"]::after { color: #f7f6ec; }
+
+/* ───────── 聊天条：收窄、抬高、跟 dock 咬合 ───────── */
+.lc-chat {
+  bottom: calc(var(--dock-b) + var(--dock-h) + var(--gap) + env(safe-area-inset-bottom, 0px)) !important;
+  width: min(440px, calc(100vw - 2 * var(--pad) - 96px)) !important;
+  padding: 4px 4px 4px 12px !important;
+  border-radius: 999px !important;
+  border: 1px solid var(--glass-line) !important;
+  background: var(--glass) !important;
+  box-shadow: var(--ui-shadow) !important;
+  backdrop-filter: blur(18px) saturate(1.1) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(1.1) !important;
+  gap: 2px !important;
+  transition: opacity .34s var(--ui-ease), transform .34s var(--ui-ease), box-shadow .2s;
+}
+.lc-chat:focus-within {
+  background: var(--glass-strong) !important;
+  box-shadow: var(--ui-shadow-lift) !important;
+}
+.lc-chat input {
+  font-size: 13px !important;
+  padding: 9px 2px !important;
+  height: calc(var(--chat-h) - 8px);
+  color: var(--ui-ink) !important;
+}
+.lc-chat input::placeholder { color: var(--ui-mute); opacity: .8; }
+.lc-chat button {
+  height: 34px; border-radius: 999px;
+  padding: 0 13px !important;
+  font-size: 12px !important;
+  background: #2f5660 !important;
+  box-shadow: none !important;
+}
+.lc-chat button:hover:not(:disabled) { background: #3a6672 !important; }
+/* 「已连接」这类常驻小字是最吵的东西：不忙的时候收起来，忙的时候做成条内芯片 */
+.lc-chat-status {
+  position: static !important;
+  order: 2;
+  padding: 3px 9px; border-radius: 999px;
+  background: rgba(38, 65, 76, .08);
+  font-size: 10px !important; letter-spacing: .02em;
+  color: var(--ui-mute) !important; text-shadow: none !important;
+  white-space: nowrap; max-width: 9em; overflow: hidden; text-overflow: ellipsis;
+  opacity: 0; transition: opacity .2s;
+}
+.lc-chat[aria-busy="true"] .lc-chat-status { opacity: 1; }
+
+/* 气泡：始终在聊天条上方，不会压住输入框 */
+.lc-bubble {
+  bottom: calc(var(--dock-b) + var(--dock-h) + var(--gap) + var(--chat-h) + var(--gap) + env(safe-area-inset-bottom, 0px)) !important;
+  width: min(440px, calc(100vw - 2 * var(--pad))) !important;
+  border: 1px solid var(--glass-line) !important;
+  border-radius: 16px !important;
+  background: var(--glass-strong) !important;
+  box-shadow: var(--ui-shadow) !important;
+  font-size: 12.5px !important;
+  line-height: 1.75 !important;
+  max-height: 22vh;
+}
+
+/* ───────── 左上：屋名 + 天气���成一组 ───────── */
+body .lc-home {
+  position: static !important;
+  height: 30px;
+  padding: 0 12px !important;
+  margin: 0 !important;
+  border-radius: 999px !important;
+  border: 1px solid var(--glass-line) !important;
+  background: var(--glass) !important;
+  box-shadow: var(--ui-shadow);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  font-size: 11.5px !important;
+  letter-spacing: .1em !important;
+  color: var(--ui-ink) !important;
+  pointer-events: auto;
+  transition: opacity .34s var(--ui-ease), transform .34s var(--ui-ease);
+}
+.lc-home-dot { width: 5px !important; height: 5px !important; box-shadow: 0 0 0 3px rgba(112, 156, 142, .18) !important; }
+body header.tag {
+  top: calc(var(--pad) + 38px) !important;
+  left: var(--pad) !important;
+  gap: 6px !important;
+  z-index: 12;
+}
+body header.tag .wx {
+  min-width: 0 !important;
+  padding: 7px 11px !important;
+  border-radius: 11px !important;
+  border: 1px solid rgba(255, 255, 255, .28) !important;
+  background: rgba(24, 44, 52, .42) !important;
+  color: #eef4ee !important;
+  font-size: 10.5px !important;
+  letter-spacing: .04em;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 4px 16px rgba(12, 28, 36, .16);
+  transition: background .18s, transform .18s;
+}
+body header.tag .wx:hover { background: rgba(24, 44, 52, .58) !important; }
+body header.tag .wx .city { font-size: 13px !important; letter-spacing: .08em !important; }
+body header.tag .wx .now b { font-size: 15px !important; }
+
+/* ───────── 右上：两颗文字按钮改成和屋名同族的胶囊 ───────── */
+.lc-hud { pointer-events: none; }
+.lc-hud-btn {
+  height: 30px !important;
+  padding: 0 13px !important;
+  border-radius: 999px !important;
+  border: 1px solid var(--glass-line) !important;
+  background: var(--glass) !important;
+  color: var(--ui-ink) !important;
+  font-size: 11px !important;
+  letter-spacing: .04em;
+  box-shadow: var(--ui-shadow);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: background .18s, opacity .34s var(--ui-ease), transform .34s var(--ui-ease);
+}
+.lc-hud-btn:hover { background: var(--glass-strong) !important; }
+.lc-desktop {
+  background: #2f5660 !important;
+  border-color: rgba(255, 255, 255, .18) !important;
+  color: #f4f7f0 !important;
+}
+.lc-desktop:hover { background: #3a6672 !important; }
+body.night .lc-hud-btn { --glass: rgba(28, 34, 48, .58); --glass-line: rgba(246, 239, 230, .14); --ui-ink: #e8e6f2; }
+body.night .lc-desktop { background: #cfc7a8 !important; color: #241f16 !important; }
+body.ui-idle .lc-hud-btn { opacity: .30; }
+
+/* ───────── 左下：提示语与版权行分居两行，不叠 ───────── */
+body .hint {
+  bottom: calc(var(--dock-b) + 22px + env(safe-area-inset-bottom, 0px)) !important;
+  left: var(--pad) !important;
+  right: auto !important;
+  top: auto !important;
+  font-size: 9.5px !important;
+  line-height: 1.7;
+  opacity: .58;
+  color: #eef4ee !important;
+  text-shadow: 0 1px 4px rgba(14, 34, 44, .35);
+  max-width: 40vw;
+  padding: 3px 8px;
+  margin-left: -4px;
+  border-radius: 8px;
+  background: rgba(18, 32, 42, .34);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: opacity .5s var(--ui-ease);
+}
+body .hint.gone { opacity: 0 !important; }
+body header.tag .upstream-credit {
+  left: var(--pad) !important;
+  bottom: calc(var(--dock-b) - 6px + env(safe-area-inset-bottom, 0px)) !important;
+  font-size: 8.5px !important;
+  opacity: .55 !important;
+  max-width: 40vw;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  padding: 2px 8px;
+  margin-left: -4px;
+  border-radius: 7px;
+  background: rgba(18, 32, 42, .30);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  text-shadow: 0 1px 3px rgba(14, 34, 44, .35);
+}
+
+/* ───────── 闲置退场 ───────── */
+body.ui-idle nav.bar,
+body.ui-idle .lc-chat,
+body.ui-idle .lc-home,
+body.ui-idle header.tag,
+body.ui-idle .hint,
+body.ui-idle header.tag .upstream-credit {
+  opacity: .30;
+  transform: translateY(3px);
+}
+body.ui-idle nav.bar { transform: translateX(-50%) translateY(3px); }
+body.ui-idle.lc-panel-open nav.bar { transform: translateY(3px); }
+body.ui-idle header.tag .upstream-credit { transform: translateY(3px); opacity: .22 !important; }
+body.ui-idle nav.bar:hover,
+body.ui-idle .lc-chat:hover,
+body.ui-idle .lc-home:hover,
+body.ui-idle .lc-hud-btn:hover { opacity: 1; transform: none; }
+body.ui-idle nav.bar:hover { transform: translateX(-50%); }
+/* 面板打开 / 窗口失焦时不要退场，不然像卡住了 */
+body.lc-panel-open nav.bar,
+body.lc-panel-open .lc-chat,
+body.lc-panel-open .lc-home { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  body.ui-idle nav.bar, body.ui-idle .lc-chat, body.ui-idle .lc-home,
+  body.ui-idle header.tag, body.ui-idle .hint { opacity: .3; transform: none !important; }
+}
+
+/* ───────── 夜晚：玻璃转深色，文字提亮 ───────── */
+body.night nav.bar,
+body.night .lc-chat,
+body.night .lc-home {
+  --glass: rgba(28, 34, 48, .58);
+  --glass-strong: rgba(30, 36, 52, .86);
+  --glass-line: rgba(246, 239, 230, .14);
+  --ui-ink: #e8e6f2;
+  --ui-mute: #a9a6bd;
+  box-shadow: 0 8px 28px rgba(6, 10, 20, .38), 0 1px 2px rgba(6, 10, 20, .3);
+}
+body.night nav.bar button:hover { background: rgba(246, 239, 230, .12) !important; }
+body.night nav.bar button[aria-pressed="true"] { background: var(--yellow) !important; color: #241f16 !important; }
+body.night .lc-chat button { background: #cfc7a8 !important; color: #241f16 !important; }
+body.night .lc-chat-status { background: rgba(246, 239, 230, .12); }
+body.night .hint, body.night header.tag .upstream-credit { background: rgba(8, 12, 22, .42); }
+body.night .lc-bubble { background: var(--glass-strong) !important; color: #eceaf4 !important; }
+
+/* ───────── 小窗口：dock 缩一号，聊天条贴满 ───────── */
+@media (max-width: 780px), (max-height: 460px) {
+  :root { --pad: 10px; --gap: 6px; --dock-h: 44px; --dock-b: 10px; --chat-h: 40px; }
+  nav.bar { padding: 5px; }
+  nav.bar button { width: 34px; height: 34px; }
+  nav.bar button svg { width: 17px; height: 17px; }
+  .lc-chat {
+    width: calc(100vw - 2 * var(--pad)) !important;
+    left: 50% !important; transform: translateX(-50%) !important;
+  }
+  .lc-bubble { width: calc(100vw - 2 * var(--pad)) !important; }
+  body header.tag { top: calc(var(--pad) + 34px) !important; }
+  .lc-home { height: 27px; font-size: 10.5px !important; }
+  body.header-notag .hint { display: none; }
+}
+/* 手机上有方向键时 dock 让到上排，别和 .pad 打架 */
+@media (pointer: coarse) {
+  body.tv nav.bar { opacity: 0; pointer-events: none; }
+}

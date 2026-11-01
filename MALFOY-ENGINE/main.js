@@ -366,6 +366,8 @@ function getPersona() {
     persona: getPersonaObj(),
     mode: currentMode,
     memory: memoryDigest(),
+    // 性格段：只放"她此刻偏向什么"，身份段（她是谁）仍然逐字节不变。
+    soul: soulPrompt(),
   });
 }
 
@@ -851,6 +853,36 @@ function stopWindowPolling() {
 // ── 三态：dormant(休眠/壁纸) | world(她的世界) | desktop(你的世界) ──
 let stage = null, stageMode = null;
 let contentPages = null;
+// ── 她自己的四个状态：灵魂 / 花园 / 钓鱼 / 小屋布局 ────────────────
+// 全部落在 DATA.dir 下，和好感度、旅行日记同级；都不认识窗口，只管规则与落盘。
+let soulStore = null, gardenStore = null, fishingStore = null, roomStore = null, intentStore = null;
+function soul() {
+  if (!soulStore) soulStore = require('./lib/soul').createSoul({ dir: DATA.dir });
+  return soulStore;
+}
+function garden() {
+  if (!gardenStore) gardenStore = require('./lib/garden').createGarden({ dir: DATA.dir });
+  return gardenStore;
+}
+function fishing() {
+  if (!fishingStore) fishingStore = require('./lib/fishing').createFishing({ dir: DATA.dir });
+  return fishingStore;
+}
+function roomPlan() {
+  if (!roomStore) roomStore = require('./lib/room-plan').createRoomPlan({ dir: DATA.dir });
+  return roomStore;
+}
+function intent() {
+  if (!intentStore) intentStore = require('./lib/intent').createIntent({ dir: DATA.dir });
+  return intentStore;
+}
+// 灵魂计算失败不该影响聊天：提示词少一段，比整轮报错好。
+function soulPrompt() {
+  try { return soul().prompt(); } catch (_) { return ""; }
+}
+function feelSoul(kind, options) {
+  try { return soul().feel(kind, options); } catch (_) { return null; }
+}
 let desktopSize = 180;
 let mediaController = null, coverController = null, currentChatRequest = null, albumStore = null;
 function media() {
@@ -1006,6 +1038,79 @@ function startJourneyClock() {
   timer.unref?.();
   // 启动时先补算一次，别等 10 分钟
   journeys().tick().catch(() => {});
+}
+
+/**
+ * 她自己的时间表：不定时问一次「现在想做什么」，能做就真去做。
+ *
+ * 这里执行的是**真实后果**：摘掉熟了的番茄、钓上一条鱼、让模型改一次家具。
+ * 不是为了动效假装她做了事 —— 假装过两次用户就会发现花园永远是满的。
+ *
+ * 三条纪律：
+ *   - 没有窗口就整轮不动（pushToCharacter 会落到 wall/stage，都没有就白做）；
+ *   - 一句话不打断正在进行的对话：seq 不参与，渲染层只认 text/emo/voice；
+ *   - 模型改造小屋失败就当这次没改造，房间保持原样（room-plan 的 apply 是原子的）。
+ */
+function startIntentClock() {
+  const tick = Number(process.env.INTENT_TICK_MS) || 5 * 60 * 1000;
+  const timer = setInterval(() => { runIntent().catch(() => {}); }, tick);
+  timer.unref?.();
+  // 启动后先等一会儿再第一次开口，别一开机就弹一句。
+  const first = setTimeout(() => { runIntent().catch(() => {}); }, Math.min(tick, 90 * 1000));
+  first.unref?.();
+}
+
+async function runIntent() {
+  if (!stage && !wall) return null;
+  const now = Date.now();
+  const plan = intent().decide({
+    wants: soul().wants(now, 6),
+    context: { garden: garden().snapshot(now), fishing: fishing().snapshot(now), room: roomPlan().snapshot() },
+    now,
+  });
+  if (!plan.line || plan.action === 'idle') return plan;
+
+  let line = plan.line;
+  try {
+    if (plan.action === 'tendGarden') {
+      const ripe = garden().snapshot(now).plots.filter((p) => p.ready && !p.withered);
+      if (!ripe.length) return plan;
+      for (const plot of ripe) garden().harvest(plot.id, Date.now());
+      line = `${ripe.map((p) => p.name).join('、')}熟了，我摘下来了。`;
+      feelSoul('garden');
+    } else if (plan.action === 'fish') {
+      const spot = fishing().snapshot(now).spots.find((s) => s.open);
+      if (!spot) return plan;
+      const caught = fishing().cast({ spot: spot.id, now: Date.now() });
+      if (!caught.ok) return plan;
+      line = `${spot.name}风不大，我坐了一会儿。钓到一条${caught.name}。`;
+      feelSoul('fish');
+    } else if (plan.action === 'decorate') {
+      const { decorate } = require('./lib/decorator');
+      const result = await decorate({
+        roomPlan: roomPlan(),
+        goal: `按你现在的性情（${soul().snapshot(now).labels.join('、')}）把屋子重新摆一下`,
+        // 这里不能用 1474 行那个 withTimeout：它是函数内的 const 箭头，
+        // 顶层拿不到。自己带一道超时，模型挂了就当这次没改造。
+        generate: async (prompt) => {
+          const job = llmChat(prompt, [], { noMemory: true, label: '（她改造小屋）' });
+          const timeout = new Promise((resolve) => { setTimeout(() => resolve(null), 45000).unref?.(); });
+          const r = await Promise.race([job, timeout]);
+          return r && r.ok ? r.text : '';
+        },
+      });
+      if (!result.ok) return { ...plan, action: 'idle', reason: 'decorate-failed' };
+      line = plan.line;
+      feelSoul('decorate');
+    }
+  } catch (error) {
+    console.warn('[intent] ' + ((error && error.message) || error));
+    return plan;
+  }
+
+  intent().done(plan.action, Date.now());
+  pushToCharacter({ text: line, emo: plan.action === 'rest' ? 'calm' : 'happy', voice: null, mode: currentMode, partial: false });
+  return { ...plan, line };
 }
 
 function openCompanionPanel(tab) {
@@ -1295,6 +1400,10 @@ app.whenReady().then(() => {
   setTimeout(() => { if (wakeEnabled) prewarmComposer(); }, 1200);
   // 她的旅行：按真实时间对账，app 关着的时候也照样"出去过"
   try { startJourneyClock(); } catch (_) {}
+  // 她自己也会变：app 关着的这段时间，性格会往原位漂一点（一天最多记一次）。
+  try { soul().settle(); } catch (_) {}
+  // 她自己的时间表：决定要不要去做点什么，并且真的做。
+  try { startIntentClock(); } catch (_) {}
   // 相册/剧情与记忆管理：独立窗口，失败只影响这两页，不阻断主舞台。
   try {
     contentPages = createContentPages({
@@ -1401,7 +1510,7 @@ app.whenReady().then(() => {
       if (r.timedOut) {request.cancelled=true;controller.abort();}
       r.ms = Date.now() - t0;
       // 真实聊天成功才加好感（冷却由 pack.affection.chatCooldown 控制）；超时/失败不算。
-      if (!r.timedOut && r.text) contentPages?.bump("chat");
+      if (!r.timedOut && r.text) { contentPages?.bump("chat"); feelSoul("chat"); }
       return r;
     } finally {if(currentChatRequest===request)sendToScene("character:activity", "idle");}
   });
@@ -1410,10 +1519,53 @@ app.whenReady().then(() => {
     return toggleComposer(expanded);
   });
   ipcMain.on("character:stop-voice", () => {cancelChat();mediaController?.stop();});
-  ipcMain.on("character:tap", () => { contentPages?.bump("touch"); });
+  ipcMain.on("character:tap", () => { contentPages?.bump("touch"); feelSoul("touch"); });
   // query 可选：面板的搜索框透传过来，空查询返回整个曲库
   ipcMain.handle('companion:library',(e,query)=>media().library(query));
   ipcMain.handle('companion:journey',()=>journeys().snapshot());
+  // ── 灵魂 / 花园 / 钓鱼 / 小屋 ──────────────────────────────────
+  // 只认自己的两个窗口（和麦克风权限同一口径），失败一律返回 {ok:false}
+  // 而不是把异常抛过 IPC —— 渲染层拿到的是一个能直接显示的对象。
+  const ownSender = (e) => !!e && !!e.sender && !e.sender.isDestroyed() &&
+    (e.sender === composer?.webContents || e.sender === stage?.webContents);
+  const homesteadHandle = (channel, fn) => ipcMain.handle(channel, (e, ...args) => {
+    if (!ownSender(e)) return { ok: false, error: '无效窗口' };
+    try { return fn(...args); } catch (error) { return { ok: false, error: String((error && error.message) || error) }; }
+  });
+  homesteadHandle('soul:snapshot', () => ({ ok: true, ...soul().snapshot() }));
+  homesteadHandle('soul:note', (text) => soul().note(text));
+  homesteadHandle('homestead:snapshot', () => ({
+    ok: true, soul: soul().snapshot(), garden: garden().snapshot(),
+    fishing: fishing().snapshot(), room: roomPlan().snapshot(),
+  }));
+  homesteadHandle('garden:plant', (p = {}) => garden().plant(p.plot, p.species));
+  homesteadHandle('garden:water', (p = {}) => garden().water(p.plot));
+  homesteadHandle('garden:harvest', (p = {}) => garden().harvest(p.plot, Date.now(), { receiptId: p.receiptId || null }));
+  homesteadHandle('garden:clear', (p = {}) => garden().clear(p.plot));
+  homesteadHandle('fishing:cast', (p = {}) => {
+    const result = fishing().cast({ spot: p.spot, weather: p.weather || 'clear' });
+    // 钓上来就记一笔：钓鱼是她的性情来源之一。
+    if (result.ok) feelSoul('fish');
+    return result;
+  });
+  homesteadHandle('fishing:take', (p = {}) => fishing().take(p.fish, p.count || 1));
+  homesteadHandle('room:snapshot', () => ({ ok: true, ...roomPlan().snapshot() }));
+  homesteadHandle('room:apply', (p = {}) => roomPlan().apply(p.plan, { receiptId: p.receiptId || null }));
+  // 只读预测：问「她现在会想做什么」但不执行 —— 给调试和界面用。
+  homesteadHandle('intent:peek', () => {
+    const now = Date.now();
+    return {
+      ok: true,
+      plan: intent().decide({
+        wants: soul().wants(now, 6),
+        context: { garden: garden().snapshot(now), fishing: fishing().snapshot(now), room: roomPlan().snapshot() },
+        now,
+      }),
+      state: intent().snapshot(),
+    };
+  });
+  // 手动触发一次（验收用：不用等 5 分钟）
+  homesteadHandle('intent:run', async () => ({ ok: true, result: await runIntent() }));
   ipcMain.handle('companion:cover',async(e,p={})=>{
     if(e.sender!==composer?.webContents)return {ok:false,error:'无效窗口'};
     try{
