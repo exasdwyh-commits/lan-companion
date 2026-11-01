@@ -2,6 +2,8 @@
 
 快照：2026-11-01。本页集中汇总各条路线的已有成果；动态计数用 `bash scripts/project.sh status` 核对。
 
+**GitHub（GITHUB-01）**：已上传到私有仓库 [exasdwyh-commits/lan-companion](https://github.com/exasdwyh-commits/lan-companion)，包含当前源码及小屋/桌面运行素材。保留本地原HEAD/暂存区，快照分支 `github/main` 推送远程 `main`；未上传大原片/权重/本机App/个人数据，不等于公开开源或独立安装包发行。[上传与核对](updates/2026-11-01-GITHUB-01-private-source.md)。
+
 **当前同步（WORLD-UX-20）**：相册/冒险手账、封面书架、连续会话、分层声音控制及“来到桌面”已接入；桌面新增24段dsh-pet透明动作、动作菜单与睡眠过渡。保留RIG-19及现有娱乐。已重新构建 `dist/DeepWhale.app`，相关211/211文件与源码一致；33项专项、17项隔离浏览器与93/93只读检查通过。原生听感、导入弹窗和窗口往返未重验；未重启当前App。扩展回归20项旧测试桩/接口失败已单列。[交付与证据](updates/2026-11-01-WORLD-UX-20-room-desktop.md)。
 
 **历史同步（WORLD-RIG-14 收尾）**：已以 **RIG-17 + LAN-08 的 App 版**为基线：本次重算小屋全部文件和入口/相关接线 **180/180 与 App 相同**；连续四权重、2070 面接触修复、后续接地/贴床/被子及相册/读书/聊天均保留。最新专属骨骼回归 4/4、check 93/93。没有重建/重启 App、没有重验真机声音；下方早期条目中的“未接 Electron”只描述各任务当时快照。袖口仍有局部折叠，朗读/聊天听感与加照片对话框仍待真机。见[修复和同步记录](updates/2026-11-01-WORLD-RIG-14-skin-and-app-sync.md)。
