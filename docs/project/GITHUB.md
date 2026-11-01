@@ -1,6 +1,6 @@
-# GitHub 私有源码快照
+# GitHub 公开源码快照
 
-目标仓库：[exasdwyh-commits/lan-companion](https://github.com/exasdwyh-commits/lan-companion)。当前为私有备份，没有公开发布或 Release。
+目标仓库：[exasdwyh-commits/lan-companion](https://github.com/exasdwyh-commits/lan-companion)。用户于2026-11-01明确授权改为公开；当前为公开源码快照，没有安装包 Release。
 
 ## 上传范围
 
@@ -28,7 +28,7 @@ python3 -m http.server 8947 --bind 127.0.0.1
 ```bash
 python3 scripts/github-snapshot.py             # 生成清单，扫描候选文件
 python3 scripts/github-snapshot.py --commit    # 独立临时索引，更新本地 github/main
-# 确认目标为自己的私有仓库后推送；不需要force
+# 确认目标为自己的目标仓库后推送；不需要force
 # git remote -v
 # git push origin github/main:main
 ```
@@ -41,4 +41,4 @@ python3 scripts/github-snapshot.py --commit    # 独立临时索引，更新本�
 - 小屋按上游 [LICENSE](../../MALFOY-ENGINE/web/moli-room/LICENSE) 保留CC BY-NC 4.0及署名；代码/音乐/美术依各自原说明。
 - dsh-pet动作按 [NOTICE](../../assets/dsh-pet-desktop-v1/NOTICE.md) 保留原作者和CC BY-NC-SA 4.0非商业说明；不能声称为澜原创。
 - 其他第三方代码和运行组件保留原有许可。用户图、生成角色、参考图与音色不因为源码上传而获得公开再分发许可。
-- 保持私有。改为公开仓库或发布安装包前，需要单独核对第三方软件与素材的再分发范围。
+- 仓库公开不改变各素材的原始许可；不能因源码可见就将第三方图、模型、音色或动画用于商业再分发。安装包发行另行处理。

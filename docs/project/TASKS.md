@@ -86,6 +86,12 @@
 
 > 交付：[GitHub私有源码记录](updates/2026-11-01-GITHUB-01-private-source.md)；origin 为 `exasdwyh-commits/lan-companion`，使用 `github/main:main` 快照同步；保留本地HEAD/暂存区，不含原片/权重/个人数据。
 
+> **GITHUB-PUBLIC-02（Codex / 01a191bf，2026-11-01）：完成，仓库已公开**
+>
+> 用户明确授权把现有仓库改成公开。负责GitHub可见性、README/AGENTS及项目GitHub说明/状态/交付索引同步；不改运行素材、业务代码、当前HEAD或原暂存区。沿用GITHUB-01已排除个人数据/凭据/大原片的快照，保留现有第三方署名与许可。验收GitHub实际PUBLIC状态、文档快照提交/完整树核对和只读工程检查。
+
+> 交付：[公开可见性与核对](updates/2026-11-01-GITHUB-PUBLIC-02-visibility.md)；用户已明确授权公开现有仓库，匿名访问实查；当前说明已同步，保留既有素材许可与个人数据排除规则。
+
 ## 领取规则
 
 1. 开始前核对当前代码与 STATUS，更新下表的负责人、状态、文件范围；负责人使用 agent/聊天标识，不写“已有人处理”。
@@ -295,7 +301,7 @@ BMAD-01 安装校验补充（Codex / 本聊天，已完成）：新增 `scripts/
 - 将依赖母体 App 的构建逐步替换为明确版本和锁定依赖；临时目录完整构建、验证后替换产物，避免先删唯一可用包。
 - 列出模型、服务、权限、资源大小与跨机器安装步骤；检查秘密、个人数据和素材许可。非营利/开源代码不自动授予素材再分发权。
 - 软件与素材分别列许可；授权不清的参考图不随公开发行。完整本机验收、干净环境构建和功能演示后再称“可发布”。
-- 用户于2026-11-01授权上传GitHub：origin 为私有 exasdwyh-commits/lan-companion，按 GITHUB.md 的快照分支同步；公开仓库/安装包发行仍另行处理。
+- 用户于2026-11-01授权上传GitHub：origin 为公开 exasdwyh-commits/lan-companion（GITHUB-PUBLIC-02用户授权），按 GITHUB.md 的快照分支同步；安装包发行仍另行处理。
 
 ### CHIBI-02：Q 版走路与移动表现（2026-10-31，Hermes 002 / 本聊天）【完成，见交付记录】
 

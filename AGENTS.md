@@ -35,7 +35,7 @@
 - 不打印、复制或提交个人 settings.json、密钥、聊天历史、画像、.env；文档不收集真实凭据。
 - Electron 数据目录隔离已在 DW-01 接入，使用 `LAN_DATA_DIR` 或 `--data-dir` 明确指定；任何会写数据的自检仍必须在隔离目录执行，绝不直接碰个人记忆。细节以 [DEVELOPMENT.md](docs/project/DEVELOPMENT.md) 为准。
 - 保留 .runtime、模型目录和 LiveTalking 相对位置。Swift 的 TTS worker 与 Electron HTTP 服务是不同接口，不能混报就绪状态。
-- Git 实查根目录为 desktop-companion/；origin 为私有仓库 exasdwyh-commits/lan-companion。本地原 HEAD/暂存区保留，使用 github/main 快照分支推送到远程 main，详见 docs/project/GITHUB.md。先看 git status，不把私有备份称为公开开源，不直接推送旧本地主分支。
+- Git 实查根目录为 desktop-companion/；origin 为公开仓库 exasdwyh-commits/lan-companion。本地原 HEAD/暂存区保留，使用 github/main 快照分支推送到远程 main，详见 docs/project/GITHUB.md。先看 git status，不把公开源码快照称为完整安装包发行，不直接推送旧本地主分支。
 
 ## 验证与汇总
 

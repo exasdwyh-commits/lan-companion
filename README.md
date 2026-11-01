@@ -6,7 +6,7 @@
 
 ## GitHub 源码快照
 
-当前私有仓库：[exasdwyh-commits/lan-companion](https://github.com/exasdwyh-commits/lan-companion)。包含源码、小屋与桌面运行素材；不含本机App、权重、个人数据和大原片。当前仍依赖本机运行环境，**不代表已完成独立构建或公开开源发布**。查看、同步和许可边界见 [GitHub说明](docs/project/GITHUB.md)。
+当前公开仓库：[exasdwyh-commits/lan-companion](https://github.com/exasdwyh-commits/lan-companion)。包含源码、小屋与桌面运行素材；不含本机App、权重、个人数据和大原片。当前仍依赖本机运行环境，**不代表已完成独立构建或安装包发行**。查看、同步和许可边界见 [GitHub说明](docs/project/GITHUB.md)。
 
 ## 开始开发
 

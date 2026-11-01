@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Plan or commit a private GitHub source snapshot without changing HEAD/index.
+"""Plan or commit a GitHub source snapshot without changing HEAD/index.
 
 Large original media, personal/runtime data and historical benchmark runs stay
 local. The upload branch has its own history so old blobs are not republished.
