@@ -343,3 +343,12 @@ BMAD-01 安装校验补充（Codex / 本聊天，已完成）：新增 `scripts/
 - 主进程：`startIntentClock()`（默认 5 分钟，`INTENT_TICK_MS` 可调）+ `runIntent()` 执行真实后果 + `intent:peek`/`intent:run` 两个 IPC。台词走 `character:say` 且不碰 `seq`，不打断正在进行的对话。
 - 新增 `docs/project/AGENT-SCOPE.md`：把「可以独立做完、靠单测验收」与「必须 macOS + 母体 App + WebGL 才能验」分成 A/B 两类，并给出 3D 动作自然度的诊断→归类→改法流程（不盲改 `lan-model.js` 里按实测定死的姿势常数）。
 - 验收：6 个新模块测试合计 62/62 PASS；全量 357 用例 346 PASS，11 项失败均为既有缺 fixture；`main.js`/`lib/*.js` 语法全通过。
+
+### WORLD-FX-01：画面元素（2026-11-01，Arena Agent）【已交付，量感待人眼确认】
+
+- 新增 `web/moli-room/scene-extras.js`：窗光柱（沿太阳方向挤出的楔形 + 软边/衰减/噪声着色器）、浮尘（420 点，漂移全在顶点着色器）、玻璃雨（水珠网格 + 拖尾 + 薄雾）、夜萤（窗外锥内 46 点，脉冲）。全部只读 `W` 与 `world.altDeg`，构建失败即降级、房间行为不变。
+- 接入 `index.html` 三处：script 标签、`sceneExtras` 初始化（`?fx=0` 可关，`window.__lanFx` 为验收句柄）、主循环 `composer.render` 前一行 update。
+- 新增 `tools/room-fx-probe.py`：在 headless Chromium + SwiftShader 里跑**真实房间页含完整后处理链**，用 `?at=`/`?wx=`/`?cam=` 固定条件，在同一次加载内开关特效。断言用几何投影覆盖率（无噪声），像素差仅作参考。
+- **方法论更正**：像素差在调色 pass 的动态颗粒 + 窗外动态海面前不可用；块平均可消颗粒但消不掉海面动画。最终判定改为「顶点投影到屏幕的 NDC 包围盒覆盖面积」，`area=0` 即「没画在画面里」。
+- 验收：4/4 场景通过（dawn/noon/rain/night），无脚本错误，各元素在画面内且面积合理、雨面积 <35%（不糊满屏）；全量 node 测试 357 用例与本次无关（11 项既有缺 fixture）。
+- 调参记录：初版强度 0.85 / 长度 6 → 整间房被暖雾洗白；改 0.30 / 上限 4 / 横向 2.2 次方后成为窗边一层光。

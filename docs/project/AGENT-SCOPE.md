@@ -22,6 +22,7 @@
 | 大模型改造小屋闭环（出计划→校验→错误回灌→重试≤3） | ✅ 已交付 | `lib/decorator.js` | `test/decorator.test.js` 10/10 |
 | 性格段注入 system prompt | ✅ 已交付 | `lib/identity.js` + `main.js` | 不传时逐字节不变 |
 | `project.sh check` 在干净 clone 上崩溃 | ✅ 已修 | `scripts/project_audit.py` | 能跑完整轮 |
+| 画面元素：窗光柱 / 浮尘 / 玻璃雨 / 夜萤 | ✅ 已交付 | `web/moli-room/scene-extras.js` | `tools/room-fx-probe.py` 4/4；真实房间页无头渲染 |
 
 ### 还能在 A 类里继续做（不需要你任何输入）
 
@@ -44,12 +45,20 @@
 
 ## B 类：必须在本机做，我只能出方案和诊断
 
-原因统一：App 需要 macOS + `SmartCompanion.app` 母体 + WebGL。在没有这些的环境里写出来的改动**无法验证**，交付等于把风险转给你。
+原因：这些改动最终要由**人眼**判定"对不对"，而在没有 macOS + `SmartCompanion.app` 母体的环境里，我看不到你看到的画面。
+
+> **2026-11-01 更正**：B 类里有一半其实可以验，我一开始判断错了。
+> `web/moli-room/index.html` 是纯相对 URL 的普通网页，只要用 HTTP 服务起来（不能用 `file://`），
+> headless Chromium + SwiftShader 就能把**真实房间含完整后处理链**渲染出来，房间自己的
+> `?at=` / `?wx=` / `?cam=` 还提供了确定性。于是"元素有没有画在画面里、该亮的时候亮不亮"
+> 是可以无头断言的（见 `tools/room-fx-probe.py`，4/4 场景通过）。
+> 仍然不能验的只剩一件事：**量感和美感**。所以 B 类现在细分为「可无头验的几何/状态」与
+> 「必须人眼的美术」两半，前者我可以独立做。
 
 | 事项 | 为什么必须本机 | 我能提供什么 |
 |---|---|---|
-| 3D 动作自然度 | 手感只能看，不能断言 | 下面那套诊断脚本 + 逐项改法 |
-| 场景 / 室内元素更丰富 | 同上，而且需要美术取舍 | 结构方案（复用 `lan-theme.js` 的分层），素材由你定 |
+| 3D 动作自然度 | 手感只能看，不能断言 | 下面那套诊断脚本 + 逐项改法（**仍必须人眼**）|
+| 场景 / 室内元素更丰富 | 需要美术取舍 | 结构我能加（已加四个元素），取舍与量感要你看 |
 | 外出旅行的表现层 | 需要看转场 | `lib/journey.js` 已有数据层，我补表现层规格 |
 | 服装的显示 | 需要看穿模 | `lib/wardrobe.js` 我写完，渲染接线你验 |
 | 多款猫的显示 | 同上 | `lib/cats.js` 我写完，渲染接线你验 |
@@ -102,6 +111,14 @@ node --test test/soul.test.js test/garden.test.js test/fishing.test.js \
              test/room-plan.test.js test/intent.test.js test/decorator.test.js
 # 期望：62 tests, 62 pass
 node --test --test-timeout=30000 test/     # 全量：336 + 21 = 357，失败 11 项均为既有缺 fixture
+```
+
+画面元素的验收（不需要 GPU，也不需要 macOS）：
+
+```bash
+pip install playwright pillow && playwright install chromium
+python3 tools/room-fx-probe.py            # 真实房间页，四个时刻/天气场景
+python3 tools/room-fx-probe.py --state rain --keep /tmp/fx   # 只跑一个并留截图
 ```
 
 真机上想让主动行为立刻发生，不用等 5 分钟：
