@@ -1,0 +1,148 @@
+{
+  "format": 1,
+  "created": "2026-10-31",
+  "grid": [
+    4,
+    3
+  ],
+  "tool": "agnes-image-2.5-flash i2i (montage ref: rig-v2 identity + user style reference)",
+  "texture": "atlas.png",
+  "sha256": "761cedf2488a8c18a287f1b3520824985c4336a08da75e6210617ba2bae6ff3a",
+  "width": 1024,
+  "height": 1024,
+  "frames": [
+    {
+      "name": "dance-0",
+      "rect": [
+        42,
+        437,
+        203,
+        252
+      ],
+      "alphaBounds": [
+        42,
+        437,
+        203,
+        252
+      ]
+    },
+    {
+      "name": "dance-1",
+      "rect": [
+        287,
+        438,
+        213,
+        259
+      ],
+      "alphaBounds": [
+        287,
+        438,
+        213,
+        259
+      ]
+    },
+    {
+      "name": "dance-2",
+      "rect": [
+        521,
+        439,
+        230,
+        258
+      ],
+      "alphaBounds": [
+        521,
+        439,
+        230,
+        258
+      ]
+    },
+    {
+      "name": "dance-3",
+      "rect": [
+        774,
+        441,
+        228,
+        256
+      ],
+      "alphaBounds": [
+        774,
+        441,
+        228,
+        256
+      ]
+    },
+    {
+      "name": "dance-4",
+      "rect": [
+        20,
+        726,
+        225,
+        278
+      ],
+      "alphaBounds": [
+        20,
+        726,
+        225,
+        278
+      ]
+    },
+    {
+      "name": "dance-5",
+      "rect": [
+        272,
+        726,
+        225,
+        278
+      ],
+      "alphaBounds": [
+        272,
+        726,
+        225,
+        278
+      ]
+    },
+    {
+      "name": "dance-6",
+      "rect": [
+        529,
+        726,
+        224,
+        278
+      ],
+      "alphaBounds": [
+        529,
+        726,
+        224,
+        278
+      ]
+    },
+    {
+      "name": "dance-7",
+      "rect": [
+        779,
+        726,
+        223,
+        278
+      ],
+      "alphaBounds": [
+        779,
+        726,
+        223,
+        278
+      ]
+    }
+  ],
+  "reference": "../ref-montage.png",
+  "license": "generated for this project; user style reference redistribution terms unverified - keep out of public release until cleared",
+  "selectedCells": [
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "revision": "CHIBI-04: actual sheet has 3 rows; exclude mermaid row, sample whole humanoid cells only. Crop repair, not reference-matched choreography."
+}

@@ -1,0 +1,30 @@
+{
+  "state": "imported_model_pending_visual_review",
+  "source": "/Users/exasdwyh/Documents/VScode/vidu/desktop-companion/assets/lan-3d-hunyuan-v1/refined-v4/lan-b-room-static.glb",
+  "reference": "/Users/exasdwyh/Documents/VScode/vidu/desktop-companion/assets/whale-chibi-directions-2026-10-31/B-master-v1.png",
+  "mesh_objects": 1,
+  "vertices": 104381,
+  "triangles": 99999,
+  "armatures": [],
+  "actions": [],
+  "shape_keys": {},
+  "images": [
+    {
+      "name": "texture_pbr_20250901",
+      "width": 4096,
+      "height": 4096,
+      "has_data": true
+    },
+    {
+      "name": "texture_pbr_20250901_normal",
+      "width": 4096,
+      "height": 4096,
+      "has_data": true
+    }
+  ],
+  "limitations": [
+    "Front camera assumes imported Blender -Y facing; inspect all views.",
+    "Mesh/material/bone counts do not establish identity or animation quality.",
+    "No retopology, weight corrections or game integration performed by this script."
+  ]
+}

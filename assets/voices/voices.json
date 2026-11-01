@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "note": "音域单位 Hz。lo = 能唱实的下界，低于它只能出气声；hi = 舒适上界，null 表示由 SVC 外推、不设硬限。",
+  "voices": [
+    {
+      "id": "magnetic",
+      "name": "磁性",
+      "ref": "ref-magnetic.wav",
+      "tone": "低音厚、略带沙，成熟感最强",
+      "range": { "lo": 165, "hi": null },
+      "lowNote": "低音区能站住但会显老。源曲下探到 120Hz 以下时，尽量把整首抬上去。",
+      "default": true
+    },
+    {
+      "id": "warm",
+      "name": "温暖",
+      "ref": "ref-warm.wav",
+      "tone": "中音饱满，明亮度中等，气声柔和",
+      "range": { "lo": 175, "hi": null },
+      "lowNote": "低音区比磁性容易发虚，需要抬得更高一点才实。"
+    },
+    {
+      "id": "cool-thick",
+      "name": "清冷厚实",
+      "ref": "ref-cool-thick.wav",
+      "tone": "偏冷、有厚度，咬字清楚",
+      "range": { "lo": 170, "hi": null },
+      "lowNote": "冷色调，低音区不如磁性厚，但也不显老。"
+    },
+    {
+      "id": "sunyanzi",
+      "name": "孙燕姿",
+      "ref": "sunyanzi.wav",
+      "tone": "锥形波明亮，中低音带颗粒感，气声起音",
+      "range": { "lo": 164.8, "hi": 493.9 },
+      "lowNote": "质量音域下界 E3，低音区有颗粒感不会虚，这块是她强项。",
+      "highNote": "质量音域上界 B4。原曲抬完超过这里会挤，宁可少升半音。",
+      "provenance": "E3–B4 来自声乐分析（巅峰质量音域），非官方测量；网上流传的 D3–D5 / C5–F5 互相矛盾，本站不采信。"
+    }
+  ]
+}

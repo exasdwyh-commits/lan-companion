@@ -1,0 +1,175 @@
+{
+  "source": "https://github.com/PC2005-cloud/dsh-pet",
+  "revision": "8ad3d957f83052d332f0d0f09e90993e9756d2ec",
+  "license": "Animations non-commercial; character CC BY-NC-SA 4.0",
+  "actions": {
+    "idle": {
+      "file": "idle.webm",
+      "label": "发呆",
+      "sourceFile": "待机呼吸休闲.webm",
+      "sha256": "deb965d05a85dacf5ff4a20faa757846f0d11679598c3ec578a5571487660395",
+      "bytes": 441437
+    },
+    "walk": {
+      "file": "walk.webm",
+      "label": "散步",
+      "sourceFile": "螃蟹走路.webm",
+      "sha256": "5696b0878be38cc450d6eaace837aef1c1b5834f1382bc6c11c2de582f284673",
+      "bytes": 596902
+    },
+    "wave": {
+      "file": "wave.webm",
+      "label": "挥手",
+      "sourceFile": "点击回应-元气挥手.webm",
+      "sha256": "48cd729ccdcf746369942ea954d242e9afdd5643e1dac3827fa5e67450eb8776",
+      "bytes": 421669
+    },
+    "drag": {
+      "file": "drag.webm",
+      "label": "拎起来",
+      "sourceFile": "被鼠标拖拽悬空反馈.webm",
+      "sha256": "31373a86026636eecc890db763760309360310eb095cf5575b13c9ca2a6cc80e",
+      "bytes": 464764
+    },
+    "sleep-in": {
+      "file": "sleep-in.webm",
+      "label": "准备睡觉",
+      "sourceFile": "睡觉-开始.webm",
+      "sha256": "5352a208925e01e191c1529d07c61ae61bcda90d92f2b89549c25c949f207e11",
+      "bytes": 331611
+    },
+    "sleep": {
+      "file": "sleep.webm",
+      "label": "睡觉",
+      "sourceFile": "睡觉-循环.webm",
+      "sha256": "b49deb9b8dae4b83f84b6dc49efd41fdb654b05ad08ac6c5083977e17ef1122c",
+      "bytes": 237002
+    },
+    "wake": {
+      "file": "wake.webm",
+      "label": "起床",
+      "sourceFile": "睡觉-起来.webm",
+      "sha256": "a2a4832e546e7639782b74f998d8a6ebc2ec3b3b933c0bcc709487fb4d19ab46",
+      "bytes": 379582
+    },
+    "thinking": {
+      "file": "thinking.webm",
+      "label": "想事情",
+      "sourceFile": "工作状态-思考冒泡.webm",
+      "sha256": "b4a36cfa28ea5d7089e362a01972c6e880297c6dcd0d39f1994efd889a3c1be5",
+      "bytes": 408849
+    },
+    "working": {
+      "file": "working.webm",
+      "label": "写代码",
+      "sourceFile": "写代码.webm",
+      "sha256": "0441287737cdbb993ce90dfa74c67ea4ea3549d8c8ea98946604668464589ed7",
+      "bytes": 383960
+    },
+    "success": {
+      "file": "success.webm",
+      "label": "庆祝",
+      "sourceFile": "工作状态-雀跃庆祝.webm",
+      "sha256": "3ff681051a0bb4f152d7535d64b7f3194c30298bf56d41e521216a278f135d3e",
+      "bytes": 488024
+    },
+    "dance": {
+      "file": "dance.webm",
+      "label": "跳舞",
+      "sourceFile": "可爱宅舞.webm",
+      "sha256": "4f737e44ea67c20368bdce474b951902c87c37991fb0750da8ed7794df6ec55c",
+      "bytes": 576307
+    },
+    "sway": {
+      "file": "sway.webm",
+      "label": "摇摆舞",
+      "sourceFile": "轻快摇摆舞.webm",
+      "sha256": "c621d00e1b959b991df8fc420e409b569e768fad7f75d1fb489375d101fee630",
+      "bytes": 542928
+    },
+    "stretch": {
+      "file": "stretch.webm",
+      "label": "伸懒腰",
+      "sourceFile": "超大伸懒腰.webm",
+      "sha256": "0ac66d918cc5efd49be1273c3830de73eae5f9bdcd5fcb968d1b2f9b487705ad",
+      "bytes": 396987
+    },
+    "snack": {
+      "file": "snack.webm",
+      "label": "吃零食",
+      "sourceFile": "大口吃零食.webm",
+      "sha256": "fdacb534a828b0c669f22a54e8da9bb9b5d731e0132dd5ea946f7badc9229a39",
+      "bytes": 806998
+    },
+    "cat": {
+      "file": "cat.webm",
+      "label": "撸猫",
+      "sourceFile": "撸猫.webm",
+      "sha256": "068d84e944dfce17de1c5a2ee2a4bc391e2848dad88a7df4877ebf23cf38bcec",
+      "bytes": 348432
+    },
+    "magic": {
+      "file": "magic.webm",
+      "label": "变朵花",
+      "sourceFile": "凭空生花.webm",
+      "sha256": "d1c336bc54c57a282bec180859c7b7b58912b70b5bca7b2f49495cd30cc7d5d6",
+      "bytes": 620252
+    },
+    "bubbles": {
+      "file": "bubbles.webm",
+      "label": "吐泡泡",
+      "sourceFile": "鲸鱼吐泡泡特效.webm",
+      "sha256": "d64d02059dc1602f7de5aa3135d381351363f021b2bceed47655db322cc71db3",
+      "bytes": 452096
+    },
+    "shy": {
+      "file": "shy.webm",
+      "label": "害羞",
+      "sourceFile": "点击回应-害羞惊讶.webm",
+      "sha256": "a04968bbc46d1ebea07f81e5dabd93b0b67a9d07f1371e9887b33075134ad00d",
+      "bytes": 538281
+    },
+    "happy": {
+      "file": "happy.webm",
+      "label": "开心",
+      "sourceFile": "点击回应-开心跃动.webm",
+      "sha256": "86dcb0c3dd7b651de9c107e927d57a5c4224599101706dbdcc782fa48bcd0ad7",
+      "bytes": 538110
+    },
+    "game": {
+      "file": "game.webm",
+      "label": "玩魔方",
+      "sourceFile": "原地专心玩魔方.webm",
+      "sha256": "ad54da175ba86b19a84b73b3169fb418b2df016560bb274283f200aca351e712",
+      "bytes": 442948
+    },
+    "flute": {
+      "file": "flute.webm",
+      "label": "吹笛子",
+      "sourceFile": "吹笛子.webm",
+      "sha256": "9c8b754a3256778cddd88fbb073b649d5b1d2e5f96e70231bc2c3bee06fa7c78",
+      "bytes": 768350
+    },
+    "reading": {
+      "file": "reading.webm",
+      "label": "做笔记",
+      "sourceFile": "轻快记录.webm",
+      "sha256": "1da04162fed5cd52bd4a6a6027a6902f50bda0969d34465bc2d332cf3679bbd5",
+      "bytes": 447726
+    },
+    "look": {
+      "file": "look.webm",
+      "label": "张望",
+      "sourceFile": "东张西望.webm",
+      "sha256": "a20ed02ccc5e72075a3ca83fabb57d9aac5ded699f52d00ec6de72069799fcd5",
+      "bytes": 427005
+    },
+    "whale": {
+      "file": "whale.webm",
+      "label": "小鲸鱼",
+      "sourceFile": "蓝鲸现世.webm",
+      "sha256": "ed72f0ede7c6cd9482d44aa31002214d461b833c456f3ea40a52c3a0ddc20230",
+      "bytes": 482896
+    }
+  }
+}

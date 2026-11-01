@@ -1,0 +1,11 @@
+{
+  "task": "WORLD-MODEL-11",
+  "source": "assets/lan-3d-model-design-v2/model-trial-v1/lan-b-multiview-game-preview.glb",
+  "runtime": "lan-v2-game.glb",
+  "sha256": "bee05205aadf9dcb0b92c2ff739a1c2be323fb834391c57949d613a7a08b6824",
+  "bytes": 9213768,
+  "triangles": 199999,
+  "skeleton": false,
+  "animations": false,
+  "license_state": "internal_preview_only_public_asset_rights_unverified"
+}

@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8" />
+<title>角色层 · 鲸鱼娘</title>
+<style>
+  html, body { margin:0; height:100%; background:transparent; overflow:hidden; }
+  #wrap { position:fixed; inset:0; }
+  #ch { position:absolute; left:50%; bottom:0; transform-origin:50% 100%; }
+  #ch { transform-origin: 50% 100%; transition: opacity .28s ease; opacity:.55; will-change: transform; }
+  body.hot #ch { opacity:1; }
+  /* 萌娘模式：缩小到桌面宠物尺寸 */
+  body.roam #ch { max-height: 40vh; opacity: 1; }
+  #fx { position:fixed; inset:0; pointer-events:none; overflow:hidden; }
+  .heart { position:absolute; font-size:22px; animation: floatUp 1.6s ease-out forwards; }
+  @keyframes floatUp {
+    0%   { opacity:0; transform: translateY(0) scale(.6); }
+    20%  { opacity:1; }
+    100% { opacity:0; transform: translateY(-110px) scale(1.15); }
+  }
+</style>
+</head>
+<body>
+<div id="wrap"><img id="ch" alt="" /></div>
+<div id="fx"></div>
+
+<script>
+/*
+ * 鲸鱼娘角色层（2.5D 伪 Live2D）
+ * API 与 Live2D 版保持一致：
+ *   await Character.ready
+ *   Character.setEmotion(name)   happy|sad|angry|surprised|shy|calm|sleepy|thinking
+ *   Character.playMotion(name)   idle|nod|bounce
+ *   Character.lookAt(x, y)
+ *   Character.speak(base64Mp3)   播放 + 身体随音量起伏
+ *   Character.stopSpeaking()
+ */
+window.Character = (function () {
+  const img = document.getElementById("ch");
+  const fx = document.getElementById("fx");
+  let audioEl, audioCtx, analyser, speaking = false, raf = 0;
+  let emotion = "calm";
+  let t0 = performance.now();
+  let look = { x: 0, y: 0 };      // -1..1
+  let energy = 0;                  // 说话音量 0..1
+  let pop = 0;                     // 情绪弹跳衰减
+
+  const EMO = {
+    happy:     { tint: 0xfff3c4, pop: 1.0, hearts: "💙" },
+    sad:       { tint: 0xc9d6ff, pop: 0.3 },
+    angry:     { tint: 0xffc9c9, pop: 0.7 },
+    surprised: { tint: 0xffffff, pop: 1.2 },
+    shy:       { tint: 0xffd9e6, pop: 0.5, hearts: "💗" },
+    sleepy:    { tint: 0xbfc7e0, pop: 0.15 },
+    thinking:  { tint: 0xd8e6ff, pop: 0.3 },
+    calm:      { tint: 0xffffff, pop: 0 },
+  };
+
+  function spawnHearts(ch) {
+    for (let i = 0; i < 3; i++) {
+      const s = document.createElement("div");
+      s.className = "heart";
+      s.textContent = ch;
+      s.style.left = (30 + Math.random() * 40) + "%";
+      s.style.bottom = (28 + Math.random() * 18) + "%";
+      s.style.animationDelay = (i * 0.14) + "s";
+      fx.appendChild(s);
+      setTimeout(() => s.remove(), 2100);
+    }
+  }
+
+  function setEmotion(name) {
+    const e = EMO[name] ? name : "calm";
+    emotion = e;
+    const cfg = EMO[e];
+    pop = cfg.pop;
+    // 注意：透明 PNG 上不要用 drop-shadow，会在 alpha 边缘产生描边伪影
+    img.style.filter = e === "calm" ? "none" : "brightness(1.06) saturate(1.12)";
+    if (cfg.hearts) spawnHearts(cfg.hearts);
+    return emotion;
+  }
+
+  function ensureAudio() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === "suspended") audioCtx.resume();
+    if (!audioEl) {
+      audioEl = new Audio();
+      audioEl.crossOrigin = "anonymous";
+      const src = audioCtx.createMediaElementSource(audioEl);
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 512;
+      analyser.smoothingTimeConstant = 0.6;
+      src.connect(analyser);
+      src.connect(audioCtx.destination);
+    }
+  }
+
+  const buf = new Uint8Array(512);
+  function loop() {
+    const t = (performance.now() - t0) / 1000;
+    // 呼吸
+    const breath = Math.sin(t * 1.6) * 0.012;
+    // 摆动
+    const sway = Math.sin(t * 0.9) * 1.1;
+    // 说话能量
+    if (speaking && analyser) {
+      analyser.getByteTimeDomainData(buf);
+      let sum = 0;
+      for (let i = 0; i < buf.length; i++) { const d = (buf[i] - 128) / 128; sum += d * d; }
+      energy = energy * 0.7 + Math.min(1, Math.sqrt(sum / buf.length) * 5) * 0.3;
+    } else {
+      energy *= 0.9;
+    }
+    if (pop > 0) pop *= 0.94;
+
+    const bob = energy * 5;                       // 说话上下起伏
+    const tiltX = look.x * 3.2;                   // 视线倾斜
+    const tiltY = look.y * 2.0;
+    const popScale = 1 + pop * 0.035;
+
+    // 漫游：缓动靠近目标 + 落地弹跳
+    if (roaming) {
+      pos.x += (target.x - pos.x) * 0.035;
+      pos.y += (target.y - pos.y) * 0.05;
+      if (Math.abs(target.x - pos.x) < 0.01 && Math.abs(target.y - pos.y) < 0.01) {
+        if (hop > 0.02) hop *= 0.86; else hop = 0;
+      }
+    }
+    const hopY = roaming ? Math.abs(Math.sin(t * 6.5)) * 10 * (hop > 0.02 ? 1 : 0.25) : 0;
+    const leftPct = roaming ? pos.x * 100 : 50;
+    const bottomPct = roaming ? (1 - pos.y) * 100 : 0;
+    img.style.left = leftPct + "%";
+    img.style.bottom = bottomPct + "%";
+    img.style.transform =
+      `translate(-50%, ${-(bob + hopY)}px) rotate(${sway + tiltX}deg) skewX(${tiltX * 0.35}deg) ` +
+      `scale(${popScale}, ${popScale + breath}) translateY(${tiltY}px)`;
+    raf = requestAnimationFrame(loop);
+  }
+
+  async function speak(b64) {
+    ensureAudio();
+    stopSpeaking();
+    audioEl.src = "data:audio/mpeg;base64," + b64;
+    speaking = true;
+    try { await audioEl.play(); } catch (e) { speaking = false; }
+    audioEl.onended = () => { speaking = false; energy = 0; };
+  }
+
+  function stopSpeaking() {
+    speaking = false; energy = 0;
+    if (audioEl) { try { audioEl.pause(); audioEl.currentTime = 0; } catch (e) {} }
+  }
+
+  // ── 漫游（你的世界：满屏乱跑）──
+  let roaming = false, roamTimer = 0;
+  let pos = { x: 0.5, y: 1.0 };   // 归一化位置（x:0-1, y:0-1 底部对齐）
+  let target = { x: 0.5, y: 1.0 };
+  let hop = 0;                     // 跳跃偏移
+
+  function pickTarget() {
+    target.x = 0.12 + Math.random() * 0.76;
+    target.y = 0.72 + Math.random() * 0.26;
+    hop = 1;
+  }
+
+  const IMG_WORLD = "./whale.png";
+  const IMG_DESKTOP = "./whale-chibi.png";
+  function setMode(mode) {
+    const src = (mode === "desktop") ? IMG_DESKTOP : IMG_WORLD;
+    const el = document.getElementById("ch");
+    if (el && !el.src.endsWith(src.slice(2))) el.src = src;
+    setRoam(mode === "desktop");
+    return src;
+  }
+
+  function setRoam(on) {
+    roaming = !!on;
+    document.body.classList.toggle("roam", roaming);
+    if (roaming) {
+      pickTarget();
+      clearInterval(roamTimer);
+      roamTimer = setInterval(() => { if (roaming && !speaking) pickTarget(); }, 4200 + Math.random() * 3000);
+    } else {
+      clearInterval(roamTimer);
+      pos.x = 0.5; pos.y = 1.0; target.x = 0.5; target.y = 1.0; hop = 0;
+    }
+    return roaming;
+  }
+
+  function lookAt(x, y) {
+    const w = window.innerWidth, h = window.innerHeight;
+    look.x = Math.max(-1, Math.min(1, (x - w / 2) / (w / 2)));
+    look.y = Math.max(-1, Math.min(1, (y - h / 2) / (h / 2)));
+  }
+
+  const ready = (async function init() {
+    // 图片路径由 URL 参数指定，默认用项目内的鲸鱼娘
+    const params = new URLSearchParams(location.search);
+    const src = params.get("src") || "./whale.png";
+    img.src = src;
+    await new Promise((res, rej) => { img.onload = res; img.onerror = () => rej(new Error("图片加载失败: " + src)); });
+    // 适配高度
+    function fit() {
+      const maxH = window.innerHeight * 0.96;
+      const maxW = window.innerWidth * 0.96;
+      const s = Math.min(maxH / img.naturalHeight, maxW / img.naturalWidth);
+      img.style.height = (img.naturalHeight * s) + "px";
+      img.style.width = "auto";
+    }
+    fit();
+    window.addEventListener("resize", fit);
+
+    // 鼠标跟随 + 悬停穿透
+    let hoverOver = false, lastSent = 0;
+    window.addEventListener("mousemove", (e) => {
+      lookAt(e.clientX, e.clientY);
+      const r = img.getBoundingClientRect();
+      const over = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+      if (over !== hoverOver || Date.now() - lastSent > 800) {
+        hoverOver = over; lastSent = Date.now();
+        document.body.classList.toggle("hot", over);
+        if (window.malfoyHost && window.malfoyHost.setHover) window.malfoyHost.setHover(over);
+      }
+    });
+
+    // 世界模式：desktop=漫游，world=静止
+    if (window.malfoyHost && window.malfoyHost.onCharacterMode) {
+      window.malfoyHost.onCharacterMode((p) => {
+        setMode(p && p.mode === "desktop" ? "desktop" : "world");
+      });
+    }
+
+    // 主进程推送
+    if (window.malfoyHost && window.malfoyHost.onCharacterSay) {
+      window.malfoyHost.onCharacterSay((p) => {
+        if (!p) return;
+        if (p.emo) setEmotion(p.emo);
+        if (p.audio) speak(p.audio);
+      });
+    }
+
+    // 点击反应
+    img.addEventListener("click", () => {
+      pop = 0.8;
+      spawnHearts("💙");
+      if (window.malfoyHost && window.malfoyHost.setHover) {}
+    });
+
+    loop();
+    document.title = "WHALE-READY";
+    return true;
+  })();
+
+  return {
+    ready,
+    setEmotion,
+    getEmotion: () => emotion,
+    playMotion: (n) => { pop = n === "nod" ? 1 : 0.6; },
+    lookAt,
+    setRoam,
+    setMode,
+    get roaming() { return roaming; },
+    speak,
+    stopSpeaking,
+    get speaking() { return speaking; },
+    get energy() { return energy; },
+  };
+})();
+</script>
+</body>
+</html>

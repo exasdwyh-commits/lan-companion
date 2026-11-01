@@ -1,0 +1,93 @@
+{
+  "_note": "这是一份完整 schema 的示例，不参与运行。它演示了剧情片段、时间码字幕、分支选择、多段待机循环与相册解锁怎么填。想看效果就把素材补齐后另存为 pack.json。",
+
+  "format": 1,
+  "name": "示例角色",
+  "persona": "用一两句话说清她的身份、语气、句子长短、什么话题会让她动摇。这段会被直接放进 system prompt，所以写给人看，不要写成一串形容词。",
+
+  "greeting": ["一天里第一次见面说的话。"],
+  "touches": ["被点一下时的反应。写 3–6 条，会随机挑。"],
+  "idles": ["长时间没人理时偶尔冒出来的一句。"],
+
+  "addresses": [
+    { "affinity": 0, "call": "转校生" },
+    { "affinity": 20, "call": "你" },
+    { "affinity": 40, "call": "笨蛋" }
+  ],
+
+  "scene": {
+    "id": "sofa",
+    "name": "公共休息室 · 沙发",
+    "still": "anchor-sofa.jpg",
+    "ambient": ["ambient-sofa-a.mp4", "ambient-sofa-a.mp4", "ambient-sofa-b.mp4"],
+    "actions": ["idle-a.mp4", "idle-b.mp4"],
+    "touch": "touch.mp4",
+    "sleep": "sleep.mp4",
+    "sleepStill": "sleep-sofa.jpg",
+    "sleepEndAt": 5.0
+  },
+
+  "clips": [
+    {
+      "id": "1-1",
+      "file": "story-1-1.mp4",
+      "caps": [
+        { "from": 8.2, "to": 11.95, "zh": "入学第三天，就敢闯禁书区。", "en": "Third day here." },
+        { "from": 12.45, "to": 14.8, "zh": "胆子不小啊。", "en": "Bold." }
+      ]
+    },
+    {
+      "id": "1-2",
+      "file": "story-1-2.mp4",
+      "caps": [{ "from": 4.0, "to": 8.15, "zh": "这里不是你该来的地方。", "en": "You shouldn't be here." }]
+    },
+    { "id": "1-2A", "file": "story-1-2A.mp4", "caps": [{ "from": 2.6, "to": 4.9, "zh": "聪明。保持下去。" }] },
+    { "id": "1-2B", "file": "story-1-2B.mp4", "caps": [{ "from": 2.0, "to": 4.5, "zh": "……那你最好在天亮之前忘掉。" }] }
+  ],
+
+  "chapters": [
+    {
+      "id": "ch1",
+      "title": "第一章 · 午夜禁书区",
+      "titleEn": "The Restricted Section",
+      "unlockAt": 0,
+      "reward": 10,
+      "flow": [
+        { "clip": "1-1" },
+        { "clip": "1-2", "then": "choice" },
+        { "branch": { "A": "1-2A", "B": "1-2B" } }
+      ],
+      "choices": {
+        "prompt": "她在等你的回答",
+        "a": "什么都没看到。",
+        "b": "你戒指上的蛇。"
+      }
+    },
+    {
+      "id": "ch2",
+      "title": "第二章 · 雪夜天文塔",
+      "unlockAt": 40,
+      "flow": [],
+      "pending": "敬请期待"
+    }
+  ],
+
+  "album": [
+    { "id": "p1", "file": "photo-1.jpg", "unlockAt": 10, "zh": "……拍好了。不许删。", "date": "26.10.31", "where": "禁书区" },
+    { "id": "p2", "file": "photo-2.jpg", "unlockAt": 20, "zh": "这张不许给任何人看。", "date": "26.11.02", "where": "书架之间" },
+    { "id": "p3", "file": "photo-3.jpg", "unlockAt": 35, "zh": "别习惯了。", "date": "26.11.14", "where": "村里的小酒馆" },
+    { "id": "p4", "file": "photo-4.jpg", "unlockAt": 50, "zh": "你又在拍。", "date": "26.11.30", "where": "公共休息室" },
+    { "id": "p5", "file": "photo-5.jpg", "unlockAt": 65, "zh": "茶是我的。人……也可以算你的。", "date": "26.12.21", "where": "壁炉边" },
+    { "id": "p6", "file": "photo-6.jpg", "unlockAt": 80, "zh": "领带。又歪了。过来。", "date": "26.12.31", "where": "天文塔" }
+  ],
+
+  "affection": {
+    "max": 100,
+    "touch": 1,
+    "touchCooldown": 45,
+    "dailyVisit": 3,
+    "chat": 1,
+    "chatCooldown": 20,
+    "chapterReward": 10
+  }
+}

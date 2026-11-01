@@ -1,0 +1,704 @@
+{
+  "generatedAt": "2026-10-30T21:59:18+08:00",
+  "scope": "static checks and repository/asset/package inventory; no runtime acceptance",
+  "root": "/Users/exasdwyh/Documents/VScode/vidu/desktop-companion",
+  "primary": {
+    "source": "MALFOY-ENGINE",
+    "buildScript": "scripts/build-companion.sh",
+    "app": "dist/DeepWhale.app",
+    "bundleId": "com.koudouma.deepwhale",
+    "runtimeDonor": "SmartCompanion.app",
+    "page": "MALFOY-ENGINE/web/live2d/world.html"
+  },
+  "reference": {
+    "source": "Sources/PetDesk",
+    "buildScript": "scripts/build-whale-video.sh",
+    "app": "dist/WhaleVideoCompanion.app",
+    "assets": "assets/whale-video-test"
+  },
+  "git": {
+    "branch": "main",
+    "head": "983e80a",
+    "remoteCount": 0
+  },
+  "contentCounts": {
+    "album": 20,
+    "chapters": 1,
+    "clips": 6,
+    "songs": 2
+  },
+  "referenceAssetFiles": 29,
+  "referenceBundleIntegrity": [
+    {
+      "path": "album-01-tide-meeting.jpg",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "album-02-window-morning.jpg",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "album-03-rain-library.jpg",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "album-04-starlight-balcony.jpg",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "album-05-spring-petals.jpg",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "album-06-summer-whisper.jpg",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "album-07-autumn-maple.jpg",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "album-08-winter-snow.jpg",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "album-09-moon-jellyfish.jpg",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "album-10-forest-spirit.jpg",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "album-11-city-streetstyle.jpg",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "album-12-summer-swim.jpg",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "album-13-midnight-fashion.jpg",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "album-14-white-dance.jpg",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "album-15-cozy-wardrobe.jpg",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "album-16-morning-yoga.jpg",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "album-17-kiss-reward.jpg",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "album-18-after-bath.jpg",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "album-19-hot-spring.jpg",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "album-20-anniversary-dress.jpg",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "background.png",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "bed-sleep-loop.mp4",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "character.json",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "idle-matched-clean.mov",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "pack.json",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "quiet-idle-loop.mov",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "songs/d9205056.m4a",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "songs/tide.m4a",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "touch-matched-clean.mov",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    }
+  ],
+  "electronBundleIntegrity": [
+    {
+      "path": "main.js",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "preload.js",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "web/data.js",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "web/live2d/world.html",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "web/live2d/chibi-motion.js",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "web/live2d/chibi-renderer.js",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "web/live2d/chibi-texture.js",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "web/live2d/chibi-performance.js",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "web/live2d/chibi-atlas.js",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "web/live2d/chibi-face.js",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    },
+    {
+      "path": "web/live2d/chibi-presence.js",
+      "sourceExists": true,
+      "packagedExists": true,
+      "matches": true
+    }
+  ],
+  "whaleContentInElectron": {
+    "source": {
+      "packCount": 0,
+      "albumJpegCount": 0,
+      "tideAudioCount": 0
+    },
+    "packaged": {
+      "packCount": 0,
+      "albumJpegCount": 0,
+      "tideAudioCount": 0
+    }
+  },
+  "album": {
+    "pngCounts": {
+      "originals": 26,
+      "model-v2": 14,
+      "final-v3": 6
+    },
+    "manifests": {
+      "generation.json": {
+        "items": 26,
+        "missingOriginals": [
+          "model-v2/05-spring-petals.png",
+          "model-v2/06-summer-whisper.png",
+          "model-v2/10-forest-spirit.png",
+          "model-v2/11-city-streetstyle.png",
+          "model-v2/12-summer-swim.png",
+          "model-v2/17-kiss-reward.png",
+          "model-v2/18-after-bath.png",
+          "model-v2/19-hot-spring.png",
+          "model-v2/23-backless-moon.png",
+          "model-v2/24-active-curves.png",
+          "model-v2/25-satin-evening.png",
+          "model-v2/26-seaside-shoulders.png"
+        ],
+        "missingRuntime": [
+          "../whale-video-test/album-01-tide-meeting-v2.jpg",
+          "../whale-video-test/album-02-window-morning-v2.jpg",
+          "../whale-video-test/album-03-rain-library-v2.jpg",
+          "../whale-video-test/album-04-starlight-balcony-v2.jpg",
+          "../whale-video-test/album-05-spring-petals-v2.jpg",
+          "../whale-video-test/album-06-summer-whisper-v2.jpg",
+          "../whale-video-test/album-07-autumn-maple-v2.jpg",
+          "../whale-video-test/album-08-winter-snow-v2.jpg",
+          "../whale-video-test/album-09-moon-jellyfish-v2.jpg",
+          "../whale-video-test/album-10-forest-spirit-v2.jpg",
+          "../whale-video-test/album-11-city-streetstyle-v2.jpg",
+          "../whale-video-test/album-12-summer-swim-v2.jpg",
+          "../whale-video-test/album-13-midnight-fashion-v2.jpg",
+          "../whale-video-test/album-14-white-dance-v2.jpg",
+          "../whale-video-test/album-15-cozy-wardrobe-v2.jpg",
+          "../whale-video-test/album-16-morning-yoga-v2.jpg",
+          "../whale-video-test/album-17-kiss-reward-v2.jpg",
+          "../whale-video-test/album-18-after-bath-v2.jpg",
+          "../whale-video-test/album-19-hot-spring-v2.jpg",
+          "../whale-video-test/album-20-anniversary-dress-v2.jpg",
+          "../whale-video-test/album-21-beach-shorts-v2.jpg",
+          "../whale-video-test/album-22-black-silk-silhouette-v2.jpg",
+          "../whale-video-test/album-23-backless-moon-v2.jpg",
+          "../whale-video-test/album-24-active-curves-v2.jpg",
+          "../whale-video-test/album-25-satin-evening-v2.jpg",
+          "../whale-video-test/album-26-seaside-shoulders-v2.jpg"
+        ]
+      },
+      "generation-v3.json": {
+        "items": 26,
+        "missingOriginals": [
+          "final-v3/05-spring-petals.png",
+          "final-v3/08-winter-snow.png",
+          "final-v3/09-moon-jellyfish.png",
+          "final-v3/10-forest-spirit.png",
+          "final-v3/11-city-streetstyle.png",
+          "final-v3/12-summer-swim.png",
+          "final-v3/13-midnight-fashion.png",
+          "final-v3/14-white-dance.png",
+          "final-v3/15-cozy-wardrobe.png",
+          "final-v3/16-morning-yoga.png",
+          "final-v3/17-kiss-reward.png",
+          "final-v3/18-after-bath.png",
+          "final-v3/19-hot-spring.png",
+          "final-v3/20-anniversary-dress.png",
+          "final-v3/21-beach-shorts.png",
+          "final-v3/22-black-silk-silhouette.png",
+          "final-v3/23-backless-moon.png",
+          "final-v3/24-active-curves.png",
+          "final-v3/25-satin-evening.png",
+          "final-v3/26-seaside-shoulders.png"
+        ],
+        "missingRuntime": [
+          "../whale-video-test/album-01-tide-meeting-v3.jpg",
+          "../whale-video-test/album-02-window-morning-v3.jpg",
+          "../whale-video-test/album-03-rain-library-v3.jpg",
+          "../whale-video-test/album-04-starlight-balcony-v3.jpg",
+          "../whale-video-test/album-05-spring-petals-v3.jpg",
+          "../whale-video-test/album-06-summer-whisper-v3.jpg",
+          "../whale-video-test/album-07-autumn-maple-v3.jpg",
+          "../whale-video-test/album-08-winter-snow-v3.jpg",
+          "../whale-video-test/album-09-moon-jellyfish-v3.jpg",
+          "../whale-video-test/album-10-forest-spirit-v3.jpg",
+          "../whale-video-test/album-11-city-streetstyle-v3.jpg",
+          "../whale-video-test/album-12-summer-swim-v3.jpg",
+          "../whale-video-test/album-13-midnight-fashion-v3.jpg",
+          "../whale-video-test/album-14-white-dance-v3.jpg",
+          "../whale-video-test/album-15-cozy-wardrobe-v3.jpg",
+          "../whale-video-test/album-16-morning-yoga-v3.jpg",
+          "../whale-video-test/album-17-kiss-reward-v3.jpg",
+          "../whale-video-test/album-18-after-bath-v3.jpg",
+          "../whale-video-test/album-19-hot-spring-v3.jpg",
+          "../whale-video-test/album-20-anniversary-dress-v3.jpg",
+          "../whale-video-test/album-21-beach-shorts-v3.jpg",
+          "../whale-video-test/album-22-black-silk-silhouette-v3.jpg",
+          "../whale-video-test/album-23-backless-moon-v3.jpg",
+          "../whale-video-test/album-24-active-curves-v3.jpg",
+          "../whale-video-test/album-25-satin-evening-v3.jpg",
+          "../whale-video-test/album-26-seaside-shoulders-v3.jpg"
+        ]
+      }
+    }
+  },
+  "localDependencyExists": {
+    "SmartCompanion.app": true,
+    ".runtime/venv-tts/bin/python": true,
+    ".runtime/models/qwen3-tts": true
+  },
+  "documentSnapshots": 26,
+  "checks": [
+    {
+      "name": "project schema",
+      "passed": true
+    },
+    {
+      "name": "exists docs/project/README.md",
+      "passed": true
+    },
+    {
+      "name": "exists docs/project/PRODUCT.md",
+      "passed": true
+    },
+    {
+      "name": "exists docs/project/ARCHITECTURE.md",
+      "passed": true
+    },
+    {
+      "name": "exists docs/project/STATUS.md",
+      "passed": true
+    },
+    {
+      "name": "exists docs/project/DEVELOPMENT.md",
+      "passed": true
+    },
+    {
+      "name": "exists docs/project/ASSETS.md",
+      "passed": true
+    },
+    {
+      "name": "exists docs/project/TASKS.md",
+      "passed": true
+    },
+    {
+      "name": "exists docs/project/CHANGELOG.md",
+      "passed": true
+    },
+    {
+      "name": "exists docs/project/ARCHIVE.md",
+      "passed": true
+    },
+    {
+      "name": "exists docs/project/updates/TEMPLATE.md",
+      "passed": true
+    },
+    {
+      "name": "exists docs/project/CHIBI-MOTION.md",
+      "passed": true
+    },
+    {
+      "name": "exists MALFOY-ENGINE",
+      "passed": true
+    },
+    {
+      "name": "exists scripts/build-companion.sh",
+      "passed": true
+    },
+    {
+      "name": "exists MALFOY-ENGINE/web/live2d/world.html",
+      "passed": true
+    },
+    {
+      "name": "exists Sources/PetDesk",
+      "passed": true
+    },
+    {
+      "name": "exists scripts/build-whale-video.sh",
+      "passed": true
+    },
+    {
+      "name": "exists assets/whale-video-test",
+      "passed": true
+    },
+    {
+      "name": "exists assets/whale-chibi-reference-2026-10-30",
+      "passed": true
+    },
+    {
+      "name": "reference pack file references",
+      "passed": true
+    },
+    {
+      "name": "Electron chibi sample",
+      "passed": true
+    },
+    {
+      "name": "chibi texture source/runtime match",
+      "passed": true
+    },
+    {
+      "name": "Electron video idle-smile.webm",
+      "passed": true
+    },
+    {
+      "name": "Electron video closeup-idle.webm",
+      "passed": true
+    },
+    {
+      "name": "Electron video action-heart.webm",
+      "passed": true
+    },
+    {
+      "name": "Electron video sleep.webm",
+      "passed": true
+    },
+    {
+      "name": "26 document snapshots",
+      "passed": true
+    },
+    {
+      "name": "snapshot hash AGENTS.md",
+      "passed": true
+    },
+    {
+      "name": "snapshot hash README.md",
+      "passed": true
+    },
+    {
+      "name": "snapshot hash desktop-companion/CHARACTER-PIPELINE-BRIEF.md",
+      "passed": true
+    },
+    {
+      "name": "snapshot hash desktop-companion/DUAL-WORLD.md",
+      "passed": true
+    },
+    {
+      "name": "snapshot hash desktop-companion/MALFOY-APP-LESSONS.md",
+      "passed": true
+    },
+    {
+      "name": "snapshot hash desktop-companion/CHARACTER-SPEC-01-DEEPSEEK-WHALE.md",
+      "passed": true
+    },
+    {
+      "name": "snapshot hash desktop-companion/SHELL-DECISION.md",
+      "passed": true
+    },
+    {
+      "name": "snapshot hash desktop-companion/PRODUCT-PLAN.md",
+      "passed": true
+    },
+    {
+      "name": "snapshot hash desktop-companion/INTEGRATION-REPORT.md",
+      "passed": true
+    },
+    {
+      "name": "snapshot hash desktop-companion/YUNQUE-PIPELINE.md",
+      "passed": true
+    },
+    {
+      "name": "snapshot hash desktop-companion/README.md",
+      "passed": true
+    },
+    {
+      "name": "snapshot hash desktop-companion/MALFOY-LESSONS.md",
+      "passed": true
+    },
+    {
+      "name": "snapshot hash desktop-companion/WORKBUDDY-FIXES.md",
+      "passed": true
+    },
+    {
+      "name": "snapshot hash desktop-companion/MUSE-LAYERED-HANDOFF.md",
+      "passed": true
+    },
+    {
+      "name": "snapshot hash desktop-companion/MALFOY-INTEGRATION-REVIEW.md",
+      "passed": true
+    },
+    {
+      "name": "snapshot hash desktop-companion/PET-DESK.md",
+      "passed": true
+    },
+    {
+      "name": "snapshot hash desktop-companion/MALFOY-TO-WHALE.md",
+      "passed": true
+    },
+    {
+      "name": "snapshot hash desktop-companion/OPERATION.md",
+      "passed": true
+    },
+    {
+      "name": "snapshot hash desktop-companion/ARCHITECTURE-ROADMAP.md",
+      "passed": true
+    },
+    {
+      "name": "snapshot hash desktop-companion/LIVE2D-INTEGRATION.md",
+      "passed": true
+    },
+    {
+      "name": "snapshot hash desktop-companion/MALFOY-SOURCE-ANALYSIS.md",
+      "passed": true
+    },
+    {
+      "name": "snapshot hash desktop-companion/DEEPSEA-SAMPLE.md",
+      "passed": true
+    },
+    {
+      "name": "snapshot hash desktop-companion/docs/DEVELOPMENT.md",
+      "passed": true
+    },
+    {
+      "name": "snapshot hash desktop-companion/docs/ASSETS.md",
+      "passed": true
+    },
+    {
+      "name": "snapshot hash desktop-companion/assets/whale-video-test/README.md",
+      "passed": true
+    },
+    {
+      "name": "snapshot hash desktop-companion/assets/whale-album-2026-10-29/README.md",
+      "passed": true
+    },
+    {
+      "name": "origin-clean embedded texture matches source",
+      "passed": true
+    },
+    {
+      "name": "current documentation link targets",
+      "passed": true
+    },
+    {
+      "name": "node available for syntax checks",
+      "passed": true
+    },
+    {
+      "name": "JS syntax main.js",
+      "passed": true
+    },
+    {
+      "name": "JS syntax preload.js",
+      "passed": true
+    },
+    {
+      "name": "JS syntax web/data.js",
+      "passed": true
+    },
+    {
+      "name": "JS syntax web/live2d/chibi-motion.js",
+      "passed": true
+    },
+    {
+      "name": "JS syntax web/live2d/chibi-renderer.js",
+      "passed": true
+    },
+    {
+      "name": "JS syntax web/live2d/chibi-texture.js",
+      "passed": true
+    },
+    {
+      "name": "JS syntax web/live2d/chibi-performance.js",
+      "passed": true
+    },
+    {
+      "name": "JS syntax web/live2d/chibi-atlas.js",
+      "passed": true
+    },
+    {
+      "name": "JS syntax web/live2d/chibi-face.js",
+      "passed": true
+    },
+    {
+      "name": "JS syntax web/live2d/chibi-presence.js",
+      "passed": true
+    },
+    {
+      "name": "world inline script found",
+      "passed": true
+    },
+    {
+      "name": "world inline JS syntax 1",
+      "passed": true
+    },
+    {
+      "name": "shell syntax project.sh",
+      "passed": true
+    },
+    {
+      "name": "shell syntax build-companion.sh",
+      "passed": true
+    },
+    {
+      "name": "shell syntax build-whale-video.sh",
+      "passed": true
+    },
+    {
+      "name": "shell syntax build-pet.sh",
+      "passed": true
+    },
+    {
+      "name": "audit Python syntax",
+      "passed": true
+    }
+  ],
+  "staticCheckRequested": true,
+  "errors": [],
+  "warnings": [
+    "generation.json: 缺 12 个原图引用，导入前需选版/补齐（DW-03）。",
+    "generation-v3.json: 缺 20 个原图引用，导入前需选版/补齐（DW-03）。",
+    "相册已接 20 张，初版原图 26 张（DW-03）。",
+    "鲸鱼 pack/相册/剧情/歌曲尚未迁入当前双世界入口（DW-03/05）。",
+    "Electron 个人数据：本静态检查不运行聊天/记忆/工作；写入隔离改用 `bash scripts/check-electron-isolation.sh` 验收（DW-01）。",
+    "静态检查不验证窗口行为、模型/音色、视觉听感或公开发行条件。"
+  ]
+}

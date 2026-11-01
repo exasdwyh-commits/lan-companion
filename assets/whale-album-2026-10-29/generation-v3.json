@@ -1,0 +1,270 @@
+{
+  "name": "澜 · 二十六景",
+  "tool": "built-in image_gen",
+  "created": "2026-10-30",
+  "reference": "model-proportion-master-v3.png",
+  "basePrompt": "Use case: photorealistic-natural. Asset: a single premium 16:9 landscape desktop wallpaper, at least 1920x1080, no collage.\nInput reference role: the same ADULT woman aged 24; preserve recognizable face, long BLUE HAIR, delicate silver whale-fin ornaments, and the reference's tall refined runway-model body. Use the reference only for identity and silhouette, REPLACE its studio backdrop and costume with the requested scene and outfit.\nBody art direction: fictional character setting 170cm/45kg; approximately nine-head-tall fashion proportions, small refined adult head, narrow waist, visibly full bust shaped by supportive opaque tailoring, long slender arms, exceptionally long straight slim legs and fine ankles. Maintain coherent natural joints and adult anatomy. Chic mature presence, never juvenile. Avoid big-head short-body proportions, bulky silhouette, enlarged foreground thighs or squashed legs.\nPhotographic direction: true live-action human fashion photography, detailed eyes and natural skin texture, realistic fabrics, refined makeup, expensive elegant art direction. A full-length fashion lens perspective near waist height, usually 70–85mm, no wide-angle distortion or high-angle body compression. Keep the whole body and footwear in frame unless the scene explicitly requests a closer portrait. A large clear subject, roughly 78–88% frame height for full-body scenes, with some calm negative space for desktop icons. Keep a different convincing pose and environment per theme.\nConstraints: one adult woman only, same identity, no anime/cartoon/3D doll, no extra limbs or malformed hands, no text, logos, UI or watermark. Clothes fit the scene; no nudity or transparent intimate clothing.\nSpecific theme: ",
+  "masterPrompt": "Use case: identity-preserve. Asset: definitive full-body character model reference for a photorealistic adult companion's fashion wallpaper collection.\nReference image role: preserve this same woman's facial identity, blue hair, blue eyes, delicate silver whale-fin ornaments and blue-white-silver visual signature.\nPrimary request: redesign only her body proportions and fashion styling to match a glamorous runway model. She is unequivocally an adult woman aged 24. Character brief: height 170cm, fictional weight setting 45kg, fashion illustration-inspired approximately NINE-head-tall silhouette expressed in believable live-action photography. Small refined adult head relative to her full height, notably long femurs and shins, slender straight legs and ankles, narrow waist, slim arms, a noticeably full bust supported by expertly tailored clothing. Keep a natural coherent skeleton and adult face, no caricature.\nWardrobe: refined pale ice-blue couture fitted mini dress, silver ocean embroidery, tasteful sweetheart neckline, opaque structured fabric, silver elegant heels. The short hem exposes the long slim leg silhouette. Long blue hair falls down her back without hiding her waist. Subtle poised queenly confidence, elegant expression, one leg relaxed slightly forward, arms comfortably at her sides.\nComposition: entire figure from hair to shoes, standing tall with ample floor visible and no cropping; wide 16:9 gray-blue seamless studio backdrop, subject around 85% canvas height. A professional 85mm fashion photography perspective, camera near waist height; no high-angle compression, no wide-angle enlarged thighs. Photorealistic human skin and eyes, sophisticated luxury campaign lighting, fine fabric craftsmanship.\nConstraints: same adult identity as the reference; no childlike features, no anime illustration, no doll or 3D render, no extra people or limbs, no text, no watermark.",
+  "items": [
+    {
+      "id": "01-tide-meeting",
+      "title": "潮汐初遇",
+      "place": "日出海岸",
+      "caption": "海风吹过，今天的故事从这里开始。",
+      "unlockAt": 0,
+      "scenePrompt": "A confident full-body couture fashion portrait on pale stone beside a sunrise ocean. Outfit: fitted ice-blue silver-embroidered mini dress with a structured sweetheart bodice and silver heels, matching the reference design. Her long blue hair streams gently behind one shoulder, relaxed elongated stance, face toward camera. Pink horizon, blue water and subtle sea mist.",
+      "original": "final-v3/01-tide-meeting.png",
+      "runtime": "../whale-video-test/album-01-tide-meeting-v3.jpg"
+    },
+    {
+      "id": "02-window-morning",
+      "title": "校园晨光",
+      "place": "大学咖啡馆外",
+      "caption": "早八之前，先和你喝杯咖啡。",
+      "unlockAt": 0,
+      "scenePrompt": "Adult university lifestyle fashion at an open-air campus cafe in morning sun. Outfit: fitted white cropped knit top, light-blue short cardigan worn open, high-waisted navy pleated short skirt and white low-top sneakers; a small silver shoulder bag. She stands holding a takeaway cup in one hand, natural full-body street-style stance. Ivy-covered architecture and warm soft bokeh. Mature 24-year-old university fashion model.",
+      "original": "final-v3/02-window-morning.png",
+      "runtime": "../whale-video-test/album-02-window-morning-v3.jpg"
+    },
+    {
+      "id": "03-rain-library",
+      "title": "学院来信",
+      "place": "雨后书店",
+      "caption": "书里夹着一封还没寄出的信。",
+      "unlockAt": 0,
+      "scenePrompt": "A 24-year-old adult woman modeling a JK-inspired academy cosplay outfit for a fashion editorial outside a bookshop after rain: tailored navy blazer, opaque white blouse with blue ribbon tie, fitted navy plaid pleated skirt ending above the knee, knee-high navy socks and polished loafers. She holds one hardcover at her side, looks calmly at the viewer, stands fully upright in a long-legged natural pose. Wet pavement reflections, warm bookshop window, full-body view. Clearly adult costume performer.",
+      "original": "final-v3/03-rain-library.png",
+      "runtime": "../whale-video-test/album-03-rain-library-v3.jpg"
+    },
+    {
+      "id": "04-starlight-balcony",
+      "title": "电光序章",
+      "place": "未来都市天桥",
+      "caption": "下一幕，由我来掌控。",
+      "unlockAt": 0,
+      "scenePrompt": "Adult 24-year-old cosplay fashion editorial on a futuristic city pedestrian bridge at twilight. An original electromagnetic heroine-inspired academy costume: tailored beige sweater vest over an opaque fitted white short-sleeved blouse, gray pleated above-knee skirt, navy knee-high socks and brown loafers. Keep the same LONG BLUE HAIR and whale-fin ornaments; she is an adult original heroine, not a depiction of a teenage character. Confident full-body standing pose, one hand holds a small silver coin at waist level, a delicate blue electrical arc curls between coin and railing; elegant cinematic city lights.",
+      "original": "final-v3/04-starlight-balcony.png",
+      "runtime": "../whale-video-test/album-04-starlight-balcony-v3.jpg"
+    },
+    {
+      "id": "05-spring-petals",
+      "title": "云端来信",
+      "place": "晨光航站楼",
+      "caption": "下一站，想和你一起抵达。",
+      "unlockAt": 8,
+      "scenePrompt": "Premium flight-attendant uniform fashion editorial in a sunlit modern airport terminal. Tailored royal-blue short-sleeve jacket with a sculpted waist, white blouse, silver-blue neck scarf, matching above-knee pencil skirt, sheer neutral pantyhose and navy pumps, small blue pillbox hat with silver whale pin. No airline branding. She stands elegantly beside a compact carry-on, one hand on its handle, full-body confident adult model, planes softly visible through glass.",
+      "original": "final-v3/05-spring-petals.png",
+      "runtime": "../whale-video-test/album-05-spring-petals-v3.jpg"
+    },
+    {
+      "id": "06-summer-whisper",
+      "title": "白衣晴日",
+      "place": "明亮诊所走廊",
+      "caption": "忙完这一程，也要记得照顾自己。",
+      "unlockAt": 12,
+      "scenePrompt": "Adult 24-year-old nurse-uniform costume fashion editorial in a bright clean contemporary clinic corridor. Crisp opaque white fitted short-sleeved nurse tunic dress with pale blue piping, practical hem just above the knee, subtle silver whale brooch, simple white low-heel shoes. No real hospital branding, no medical procedure, no patients. She stands with a clipboard loosely at her side, friendly mature professional expression, full-body elegant long-legged silhouette. Soft daylight, polished minimal environment.",
+      "original": "final-v3/06-summer-whisper.png",
+      "runtime": "../whale-video-test/album-06-summer-whisper-v3.jpg"
+    },
+    {
+      "id": "07-autumn-maple",
+      "title": "主角登场",
+      "place": "秋日都市广场",
+      "caption": "这一场，我来做自己的主角。",
+      "unlockAt": 16,
+      "scenePrompt": "Strong leading-lady street fashion in an autumn city plaza, golden maple leaves. White fitted shirt with neckline casually open one button, short navy tailored skirt, sheer black pantyhose, sleek black knee boots, beige structured trench draped over shoulders. One confident walking step, arms relaxed, chin lifted slightly, composed powerful adult expression. Full-body luxury editorial with a long elegant silhouette, dramatic warm sidelighting.",
+      "original": "final-v3/07-autumn-maple.png",
+      "runtime": "../whale-video-test/album-07-autumn-maple-v3.jpg"
+    },
+    {
+      "id": "08-winter-snow",
+      "title": "初雪高定",
+      "place": "雪夜歌剧院",
+      "caption": "雪落下时，刚好轮到我登场。",
+      "unlockAt": 20,
+      "scenePrompt": "Winter couture fashion outside a softly lit opera house during gentle snowfall. A perfectly fitted icy-blue wool coat dress with narrow belted waist and above-knee hem, slim white gloves, pale-gray semi-opaque tights, elegant silver pumps and minimal silver ear ornaments. No puffy layers. She stands on a dry covered step, one hand lightly on a stone balustrade, poised regal adult expression, head-to-toe long slim figure. Warm lamps, navy evening sky.",
+      "original": "final-v3/08-winter-snow.png",
+      "runtime": "../whale-video-test/album-08-winter-snow-v3.jpg"
+    },
+    {
+      "id": "09-moon-jellyfish",
+      "title": "深海女王",
+      "place": "月海王庭",
+      "caption": "温柔与锋芒，我都拥有。",
+      "unlockAt": 25,
+      "scenePrompt": "Regal adult ocean queen fashion portrait in a moonlit stone terrace overlooking bioluminescent sea. Outfit: dark navy sculpted couture gown, fitted waist, structured modest neckline, silver wave embroidery, a single elegant thigh slit revealing one long slender leg and silver heel. Delicate silver whale-fin crown and blue gemstones, not oversized. Tall confident full-body stance, one hand on railing, calm commanding gaze. Blue luminescent jellyfish in distant water, cinematic silver rim light.",
+      "original": "final-v3/09-moon-jellyfish.png",
+      "runtime": "../whale-video-test/album-09-moon-jellyfish-v3.jpg"
+    },
+    {
+      "id": "10-forest-spirit",
+      "title": "逐光旅人",
+      "place": "萤火森林遗迹",
+      "caption": "这一次，向未知出发。",
+      "unlockAt": 30,
+      "scenePrompt": "Original adult fantasy adventurer cosplay in a forest ruin at dusk. Fitted white-and-silver short tunic dress, slim blue waist belt, practical silver bracers, navy thigh-high flat boots, small blue cape hanging behind shoulders, tasteful opaque costume. A small crystal lantern held at her side illuminates ferns and ancient stone. Standing in an easy grounded confident stance, entire elegant long-legged figure visible, same adult face and blue hair, fireflies.",
+      "original": "final-v3/10-forest-spirit.png",
+      "runtime": "../whale-video-test/album-10-forest-spirit-v3.jpg"
+    },
+    {
+      "id": "11-city-streetstyle",
+      "title": "周末出街",
+      "place": "滨海时尚街区",
+      "caption": "换上喜欢的衣服，去见喜欢的风景。",
+      "unlockAt": 35,
+      "scenePrompt": "Trendy adult university-age streetwear editorial on a coastal shopping street. Fitted white cropped tee, cropped light-blue fitted jacket, high-waisted navy denim mini skirt, white ankle socks and clean sneakers, small silver bag. Natural walking motion with long legs, one hand brushing blue hair behind a whale-fin ornament, confident lively expression. Full head-to-toe image with boutique windows and crisp soft sunshine.",
+      "original": "final-v3/11-city-streetstyle.png",
+      "runtime": "../whale-video-test/album-11-city-streetstyle-v3.jpg"
+    },
+    {
+      "id": "12-summer-swim",
+      "title": "浅海假日",
+      "place": "海景泳池",
+      "caption": "给自己放个晴天的假。",
+      "unlockAt": 40,
+      "scenePrompt": "Elegant adult resort swimwear fashion editorial. Outfit: opaque sculpted navy-and-white ONE-PIECE swimsuit, supportive fitted bodice with graceful neckline, small silver whale motif, pale-blue cover-up held loosely in one hand at her side. She stands fully upright barefoot beside an ocean-view pool, one leg relaxed forward, full-body elegant long slim legs and refined model proportions. Clear warm daylight, blue water reflections, natural confident adult expression, no intimate closeup.",
+      "original": "final-v3/12-summer-swim.png",
+      "runtime": "../whale-video-test/album-12-summer-swim-v3.jpg"
+    },
+    {
+      "id": "13-midnight-fashion",
+      "title": "夜色偏爱",
+      "place": "灯影长廊",
+      "caption": "今晚的灯光，刚好为你亮着。",
+      "unlockAt": 45,
+      "scenePrompt": "Sophisticated evening fashion in a warmly lit hotel gallery. Fitted navy mini dress with a sculpted neckline and fine silver buttons, slim ivory blazer draped over shoulders, sheer black pantyhose and elegant black pointed pumps, small silver clutch in one hand. Full-body adult fashion portrait with poised long-legged standing stance and subtle confident smile, refined amber wall lights, balanced attention to face and outfit.",
+      "original": "final-v3/13-midnight-fashion.png",
+      "runtime": "../whale-video-test/album-13-midnight-fashion-v3.jpg"
+    },
+    {
+      "id": "14-white-dance",
+      "title": "月光舞步",
+      "place": "海景舞蹈室",
+      "caption": "这一支舞，想先跳给你看。",
+      "unlockAt": 50,
+      "scenePrompt": "Adult ballet fashion editorial in an airy ocean-view dance studio. Fitted opaque white ballet leotard with graceful sweetheart upper seam, delicate pale-blue short chiffon wrap skirt, opaque white ballet tights, pale ballet slippers. Same long blue hair in a loose low braid, silver whale-fin clips. Full-body lyrical standing pose with one foot gently pointed touching the floor, one hand resting lightly on the barre and the other softly curved, natural grounded balance and long legs, adult dancer, soft daylight.",
+      "original": "final-v3/14-white-dance.png",
+      "runtime": "../whale-video-test/album-14-white-dance-v3.jpg"
+    },
+    {
+      "id": "15-cozy-wardrobe",
+      "title": "换装时刻",
+      "place": "海边衣帽间",
+      "caption": "今天的心情，选了这一套。",
+      "unlockAt": 55,
+      "scenePrompt": "Adult lifestyle fashion editorial in a tasteful sunlit coastal dressing room. Fitted fine-knit ivory short-sleeved cardigan with tiny blue ribbon, high-waisted navy tailored short skirt, sheer charcoal pantyhose, delicate silver low heels. She is ALREADY FULLY DRESSED, standing tall beside a wardrobe, holding an alternate blue jacket on its hanger away from her body with a light playful smile. Full-body refined long-legged silhouette, no undressing, warm natural window light.",
+      "original": "final-v3/15-cozy-wardrobe.png",
+      "runtime": "../whale-video-test/album-15-cozy-wardrobe-v3.jpg"
+    },
+    {
+      "id": "16-morning-yoga",
+      "title": "晨间伸展",
+      "place": "朝阳瑜伽室",
+      "caption": "一起舒展，再认真开始今天。",
+      "unlockAt": 60,
+      "scenePrompt": "Adult activewear campaign in a bright coastal yoga studio. Opaque powder-blue supportive cropped athletic top and fitted navy full-length high-waisted yoga leggings. Same long blue hair tied in a neat ponytail, fin ornaments. Gentle standing mountain stretch, arms extended naturally overhead without distortion, feet grounded on a pale-blue yoga mat. Entire tall slender body and long legs visible, natural athletic adult silhouette, a plant and large sea-view windows.",
+      "original": "final-v3/16-morning-yoga.png",
+      "runtime": "../whale-video-test/album-16-morning-yoga-v3.jpg"
+    },
+    {
+      "id": "17-kiss-reward",
+      "title": "晚安亲亲",
+      "place": "星灯露台",
+      "caption": "今天辛苦了，送你一个晚安吻。",
+      "unlockAt": 65,
+      "scenePrompt": "Affectionate adult fashion portrait on a seaside terrace at dusk. Opaque fitted white blouse with a blue satin ribbon, navy high-waisted skirt. Three-quarter portrait from head to mid-thigh, body upright and elegantly elongated. She gently blows a kiss to the viewer with one hand near but not obscuring softly pursed lips, warm mature eyes and a subtle smile. No second person. Soft blue dusk and warm string-light bokeh, realistic fingers and face.",
+      "original": "final-v3/17-kiss-reward.png",
+      "runtime": "../whale-video-test/album-17-kiss-reward-v3.jpg"
+    },
+    {
+      "id": "18-after-bath",
+      "title": "水汽晚安",
+      "place": "温暖浴室门外",
+      "caption": "洗去一天的忙碌，慢慢放松。",
+      "unlockAt": 70,
+      "scenePrompt": "Quiet adult spa lifestyle editorial just OUTSIDE a luxurious bathroom doorway with soft steam in the background. She is fully covered in a dry opaque white terry bathrobe, neatly closed and tied at her narrow waist, hem to knee, pale-blue slippers. Long blue hair slightly damp at the ends, silver whale-fin ornaments. She stands tall in a natural relaxed full-body stance, one hand holding a folded towel at her side, warm mature gentle expression. No nudity, no visible underwear, warm diffuse light.",
+      "original": "final-v3/18-after-bath.png",
+      "runtime": "../whale-video-test/album-18-after-bath-v3.jpg"
+    },
+    {
+      "id": "19-hot-spring",
+      "title": "温泉听雪",
+      "place": "山间露天温泉",
+      "caption": "把时间放慢一点，听雪落下。",
+      "unlockAt": 80,
+      "scenePrompt": "Adult woman enjoying a snowy mountain outdoor hot spring at dusk, wearing an opaque navy-and-blue spa one-piece swimsuit, upper chest covered by supportive swim fabric. Water covers her below the upper waist; her upper body is upright, long neck and slender shoulders, hands resting naturally on a stone rim. Same adult face, blue hair loosely pinned up with whale-fin ornaments. Medium environmental portrait, natural steam and snow on distant rocks, soft lantern light, no nudity or transparent clothing.",
+      "original": "final-v3/19-hot-spring.png",
+      "runtime": "../whale-video-test/album-19-hot-spring-v3.jpg"
+    },
+    {
+      "id": "20-anniversary-dress",
+      "title": "星耀高定",
+      "place": "海景红毯",
+      "caption": "今晚，所有目光都为这一刻停留。",
+      "unlockAt": 90,
+      "scenePrompt": "A bold adult leading-lady high-couture red-carpet fashion photograph on a modern seaside terrace. Refined silver and ice-blue sculpted strapless couture gown with supportive opaque bodice, delicate hand embroidery, narrow tailored waist and a sweeping train placed behind her, one tasteful long slit revealing a long slender leg. Silver heels and tiny ocean-blue jewelry. Full-body commanding regal pose, one hand resting on hip, mature calm expression. Soft evening spotlights, distant sea and architectural steps.",
+      "original": "final-v3/20-anniversary-dress.png",
+      "runtime": "../whale-video-test/album-20-anniversary-dress-v3.jpg"
+    },
+    {
+      "id": "21-beach-shorts",
+      "title": "碧海漫步",
+      "place": "晴日海滨大道",
+      "caption": "海风和自由，今天都刚刚好。",
+      "unlockAt": 50,
+      "scenePrompt": "Adult summer street fashion on a sunlit seaside promenade. Opaque white short-sleeve shirt tied at the waist over a fitted white camisole, high-waisted fitted blue denim shorts, simple white sandals, silver shoulder bag. Long slim legs fully visible, natural strolling step and confident gentle smile, long blue hair and silver fin ornaments. Full-body adult model, sparkling sea, palm shadows, soft realistic sunlight.",
+      "original": "final-v3/21-beach-shorts.png",
+      "runtime": "../whale-video-test/album-21-beach-shorts-v3.jpg"
+    },
+    {
+      "id": "22-black-silk-silhouette",
+      "title": "夜幕女王",
+      "place": "都市天际露台",
+      "caption": "把今夜，交给我的节奏。",
+      "unlockAt": 60,
+      "scenePrompt": "Regal adult black-and-blue couture editorial on a city rooftop at blue hour. Black fitted asymmetric mini dress with opaque tailored supportive bodice, narrow waist, dark blue satin cape-like drape behind shoulders, sheer black pantyhose, black stiletto pumps, delicate silver whale-fin tiara. Full head-to-toe commanding poised stance, hands relaxed, chin slightly raised, mature confident gaze; refined slim arms and long straight legs. Minimal skyline bokeh, elegant cinematic lighting.",
+      "original": "final-v3/22-black-silk-silhouette.png",
+      "runtime": "../whale-video-test/album-22-black-silk-silhouette-v3.jpg"
+    },
+    {
+      "id": "23-backless-moon",
+      "title": "月色露背",
+      "place": "海边玻璃长廊",
+      "caption": "转身时，月光落在肩上。",
+      "unlockAt": 70,
+      "scenePrompt": "Adult couture evening fashion in a moonlit glass seaside gallery. Opaque pearl-blue satin backless gown with a tasteful deep curved back, narrow waist and elegant long side slit, silver heels. Full-body standing three-quarter rear view, she turns her head gently toward the camera, long blue hair swept over the far shoulder to reveal the gown's back construction. Same adult facial identity and whale-fin ornaments. Graceful long legs, realistic hands, cool moonlight and warm gallery lamps.",
+      "original": "final-v3/23-backless-moon.png",
+      "runtime": "../whale-video-test/album-23-backless-moon-v3.jpg"
+    },
+    {
+      "id": "24-active-curves",
+      "title": "晴日心跳",
+      "place": "海景运动露台",
+      "caption": "认真生活，也认真喜欢自己。",
+      "unlockAt": 55,
+      "scenePrompt": "Adult premium activewear editorial on an open seaside wellness terrace. Opaque pale-blue supportive sports crop top, fitted charcoal-blue high-waisted leggings, white training shoes. Long blue hair in a high ponytail, silver whale-fin clips. Entire tall slim model body in a natural standing rest pose, hands lightly on hips, face calmly smiling at camera. Long slim legs and balanced mature upper silhouette, early warm sun, ocean railing and a simple yoga mat.",
+      "original": "final-v3/24-active-curves.png",
+      "runtime": "../whale-video-test/album-24-active-curves-v3.jpg"
+    },
+    {
+      "id": "25-satin-evening",
+      "title": "缎光晚宴",
+      "place": "海景餐厅露台",
+      "caption": "约好的晚餐，我先到了一点。",
+      "unlockAt": 75,
+      "scenePrompt": "Sophisticated adult dinner-date fashion campaign. Opaque rich sapphire satin slip-style cocktail dress, expertly fitted supportive bodice with graceful neckline, narrow waist, above-knee hem with a small tasteful side slit, silver heels and fine whale-shaped pendant. She stands beside a candlelit terrace dinner table rather than sitting, one hand lightly resting on a chair back, face toward camera with confident gentle warmth. Full long-legged figure visible, dusk sea background, glossy fabric with realistic seams.",
+      "original": "final-v3/25-satin-evening.png",
+      "runtime": "../whale-video-test/album-25-satin-evening-v3.jpg"
+    },
+    {
+      "id": "26-seaside-shoulders",
+      "title": "海风偏爱",
+      "place": "白色海岸阶梯",
+      "caption": "向着海，也向着更好的自己。",
+      "unlockAt": 65,
+      "scenePrompt": "Adult high-fashion resort portrait on white stone seaside steps. Opaque fitted white off-shoulder couture midi dress with blue embroidered trim, sculpted supportive bodice, narrow waist and a long side slit revealing one elegant slim leg, silver sandals. Long blue hair drifting behind her, whale-fin ornaments, commanding leading-lady poise, full head-to-toe standing figure. Turquoise water and pale clean architecture, refined sunlit luxury editorial, no crouching.",
+      "original": "final-v3/26-seaside-shoulders.png",
+      "runtime": "../whale-video-test/album-26-seaside-shoulders-v3.jpg"
+    }
+  ]
+}

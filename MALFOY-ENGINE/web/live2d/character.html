@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8" />
+<title>角色层 · Live2D</title>
+<style>
+  html, body { margin:0; height:100%; background: transparent; overflow:hidden; }
+  #c { display:block; width:100vw; height:100vh; transition: opacity .28s ease; opacity: .55; }
+  body.hot #c { opacity: 1; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<script src="./pixi.min.js"></script>
+<script src="./live2dcubismcore.min.js"></script>
+<script src="./cubism4.min.js"></script>
+<script>
+/*
+ * 角色层对外 API（供主进程 / 上层 UI 调用）
+ *   await Character.ready          初始化完成
+ *   Character.setEmotion(name)     happy|sad|angry|surprised|shy|calm|sleepy|thinking
+ *   Character.playMotion(group, i) 动作
+ *   Character.lookAt(x, y)         视线跟随
+ *   Character.speak(base64Mp3)     播放语音并驱动口型
+ *   Character.stopSpeaking()
+ */
+window.Character = (function () {
+  let app, model, analyser, audioCtx, audioEl, mouthRAF = 0, speaking = false;
+
+  // 无 exp3 时的参数化情绪
+  const EMO = {
+    happy:     { ParamEyeLOpen:0.55, ParamEyeROpen:0.55, ParamMouthForm:0.9, ParamBrowLY:0.7, ParamBrowRY:0.7 },
+    sad:       { ParamEyeLOpen:0.65, ParamMouthForm:-0.9, ParamBrowLY:-0.7, ParamBrowRY:-0.7 },
+    angry:     { ParamBrowLY:-1.0, ParamBrowRY:-1.0, ParamMouthForm:-0.6, ParamEyeLOpen:0.85 },
+    surprised: { ParamEyeLOpen:1.0, ParamEyeROpen:1.0, ParamMouthOpenY:0.55, ParamBrowLY:0.9, ParamBrowRY:0.9 },
+    shy:       { ParamCheek:1.0, ParamEyeLOpen:0.45, ParamEyeROpen:0.45, ParamMouthForm:0.5 },
+    sleepy:    { ParamEyeLOpen:0.15, ParamEyeROpen:0.15, ParamBrowLY:-0.2, ParamBrowRY:-0.2 },
+    thinking:  { ParamAngleX:-12, ParamEyeBallX:-0.5, ParamBrowLY:0.3 },
+    calm:      {},
+  };
+  let currentEmo = "calm";
+
+  function core() { return model.internalModel.coreModel; }
+
+  function applyEmotion(name) {
+    currentEmo = EMO[name] ? name : "calm";
+    const p = EMO[currentEmo];
+    for (const k in p) {
+      try { core().setParameterValueById(k, p[k]); } catch (e) {}
+    }
+  }
+
+  function pumpMouth() {
+    if (!analyser || !speaking) { mouthRAF = 0; return; }
+    const buf = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteTimeDomainData(buf);
+    let sum = 0;
+    for (let i = 0; i < buf.length; i++) { const d = (buf[i] - 128) / 128; sum += d * d; }
+    const rms = Math.sqrt(sum / buf.length);
+    // 口型幅度：RMS 放大 + 上限，配合轻微随机让嘴部自然
+    const open = Math.min(1, rms * 5.2 + Math.random() * 0.04);
+    try { core().setParameterValueById("ParamMouthOpenY", open); } catch (e) {}
+    mouthRAF = requestAnimationFrame(pumpMouth);
+  }
+
+  function ensureAudio() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === "suspended") audioCtx.resume();
+    if (!audioEl) {
+      audioEl = new Audio();
+      audioEl.crossOrigin = "anonymous";
+      const src = audioCtx.createMediaElementSource(audioEl);
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 512;
+      analyser.smoothingTimeConstant = 0.55;
+      src.connect(analyser);
+      src.connect(audioCtx.destination);
+    }
+  }
+
+  async function speak(b64) {
+    ensureAudio();
+    stopSpeaking();
+    audioEl.src = "data:audio/mpeg;base64," + b64;
+    speaking = true;
+    pumpMouth();
+    try { await audioEl.play(); } catch (e) { speaking = false; }
+    audioEl.onended = () => { speaking = false; try { core().setParameterValueById("ParamMouthOpenY", 0); } catch (e) {} };
+  }
+
+  function stopSpeaking() {
+    speaking = false;
+    if (mouthRAF) { cancelAnimationFrame(mouthRAF); mouthRAF = 0; }
+    if (audioEl) { try { audioEl.pause(); audioEl.currentTime = 0; } catch (e) {} }
+    try { core().setParameterValueById("ParamMouthOpenY", 0); } catch (e) {}
+  }
+
+  const ready = (async function init() {
+    app = new PIXI.Application({
+      view: document.getElementById("c"),
+      resizeTo: window,
+      backgroundAlpha: 0,
+      antialias: true,
+      autoDensity: true,
+      resolution: window.devicePixelRatio || 1,
+    });
+    model = await PIXI.live2d.Live2DModel.from("./Hiyori/Hiyori.model3.json", {
+      ticker: PIXI.Ticker.shared,
+      autoInteract: true,
+    });
+    app.stage.addChild(model);
+
+    function fit() {
+      const mw = model.width || model.internalModel.width || 1;
+      const mh = model.height || model.internalModel.height || 1;
+      const s = Math.min(app.screen.width / mw, app.screen.height / mh) * 0.95;
+      model.scale.set(s);
+      model.anchor.set(0.5, 0.5);
+      model.x = app.screen.width / 2;
+      model.y = app.screen.height / 2;
+    }
+    fit();
+    window.addEventListener("resize", fit);
+    window.addEventListener("mousemove", (e) => model.focus(e.clientX, e.clientY));
+
+    model.on("hit", (areas) => {
+      if (areas.includes("Body") || areas.includes("Head")) {
+        try { model.motion("TapBody", 0); } catch (e) {}
+      }
+    });
+
+    // 悬停检测：只有在角色身上才可交互，否则穿透
+    let hoverOver = false, lastSent = 0;
+    function inModel(px, py) {
+      try {
+        const mw = model.width * model.scale.x;
+        const mh = model.height * model.scale.y;
+        const cx = model.x, cy = model.y;
+        return px >= cx - mw / 2 && px <= cx + mw / 2 && py >= cy - mh / 2 && py <= cy + mh / 2;
+      } catch (e) { return false; }
+    }
+    window.addEventListener("mousemove", (e) => {
+      const over = inModel(e.clientX, e.clientY);
+      if (over !== hoverOver || Date.now() - lastSent > 800) {
+        hoverOver = over;
+        lastSent = Date.now();
+        document.body.classList.toggle("hot", over);
+        if (window.malfoyHost && window.malfoyHost.setHover) window.malfoyHost.setHover(over);
+      }
+    });
+    window.addEventListener("mouseleave", () => {
+      hoverOver = false;
+      document.body.classList.remove("hot");
+      if (window.malfoyHost && window.malfoyHost.setHover) window.malfoyHost.setHover(false);
+    });
+
+    // 空闲随机动作
+    setInterval(() => {
+      if (speaking) return;
+      try { model.motion("Idle", Math.floor(Math.random() * 9)); } catch (e) {}
+    }, 18000);
+
+    // 主进程推送：表情 + 语音
+    if (window.malfoyHost && window.malfoyHost.onCharacterSay) {
+      window.malfoyHost.onCharacterSay((p) => {
+        if (!p) return;
+        if (p.emo) applyEmotion(p.emo);
+        if (p.audio) speak(p.audio);
+      });
+    }
+
+    document.title = "CHARACTER-READY";
+    return true;
+  })();
+
+  return {
+    ready,
+    setEmotion: applyEmotion,
+    getEmotion: () => currentEmo,
+    playMotion: (g, i) => { try { model.motion(g, i || 0); } catch (e) {} },
+    lookAt: (x, y) => { try { model.focus(x, y); } catch (e) {} },
+    speak,
+    stopSpeaking,
+    get speaking() { return speaking; },
+    get mouth() { try { return core().getParameterValueById("ParamMouthOpenY"); } catch (e) { return -1; } },
+    get emotion() { return currentEmo; },
+  };
+})();
+</script>
+</body>
+</html>

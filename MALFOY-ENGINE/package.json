@@ -1,0 +1,8 @@
+{
+  "name": "miss-malfoy-desktop",
+  "productName": "Miss Malfoy",
+  "version": "0.1.0",
+  "description": "AI 女友桌面 · 马尔福小姐（即梦 AI 短剧工作室 Demo）",
+  "main": "main.js",
+  "private": true
+}

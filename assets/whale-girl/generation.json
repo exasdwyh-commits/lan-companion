@@ -1,0 +1,18 @@
+{
+  "mode": "built-in image_gen",
+  "file": "three-view-greenscreen.png",
+  "prompt": "three-view-prompt.txt",
+  "views": [
+    "front",
+    "left profile",
+    "back"
+  ],
+  "framing": "head to upper thighs",
+  "design": "clearly adult photorealistic whale-inspired fantasy woman",
+  "date": "2026-10-29",
+  "image_size": [
+    1536,
+    1024
+  ],
+  "transparent_background": false
+}

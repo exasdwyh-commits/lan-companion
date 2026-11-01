@@ -1,0 +1,21 @@
+{
+  "task": "CHIBI-05",
+  "date": "2026-10-31",
+  "generator": "built-in imagegen",
+  "reference": "../whale-chibi-directions-2026-10-31/B-master-v1.png",
+  "status": "concept only; not layered, animated or packaged",
+  "images": [
+    {
+      "name": "dance-pose-rejected-v1.png",
+      "sha256": "09e153c1f8625e83023a90a16efabea8d44c76b9bb1686ce35b69aba3b14fa99"
+    },
+    {
+      "name": "dance-pose-v2.png",
+      "sha256": "a4e672f311112d6a087ca55782db783a10b9c50a5c49db009bcd06e06cfe8eb5"
+    },
+    {
+      "name": "turnaround-expressions-v1.png",
+      "sha256": "bc699c18d263bb867315d1bad88ffd87862304cf81875f6d6d018ab1e480fc10"
+    }
+  ]
+}

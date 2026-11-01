@@ -1,0 +1,28 @@
+{
+  "file": "lan-b-multiview-game-preview.glb",
+  "bytes": 9213768,
+  "sha256": "bee05205aadf9dcb0b92c2ff739a1c2be323fb834391c57949d613a7a08b6824",
+  "images": [
+    {
+      "name": "texture_pbr_20250901_normal-2k",
+      "mimeType": "image/jpeg",
+      "bytes": 282683,
+      "size": [
+        2048,
+        2048
+      ]
+    },
+    {
+      "name": "texture_pbr_20250901-2k",
+      "mimeType": "image/jpeg",
+      "bytes": 952341,
+      "size": [
+        2048,
+        2048
+      ]
+    }
+  ],
+  "external_uris": [],
+  "skins": 0,
+  "animations": 0
+}

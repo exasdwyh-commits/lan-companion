@@ -1,0 +1,25 @@
+{
+  "created": "2026-11-01",
+  "purpose": "Local companion room wall photos",
+  "photos": [
+    {
+      "file": "portrait-whale.jpg",
+      "source": "assets/whale-video-test/album-31-cute-whale.jpg",
+      "sha256": "87e9d9b9d114a95e87348fdf6320635c310e39ee1570afa38796c8a4458ad08e",
+      "copyMatchesSource": true
+    },
+    {
+      "file": "morning-cafe.jpg",
+      "source": "assets/whale-video-test/album-02-window-morning.jpg",
+      "sha256": "6c060554b8873db8d33e11148ccc7ffcd582f8911659252fd8bfb1d46c359247",
+      "copyMatchesSource": true
+    },
+    {
+      "file": "starlight-balcony.jpg",
+      "source": "assets/whale-video-test/album-04-starlight-balcony.jpg",
+      "sha256": "72c89e72541ab70cc7212992bd59fa175494aa719252ae5e74a37970882349e1",
+      "copyMatchesSource": true
+    }
+  ],
+  "rights": "Reuse of existing project album assets for local preview. Existing source/redistribution boundaries remain; no new third-party photos imported."
+}

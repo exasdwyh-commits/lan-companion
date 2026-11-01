@@ -1,0 +1,27 @@
+{
+  "id": "cute-heart-01",
+  "name": "撒娇比心",
+  "source": "/Users/exasdwyh/Downloads/绿幕视频制作（桌面宠物素材） (1).mp4",
+  "greenscreen": "cute-greenscreen-covered.mp4",
+  "transparent": "cute.mov",
+  "usage": "one-shot reaction",
+  "fps": 24,
+  "width": 1280,
+  "height": 720,
+  "watermarkCover": [
+    {
+      "x": 0,
+      "y": 0,
+      "width": 260,
+      "height": 100
+    },
+    {
+      "x": 1000,
+      "y": 620,
+      "width": 280,
+      "height": 100
+    }
+  ],
+  "coverColor": "#24993e",
+  "chromakey": "0x24993e:0.10:0.03"
+}

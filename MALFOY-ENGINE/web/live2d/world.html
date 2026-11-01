@@ -1,0 +1,1003 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>WHALE-WORLD</title>
+<style>
+  html, body { margin:0; height:100%; overflow:hidden; background:#04070f;
+    font-family:-apple-system,"PingFang SC",system-ui,sans-serif; }
+  #bg { position:fixed; inset:0; width:100%; height:100%; display:block; }
+  #stage { position:fixed; inset:0; pointer-events:none; }
+  #ch { position:absolute; left:50%; bottom:0; transform-origin:50% 100%;
+        max-height:78vh; width:auto; will-change: transform; }
+  body.roam #ch { max-height:38vh; opacity:1; }
+  html.desktop, body.roam { background:transparent; }
+  #ch { pointer-events:auto; touch-action:none; }
+  #puppet { position:absolute; left:50%; bottom:0; display:none; transform:translateX(-50%);
+    pointer-events:auto; touch-action:none; }
+  #fx { position:fixed; inset:0; pointer-events:none; overflow:hidden; }
+  .heart { position:absolute; font-size:22px; animation: floatUp 1.7s ease-out forwards; }
+  @keyframes floatUp {
+    0%   { opacity:0; transform: translateY(0) scale(.6); }
+    20%  { opacity:1; }
+    100% { opacity:0; transform: translateY(-120px) scale(1.15); }
+  }
+
+  /* 对话气泡 */
+  #bubble { position:fixed; left:50%; bottom:34%; transform:translateX(-50%) translateY(10px);
+    max-width:min(560px,72vw); padding:14px 20px; border-radius:18px;
+    background:rgba(10,20,40,.72); backdrop-filter:blur(14px);
+    border:1px solid rgba(120,180,255,.28); color:#dbe9ff; font-size:16px; line-height:1.65;
+    opacity:0; transition:opacity .3s ease, transform .3s ease; pointer-events:none;
+    box-shadow:0 10px 40px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.03) inset; }
+  #bubble.on { opacity:1; transform:translateX(-50%) translateY(0); }
+  #bubble .en { display:block; margin-top:6px; font-size:12px; color:#7f9cc9; letter-spacing:.02em; }
+
+  /* 输入条 */
+  #chat { position:fixed; left:50%; bottom:26px; transform:translateX(-50%);
+    display:none; gap:10px; align-items:center; width:min(560px,78vw); z-index:5; }
+  #chat.on { display:flex; }
+  #chat input { flex:1; padding:13px 18px; border-radius:14px; border:1px solid rgba(120,180,255,.25);
+    background:rgba(8,16,32,.78); backdrop-filter:blur(14px); color:#e8f2ff; font-size:15px; outline:none; }
+  #chat input:focus { border-color:rgba(120,180,255,.55); }
+  #chat button { padding:13px 20px; border-radius:14px; border:1px solid rgba(120,180,255,.3);
+    background:rgba(30,70,140,.55); color:#cfe3ff; font-size:15px; cursor:pointer; }
+  #chat button:hover { background:rgba(40,90,175,.7); }
+  #hint { position:fixed; left:50%; bottom:8px; transform:translateX(-50%); font-size:11px;
+    color:rgba(150,180,220,.45); letter-spacing:.06em; }
+  /* 关系称呼：只在启动/变化时短暂出现，不做常驻数值条 */
+  #relation { position:fixed; left:14px; top:12px; padding:5px 11px; border-radius:999px;
+    background:rgba(10,25,45,.55); border:1px solid rgba(140,200,255,.25); color:#cfe8ff;
+    font-size:11px; letter-spacing:.04em; z-index:6; pointer-events:none; opacity:0;
+    transition:opacity .25s ease; backdrop-filter:blur(8px); }
+  #relation.on { opacity:1; }
+  body.roam #relation { top:auto; bottom:12px; left:12px; }
+  body.wallpaper #relation { display:none; }
+  #world-controls { position:fixed;top:18px;right:20px;display:none;gap:8px;z-index:6; }
+  #world-controls.on { display:flex; }
+  #world-controls button { border:1px solid #75c8de55;background:#112e48cc;color:#cceaf4;
+    border-radius:20px;padding:8px 14px;font:12px -apple-system,"PingFang SC",sans-serif;cursor:pointer; }
+  #portal { position:absolute;display:none;pointer-events:none;border:2px solid #9ce9f8;
+    border-radius:50%;box-shadow:0 0 22px #50ccec88,inset 0 0 25px #51add655;
+    background:radial-gradient(ellipse,#8fddf833,transparent 65%); }
+  #portal::after { content:"";position:absolute;inset:12%;border:1px dashed #c0edffbb;border-radius:50%; }
+  #world-scene {position:fixed;inset:0;overflow:hidden;background:#071524;pointer-events:none;}
+  #world-scene[hidden]{display:none}
+  #world-scene img {width:100%;height:100%;object-fit:cover;position:absolute;inset:0;}
+  /* 锚点静帧：与待机视频同几何，只在加载/淡出/解码失败时露出 */
+  #world-scene #world-anchor { inset:auto; left:var(--figure-x,62.5%); bottom:0;
+    height:var(--figure-height,100%); width:auto; transform:translateX(-50%);
+    object-fit:contain; opacity:0; transition:opacity .3s ease; z-index:0; pointer-events:none; }
+  #world-scene[data-scene="moon"] #world-anchor { inset:0; width:100%; height:100%;
+    transform:none; object-fit:cover; }
+  #world-scene video {position:absolute;pointer-events:auto;opacity:0;transition:opacity .18s ease;object-fit:contain;max-height:none;}
+  #world-scene video[data-layout="figure"] {height:var(--figure-height,100%);width:auto;left:var(--figure-x,62.5%);bottom:0;transform:translateX(-50%);}
+  #world-scene video[data-layout="full"] {inset:0;width:100%;height:100%;object-fit:cover;transform:none;}
+  #world-bar{position:fixed;left:0;top:0;right:0;height:36px;display:flex;gap:5px;align-items:center;padding:4px 8px;background:linear-gradient(#0b2434df,#0b243420);z-index:7;opacity:0;transition:opacity .15s;-webkit-app-region:drag}
+  body:not(.roam):hover #world-bar, #world-bar:focus-within {opacity:1}
+  body.roam #world-bar, body.wallpaper #world-bar{display:none}
+  #world-bar span{font-size:11px;color:#e2f3ff;margin-right:auto;pointer-events:none}
+  #world-bar button {background:#102d44df;color:#dbf5ff;border:1px solid #a8d9ed55;border-radius:8px;padding:4px 7px;font:11px -apple-system,"PingFang SC",sans-serif;cursor:pointer;-webkit-app-region:no-drag}
+  #world-bar button.active{background:#327287}
+  body:not(.roam) #world-controls{top:auto;bottom:10px;right:10px;opacity:0;transition:opacity .15s}
+  body:not(.roam):hover #world-controls,#world-controls:focus-within{opacity:1}
+  body.wallpaper #world-controls{display:none}
+  #video-status{position:fixed;bottom:8px;left:10px;color:#e5f3ff;background:#0a2639b3;border-radius:7px;padding:5px 8px;font-size:11px;z-index:6;pointer-events:none;max-width:65%;display:none}
+  #video-status.on{display:block}
+  #placement{display:none;position:fixed;top:40px;left:10px;z-index:8;background:#0c2946ee;color:#d4edff;padding:10px;border-radius:10px;font-size:11px}
+  #placement.on{display:grid;gap:8px}#placement label{display:flex;align-items:center;gap:8px}#placement input{-webkit-app-region:no-drag;width:115px}
+  @media(prefers-reduced-motion:reduce){#world-scene video{transition:none}}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div id="world-scene" hidden><img id="world-background" src="./world-media/background.png" alt="海边的房间"><img id="world-anchor" src="./world-media/anchor-idle.png" alt=""><video id="vid" muted playsinline preload="auto"></video><video id="vid-alt" muted playsinline preload="auto"></video></div>
+<div id="stage"><div id="portal"></div><img id="ch" alt=""><canvas id="puppet" aria-label="澜，Q版桌宠"></canvas></div>
+<div id="fx"></div>
+<div id="bubble"></div>
+<div id="chat"><input id="in" placeholder="和她说话…" autocomplete="off"><button id="send">说</button></div>
+<div id="hint">ESC 收起 · 点她会有反应</div>
+<div id="relation" role="status"></div>
+<div id="world-bar"><span>澜 · 她的世界</span><button id="scene-toggle">月夜房间</button><button id="world-prayer" hidden>祈愿</button><button data-video="idle">平常</button><button data-video="quiet">趴屏</button><button data-video="sleep">睡眠</button><button id="video-pause" aria-label="暂停视频">暂停</button><button id="adjust" aria-label="调整人物位置和大小">位置</button><button id="open-gallery" aria-label="打开相册与剧情">相册</button><button id="open-memory" aria-label="打开她记得的事">记忆</button><button id="hide-scene" aria-label="收起角色">收起</button></div>
+<div id="placement"><label>左右<input id="figure-x" aria-label="人物左右位置" type="range" min="35" max="75" step="0.5" value="62.5"></label><label>大小<input id="figure-height" aria-label="人物大小" type="range" min="65" max="125" value="100"></label></div>
+<div id="video-status" role="status"></div>
+<nav id="world-controls" aria-label="世界切换"><button id="open-gallery-desktop">相册</button><button id="open-memory-desktop">记忆</button><button id="travel-world">回到她的世界</button><button id="travel-dormant">收起角色</button></nav>
+
+<script src="./world-media/config.js"></script>
+<script src="./world-video.js"></script>
+<script src="./companion-playback.js"></script>
+<script src="./dsh-motion.js"></script>
+<script src="./chibi-motion.js"></script>
+<script src="./chibi-performance.js"></script>
+<script src="./chibi-face.js"></script>
+<script src="./chibi-presence.js"></script>
+<script src="./chibi-renderer.js"></script>
+<script src="./chibi-texture.js"></script>
+<script src="./chibi-atlas.js"></script>
+<script src="./chibi-walk.js"></script>
+<script src="./chibi-dance.js"></script>
+<script src="./chibi-hum.js"></script>
+<script>
+/* ───────── 海底场景（程序化，纯 f(t)） ───────── */
+const cv = document.getElementById("bg");
+const ctx = cv.getContext("2d");
+let W = 0, H = 0, DPR = 1;
+
+function resize() {
+  DPR = Math.min(window.devicePixelRatio || 1, 2);
+  // The background canvas is display:none on desktop. Its client size becomes
+  // zero on resize, so dimensions must come from the actual viewport.
+  W = window.innerWidth; H = window.innerHeight;
+  cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+}
+
+// 确定性伪随机
+function hash(n) { const x = Math.sin(n * 127.1) * 43758.5453; return x - Math.floor(x); }
+
+const MOTES = [], GLOWS = [], RAYS = [];
+function seedScene() {
+  MOTES.length = 0; GLOWS.length = 0; RAYS.length = 0;
+  for (let i = 0; i < 190; i++) {
+    MOTES.push({
+      x: hash(i + 1), y: hash(i + 91),
+      r: 0.6 + hash(i + 181) * 1.9,
+      sp: 0.006 + hash(i + 271) * 0.022,      // 循环内漂移速度
+      ph: hash(i + 361) * Math.PI * 2,
+      sw: 0.004 + hash(i + 451) * 0.012,
+      a: 0.32 + hash(i + 541) * 0.55,
+    });
+  }
+  for (let i = 0; i < 26; i++) {
+    GLOWS.push({
+      x: hash(i + 700), y: hash(i + 800),
+      r: 26 + hash(i + 900) * 90,
+      ph: hash(i + 1000) * Math.PI * 2,
+      a: 0.05 + hash(i + 1100) * 0.12,
+      hue: 190 + hash(i + 1200) * 60,
+    });
+  }
+  for (let i = 0; i < 7; i++) {
+    RAYS.push({
+      x: 0.06 + i * 0.145 + hash(i + 1300) * 0.05,
+      w: 0.045 + hash(i + 1400) * 0.075,
+      ph: hash(i + 1500) * Math.PI * 2,
+      a: 0.13 + hash(i + 1600) * 0.16,
+      tilt: (hash(i + 1700) - 0.5) * 0.16,
+    });
+  }
+}
+
+function drawBackground(t) {
+  // t: 秒
+  const P = 2 * Math.PI;
+  // 底色渐变
+  const g = ctx.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, "#16406e");
+  g.addColorStop(0.22, "#0e2a52");
+  g.addColorStop(0.55, "#0a1734");
+  g.addColorStop(0.82, "#070d20");
+  g.addColorStop(1, "#04060f");
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+
+  // 上方微光（水面方向）
+  const top = ctx.createRadialGradient(W * 0.5, -H * 0.25, 0, W * 0.5, -H * 0.25, H * 1.05);
+  top.addColorStop(0, "rgba(160,215,255,0.42)");
+  top.addColorStop(0.35, "rgba(90,150,240,0.16)");
+  top.addColorStop(0.7, "rgba(50,90,180,0.05)");
+  top.addColorStop(1, "rgba(0,0,0,0)");
+  ctx.fillStyle = top; ctx.fillRect(0, 0, W, H);
+
+  // 光柱（柔化）
+  ctx.globalCompositeOperation = "lighter";
+  ctx.filter = "blur(22px)";
+  for (const r of RAYS) {
+    const sway = Math.sin(t * 0.35 + r.ph) * 0.035;
+    const x0 = (r.x + sway) * W;
+    const wTop = r.w * W * 0.45, wBot = r.w * W * 1.9;
+    const tilt = r.tilt * W * 0.35;
+    const alpha = r.a * (0.72 + 0.28 * Math.sin(t * 0.5 + r.ph * 1.7));
+    const lg = ctx.createLinearGradient(x0, 0, x0 + tilt, H);
+    lg.addColorStop(0, `rgba(190,230,255,${alpha})`);
+    lg.addColorStop(0.45, `rgba(130,190,250,${alpha * 0.45})`);
+    lg.addColorStop(1, "rgba(80,120,200,0)");
+    ctx.fillStyle = lg;
+    ctx.beginPath();
+    ctx.moveTo(x0 - wTop / 2, -10);
+    ctx.lineTo(x0 + wTop / 2, -10);
+    ctx.lineTo(x0 + tilt + wBot / 2, H + 10);
+    ctx.lineTo(x0 + tilt - wBot / 2, H + 10);
+    ctx.closePath(); ctx.fill();
+  }
+
+  ctx.filter = "none";
+
+  // 远景鲸影
+  ctx.globalCompositeOperation = "source-over";
+  const whaleX = W * 0.80 + Math.sin(t * 0.12) * 26;
+  const whaleY = H * 0.26 + Math.cos(t * 0.09) * 10;
+  const ws0 = Math.min(W, H) * 0.095;
+  ctx.save();
+  ctx.translate(whaleX, whaleY);
+  ctx.globalAlpha = 0.055 + 0.02 * Math.sin(t * 0.3);
+  ctx.filter = "blur(6px)";
+  ctx.fillStyle = "#a8dcff";
+  ctx.beginPath();
+  ctx.ellipse(0, 0, ws0, ws0 * 0.34, -0.12, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.beginPath();                       // 尾鳍
+  ctx.moveTo(-ws0 * 0.92, 0);
+  ctx.quadraticCurveTo(-ws0 * 1.35, -ws0 * 0.30, -ws0 * 1.55, -ws0 * 0.02);
+  ctx.quadraticCurveTo(-ws0 * 1.32, ws0 * 0.10, -ws0 * 0.92, ws0 * 0.06);
+  ctx.fill();
+  ctx.beginPath();                       // 胸鳍
+  ctx.moveTo(-ws0 * 0.1, ws0 * 0.24);
+  ctx.quadraticCurveTo(ws0 * 0.18, ws0 * 0.62, ws0 * 0.42, ws0 * 0.34);
+  ctx.quadraticCurveTo(ws0 * 0.2, ws0 * 0.22, -ws0 * 0.1, ws0 * 0.24);
+  ctx.fill();
+  ctx.restore();
+  ctx.filter = "none";
+  ctx.globalAlpha = 1;
+  ctx.globalCompositeOperation = "lighter";
+
+  // 水面焦散
+  for (let i = 0; i < 26; i++) {
+    const cx = (i / 26) * W + Math.sin(t * 0.7 + i) * 26;
+    const cy = 40 + Math.sin(t * 0.9 + i * 1.7) * 22;
+    const rw = 60 + Math.sin(t * 1.3 + i) * 34;
+    const rh = 9 + Math.cos(t * 1.1 + i) * 5;
+    const cg = ctx.createRadialGradient(cx, cy, 0, cx, cy, rw);
+    cg.addColorStop(0, "rgba(200,240,255,0.10)");
+    cg.addColorStop(1, "rgba(160,220,255,0)");
+    ctx.fillStyle = cg;
+    ctx.save(); ctx.translate(cx, cy); ctx.scale(1, rh / rw);
+    ctx.beginPath(); ctx.arc(0, 0, rw, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+  }
+
+  // 浮游生物光晕
+  for (const b of GLOWS) {
+    const pulse = 0.55 + 0.45 * Math.sin(t * 0.55 + b.ph);
+    const x = b.x * W + Math.sin(t * 0.22 + b.ph) * 18;
+    const y = b.y * H + Math.cos(t * 0.18 + b.ph * 1.3) * 14;
+    const rg = ctx.createRadialGradient(x, y, 0, x, y, b.r);
+    rg.addColorStop(0, `hsla(${b.hue},90%,72%,${b.a * pulse})`);
+    rg.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = rg;
+    ctx.beginPath(); ctx.arc(x, y, b.r, 0, P); ctx.fill();
+  }
+
+  // 悬浮微粒（向上漂，wrap 保证循环）
+  for (const m of MOTES) {
+    const y = ((m.y - m.sp * t) % 1 + 1) % 1;
+    const x = ((m.x + Math.sin(t * 0.4 + m.ph) * m.sw) % 1 + 1) % 1;
+    const tw = 0.6 + 0.4 * Math.sin(t * 1.1 + m.ph);
+    ctx.fillStyle = `rgba(190,225,255,${m.a * tw})`;
+    ctx.beginPath(); ctx.arc(x * W, y * H, m.r, 0, P); ctx.fill();
+  }
+  ctx.globalCompositeOperation = "source-over";
+
+  // 海床微光
+  const bed = ctx.createLinearGradient(0, H * 0.72, 0, H);
+  bed.addColorStop(0, "rgba(20,60,110,0)");
+  bed.addColorStop(1, "rgba(28,80,140,0.20)");
+  ctx.fillStyle = bed; ctx.fillRect(0, H * 0.72, W, H * 0.28);
+
+  // 暗角
+  const vg = ctx.createRadialGradient(W * 0.5, H * 0.46, H * 0.18, W * 0.5, H * 0.5, H * 0.92);
+  vg.addColorStop(0, "rgba(0,0,0,0)");
+  vg.addColorStop(1, "rgba(0,0,0,0.62)");
+  ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
+}
+
+/* ───────── 角色 ───────── */
+const ch = document.getElementById("ch");
+const fx = document.getElementById("fx");
+const bubble = document.getElementById("bubble");
+const relationEl = document.getElementById("relation");
+let relationTimer = 0;
+function showRelation(state) {
+  if (!state) return;
+  const text = state.call ? `她叫你：${state.call}` : "";
+  relationEl.textContent = text;
+  relationEl.classList.toggle("on", !!text);
+  clearTimeout(relationTimer);
+  relationTimer = setTimeout(() => relationEl.classList.remove("on"), 6000);
+}
+let imgReady = false, mode = "world", roaming = false;
+let speaking = false, emotion = "calm", emoT = 0;
+const puppet = document.getElementById("puppet");
+const dshRoot=document.createElement('div');dshRoot.id='dsh-pet';dshRoot.style.cssText='position:absolute;display:none;transform:translateX(-50%);pointer-events:auto;touch-action:none;';document.getElementById('stage').append(dshRoot);
+let dshEnabled=true;
+try{dshEnabled=localStorage.getItem('lan.desktop.pack')!=='original';}catch(_){}
+const dshPlayer=new DshMotion.Player({container:dshRoot,onReady:()=>syncCharacterVisibility(),onError:()=>syncCharacterVisibility()});
+dshPlayer.enabled=dshEnabled;
+function dshActive(){return mode==='desktop'&&dshEnabled&&dshPlayer.enabled&&dshPlayer.ready;}
+const motion = new ChibiMotion.Controller(Math.floor(Math.random()*4294967296));
+const performer = new ChibiPerformance.Director();
+const face = new ChibiFace.Controller();
+const presence = new ChibiPresence.Controller();
+let travelPending=null,travelHandoff=false,modeInitialized=false;
+const motionPreference = matchMedia("(prefers-reduced-motion: reduce)");
+let rigRenderer = null, rigError = null, pointer = null, drag = null, rigDebug = null;
+let suppressClickUntil = 0, chatPending = false;
+let presentationScale=1,desktopSize=180,atlasError=null,pokeCount=0,lastPoke=0;
+let nextEdgePlay=performance.now()+45000;
+let lastDecoration=0;
+// Dance humming: renderer-level Audio fed by the generated ChibiDance payload.
+// Simple mutex with speaking; unified audio arbitration stays with DW-05.
+const danceHum=new ChibiHum.HumController();
+let danceAudio=null;
+function humTick(scene){
+  const action=danceHum.update(scene,{audioReady:!!(globalThis.ChibiDance?.audio),speaking,reducedMotion:motionPreference.matches});
+  if(!action)return;
+  if(action==="play"){
+    if(!danceAudio){danceAudio=new Audio(ChibiDance.audio.url);danceAudio.loop=true;danceAudio.volume=.55;}
+    danceAudio.play().catch(()=>{danceHum.reset();});
+  }else if(danceAudio){danceAudio.pause();try{danceAudio.currentTime=0;}catch(e){}}
+}
+// 碎碎念（dsh-pet whisper 思路的轻量版）：空闲时她周期性主动说一句。
+// 复用 touch 台词池与气泡；预生成语音与独立台词池属于 VOICE-01。
+// ?whisper=<秒> 可缩短周期用于预览/验收；默认 240s，±20% 抖动更自然。
+(function initWhisper(){
+  const params=new URLSearchParams(location.search);
+  const base=(Number(params.get("whisper"))||240)*1000;
+  if(!(base>=3000))return;
+  function whisper(){
+    const busy=speaking||chatPending||drag||document.hidden||presence.action
+      ||performer.activity!=="idle"||performer.event
+      ||(mode==="desktop"&&pet&&pet.state!=="idle");
+    if(!busy){
+      window.malfoyHost?.touchLine?.("touch")
+        .then(line=>{if(line){showBubble(line,"",5000);if(mode==="desktop")performer.notify("greet");}})
+        .catch(()=>{});
+    }
+    setTimeout(whisper,base*(0.8+Math.random()*0.4));
+  }
+  setTimeout(whisper,base*(0.8+Math.random()*0.4));
+})();
+function setActivity(name){
+  if(!performer.setActivity(name))return false;
+  motion.setActivity(name==="sleeping"?"idle":name);return true;
+}
+function characterAspect() { if(dshActive())return .92; return rigRenderer?.rig.aspect || (globalThis.ChibiTexture?.width / globalThis.ChibiTexture?.height) || 1; }
+// CSS pixels, independent of screen resolution. Always scale both axes together.
+function characterHeight() { return Math.max(32, Math.min(desktopSize*presentationScale,H*.8,W*.8/characterAspect())); }
+function setDesktopSize(value) {
+  if(!Number.isFinite(value)||value<120||value>280)return false;
+  desktopSize=value;return true;
+}
+function desktopRigActive() { return mode === "desktop" && !dshActive() && rigRenderer && rigRenderer.ready; }
+function characterRect() { return dshActive() ? dshPlayer.rect() : desktopRigActive() ? puppet.getBoundingClientRect() : mode === "world" && videoActive() ? worldVideo.rect() : ch.getBoundingClientRect(); }
+function characterHit(x,y) {
+  if(presence.action?.kind==="travel")return false;
+  if(dshActive())return dshPlayer.hitTest(x,y);
+  if (desktopRigActive()) return rigRenderer.hitTest(x,y);
+  const r=ch.getBoundingClientRect();
+  return x>=r.left && x<=r.right && y>=r.top && y<=r.bottom;
+}
+function syncCharacterVisibility() {
+  const active=desktopRigActive();
+  if(!dshActive())dshPlayer.place(0,0,180,false);
+  puppet.style.display=active ? "block" : "none";
+  if(rigDebug && !active) rigDebug.style.display="none";
+  dshRoot.style.display=dshActive()?"block":"none";
+  ch.style.visibility=dshActive() || active || (mode === "world" && videoActive()) ? "hidden" : "visible";
+}
+ChibiRenderer.load(puppet,globalThis.ChibiTexture?.url || "./whale-chibi.png").then(renderer=>{
+  rigRenderer=renderer;
+  renderer.onFailure=()=>{rigError="WebGL context lost";syncCharacterVisibility();};
+  if(globalThis.ChibiAtlas)renderer.loadAtlas(ChibiAtlas).catch(error=>{atlasError=error.message;});
+  // Walk cels are optional: absence keeps the existing atlas/skeletal gait.
+  if(globalThis.ChibiWalk)renderer.loadWalk(ChibiWalk).catch(error=>{globalThis.__walkError=String(error&&error.message||error);});
+  // Dance cels are optional too: the event degrades to a regular happy pose.
+  if(globalThis.ChibiDance)renderer.loadDance(ChibiDance).catch(error=>{globalThis.__danceError=String(error&&error.message||error);});
+  syncCharacterVisibility();
+}).catch(error=>{rigError=error.message;syncCharacterVisibility();});
+
+const IMG_WORLD = "./whale.png";
+const IMG_DESKTOP = "./whale-chibi.png";
+
+/* 原 PetDesk 视频模式，使用 assets 中原片的兼容派生文件。 */
+const worldScene = document.getElementById("world-scene");
+const worldVideo = new WhaleWorldVideo.Player(worldScene, globalThis.WhaleWorldMedia || { clips: {} }, {
+  ready: () => syncCharacterVisibility(),
+  change: state => {
+    document.querySelectorAll("[data-video]").forEach(button => button.classList.toggle("active", button.dataset.video === state.state));
+    const bar = document.getElementById("world-bar");
+    bar.dataset.scene = state.scene || "day";
+    document.getElementById("scene-toggle").textContent = state.scene === "moon" ? "返回日常" : "月夜房间";
+    document.getElementById("world-prayer").hidden = state.scene !== "moon";
+    document.getElementById("video-pause").textContent = state.paused ? "继续" : "暂停";
+    const status = document.getElementById("video-status");
+    status.textContent = state.error || (state.state === "sleep" ? "睡着了 · 点画面唤醒" : state.state === "quiet" ? "安静陪着你" : "");
+    status.classList.toggle("on", !!status.textContent && mode === "world");
+    syncCharacterVisibility();
+  },
+});
+function showVideo(name) { const aliases = { heart: "touch" }; return worldVideo.set(aliases[name] || name); }
+function hideVideo() { worldVideo.activate(false); }
+function videoActive() { return worldVideo.machine.active && !!worldVideo.current; }
+function videoMode(state) {
+  if(state === "pause") worldVideo.pause(!worldVideo.machine.paused);
+  else worldVideo.set(state);
+}
+for (const button of document.querySelectorAll("[data-video]")) button.onclick = () => videoMode(button.dataset.video);
+document.getElementById("video-pause").onclick = () => videoMode("pause");
+document.getElementById("scene-toggle").onclick = () => worldVideo.setScene(worldVideo.sceneId === "moon" ? "day" : "moon");
+document.getElementById("world-prayer").onclick = () => worldVideo.playCue("prayer");
+document.getElementById("hide-scene").onclick = () => window.malfoyHost?.dormant?.();
+document.getElementById("open-gallery").onclick = () => window.malfoyHost?.openContent?.("gallery");
+document.getElementById("open-memory").onclick = () => window.malfoyHost?.openContent?.("memory");
+document.getElementById("open-gallery-desktop").onclick = () => window.malfoyHost?.openContent?.("gallery");
+document.getElementById("open-memory-desktop").onclick = () => window.malfoyHost?.openContent?.("memory");
+document.getElementById("adjust").onclick = () => document.getElementById("placement").classList.toggle("on");
+for (const key of ["x", "height"]) document.getElementById("figure-" + key).oninput = event => {
+  worldScene.style.setProperty("--figure-" + key, event.target.value + "%");
+  worldVideo.interact();
+};
+
+ch.onload = () => { imgReady = true; document.title = "WHALE-READY"; };
+ch.onerror = () => { document.title = "WHALE-ERR"; };
+
+function setMode(m) {
+  const previous=mode;
+  mode = m === "desktop" ? "desktop" : "world";
+  imgReady = false;
+  ch.src = mode === "desktop" ? IMG_DESKTOP : IMG_WORLD;
+  ch.style.height = mode === "desktop" ? characterHeight()+"px" : "";
+  clearTimeout(poke._t);
+  drag = null;
+  document.getElementById("placement").classList.remove("on");
+  document.body.classList.toggle("roam", mode === "desktop");
+  document.documentElement.classList.toggle("desktop", mode === "desktop");
+  setRoam(mode === "desktop");
+  // Arrival must start at a valid floor anchor; waiting for roaming placement
+  // would make her materialize in midair and jump to the floor one second later.
+  if(mode==="desktop"){pet.x=W*.5;pet.y=H-2;pet.placed=true;restFor(2);}
+  cv.style.display = mode === "desktop" ? "none" : "block";
+
+  worldVideo.activate(mode === "world");
+  if (mode !== "world") document.getElementById("video-status").classList.remove("on");
+  syncCharacterVisibility();
+  document.getElementById("travel-world").textContent=mode==="desktop"?"回到她的世界":"来桌面陪我";
+  if((!modeInitialized||previous!==mode)&&!presence.action)presence.travel("in",mode);
+  modeInitialized=true;
+  loop._last = null;
+  return mode;
+}
+
+function setRoam(on) {
+  roaming = !!on;
+  if (roaming) {
+    pet.state="idle"; pet.placed=false; pet.y=0; pet.x=W*.5;
+    pet.idle=2; pet.walkFor=7; lastWinPoll=0; perch=null; jump=null;
+  }
+  else if(pet.state==="walk" || pet.state==="idle") restFor(2);
+  return roaming;
+}
+
+function setEmotion(e) {
+  emotion = e || "calm"; emoT = performance.now();
+  const scene=({happy:"happy",joy:"happy",excited:"celebrating",shy:"shy",sad:"sad",surprised:"surprised",curious:"thinking",thinking:"thinking",angry:"shy",sleepy:"sleeping"})[emotion];
+  if(scene)performer.express(scene);
+  const mood=({happy:"happy",joy:"happy",excited:"happy",shy:"shy",sad:"sad",surprised:"surprised",curious:"focused",thinking:"focused",angry:"pout",sleepy:"sleepy",calm:"calm"})[emotion];
+  if(mood)face.setExpression(mood);
+}
+function getEmotion() { return emotion; }
+
+function spawnHearts(n = 5,symbols=["💙", "🫧", "✦"]) {
+  const r = characterRect();
+  for (let i = 0; i < n; i++) {
+    const s = document.createElement("div");
+    s.className = "heart";
+    s.textContent = symbols[i % symbols.length];s.style.color="#ffe399";
+    s.style.left = (r.left + r.width * (0.3 + Math.random() * 0.4)) + "px";
+    s.style.top = (r.top + r.height * 0.3) + "px";
+    s.style.animationDelay = (i * 0.09) + "s";
+    fx.appendChild(s);
+    setTimeout(() => s.remove(), 2000);
+  }
+}
+
+/* 音频 */
+let audioCtx = null, analyser = null, mouthData = null, audioEl = new Audio();
+audioEl.preservesPitch = false;
+function ensureAudio() {
+  if (audioCtx) return;
+  try {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 512;
+    mouthData = new Uint8Array(analyser.frequencyBinCount);
+    const src = audioCtx.createMediaElementSource(audioEl);
+    src.connect(analyser); analyser.connect(audioCtx.destination);
+  } catch (e) {}
+}
+
+function speak(b64) {
+  if (!b64) return;
+  void mediaPlayback.load({kind:'speaking',audio:b64});
+}
+// 流式回复的一句：接到队尾，不打断正在播的上一句。
+// 用 load() 会让每句话互相截断，听起来像被掐住脖子。
+// mime 跟着走：聊天片段是 wav（省掉每句一次 ffmpeg 转码），整段语音仍是 mp3。
+function speakChunk(b64, mime) {
+  if (!b64) return;
+  void mediaPlayback.enqueue({kind:'speaking',audio:b64,mime:mime||'audio/mp3'});
+}
+const mediaPlayback = new CompanionPlayback.Player({
+  audio:audioEl,
+  prepare:()=>{ensureAudio();if(audioCtx?.state==='suspended')audioCtx.resume();},
+  active:(kind,on)=>{speaking=on;worldVideo.busy(chatPending||on);setActivity(on?(kind||'speaking'):(chatPending?'thinking':'idle'));},
+  text:text=>showBubble(text,'',10000),
+  progress:p=>window.malfoyHost?.mediaProgress?.(p),
+});
+
+function peek(side="right"){
+  if(mode!=="desktop"||performer.activity!=="idle"||speaking||drag||["jump","fall"].includes(pet.state))return false;
+  if(!presence.peek(side,pet))return false;
+  face.setExpression("playful",{duration:6});return true;
+}
+function travelTo(target){
+  if(!["world","desktop","dormant"].includes(target))return Promise.resolve(false);
+  if(travelPending)return travelPending.promise;
+  if(target===mode)return Promise.resolve(false);
+  presence.cancel();
+  if(!presence.travel("out",target))return Promise.resolve(false);
+  let resolve;const promise=new Promise(done=>{resolve=done;});
+  travelPending={target,resolve,promise};return promise;
+}
+async function finishTravel(){
+  const pending=travelPending;if(!pending||travelHandoff)return;
+  travelHandoff=true;
+  try{
+    const host=window.malfoyHost;
+    if(pending.target==="world"&&host?.enterWorld)await host.enterWorld();
+    else if(pending.target==="desktop"&&host?.summon)await host.summon();
+    else if(pending.target==="dormant"&&host?.dormant)host.dormant();
+    else setMode(pending.target==="desktop"?"desktop":"world");
+    pending.resolve(true);
+  }catch(error){
+    presence.travel("in",mode);showBubble("没能打开通道，再试一次吧。","",3000);pending.resolve(false);
+  }finally{travelPending=null;travelHandoff=false;}
+}
+document.getElementById("travel-world").onclick=()=>travelTo(mode==="desktop"?"world":"desktop");
+document.getElementById("travel-dormant").onclick=()=>travelTo("dormant");
+
+
+/* ───────── 窗口边缘互动（爬窗） ───────── */
+let wins = [], perch = null;
+let pet = { state: "idle", x: 0, y: 0, dir: 1, t: 0, idle: 2, walkFor: 7, placed: false };
+function restFor(seconds) { pet.state="idle"; pet.idle=seconds; pet.t=0; }
+function walkFor() { pet.state="walk"; pet.walkFor=4+Math.random()*6; pet.t=0; }
+let jump = null;          // {x0,y0,x1,y1,t,dur}
+let lastWinPoll = 0;
+
+async function pollWindows() {
+  if (!window.malfoyHost || !window.malfoyHost.windows) return;
+  try {
+    const list = await window.malfoyHost.windows();
+    if (Array.isArray(list)) wins = list.filter(w =>
+      [w.x,w.y,w.w,w.h].every(Number.isFinite) && w.w>240 && w.h>160 &&
+      w.x<W && w.x+w.w>0 && w.y<H && w.y+w.h>0);
+  } catch (e) {}
+}
+
+function windowTopY(w) { return w.y; }          // 顶边（CG 坐标 y 向下）
+
+// 站哪条边：顶边放得下就站顶边，否则站底边（否则头会被屏幕切掉）
+function perchLine(w) {
+  const charH = characterHeight();
+  if (w.y >= charH + 8) return w.y;              // 顶边有空间
+  return Math.min(H - 8, w.y + w.h);             // 站窗口底边
+}
+function pickWindow(exclude) {
+  const cands = wins.filter(w => w !== exclude);
+  if (!cands.length) return null;
+  // 优先选离得近的
+  cands.sort((a, b) => Math.abs(a.x - pet.x) - Math.abs(b.x - pet.x));
+  return cands[0];
+}
+
+function startJump(tw) {
+  if (!tw) { // 没目标就掉下去
+    pet.state = "fall";
+    return;
+  }
+  const margin=characterHeight()*characterAspect()*.5+8;
+  const tx = Math.max(margin,Math.min(W-margin,tw.x+tw.w*.5));
+  const ty = perchLine(tw);
+  jump = { x0: pet.x, y0: pet.y, x1: tx, y1: ty, t: 0, dur: 0.75 };
+  pet.state = "jump";
+  perch = tw;
+}
+
+function updatePet(dt, now) {
+  if (mode !== "desktop" || drag && drag.moved || presence.action) return;
+  if (!roaming && pet.state!=="fall" && pet.state!=="jump") return;
+
+  // 每 2.5s 拉一次窗口（now 单位 ms）
+  if (now - lastWinPoll > 2500) { lastWinPoll = now; pollWindows(); }
+
+  // 首次落位
+  if (!pet.placed) {
+    if (wins.length) {
+      perch = wins[0];
+      pet.x = perch.x + perch.w * 0.5;
+      pet.y = perchLine(perch);
+      pet.state = "idle"; pet.idle = 0.6;
+    } else {
+      pet.x = W * 0.5; pet.y = H - 2; restFor(2+Math.random()*3);
+    }
+    pet.placed = true;
+    return;
+  }
+
+  // 窗口列表每轮重建，按 app+位置把 perch 刷新到新对象；找不到就掉下去
+  if (perch) {
+    const still = wins.find(w => w.app === perch.app &&
+      Math.abs(w.x - perch.x) < 60 && Math.abs(w.y - perch.y) < 60);
+    if (still) perch = still;
+    else { perch = null; if (pet.state !== "jump") pet.state = "fall"; }
+  }
+
+  // A gesture/activity/hover owns the body until it can safely return to walking.
+  // Do not freeze a jump/fall in midair.
+  const held=performer.activity!=="idle" || performer.event || performer.ambient || motion.action || document.activeElement===input ||
+    (pointer && characterHit(pointer.x,pointer.y));
+  if (held && (pet.state==="idle" || pet.state==="walk")) {
+    restFor(Math.max(pet.idle,1));
+    if (perch) pet.y=perchLine(perch);
+    return;
+  }
+
+  // 有窗口但没栖息 → 跳过去
+  if (!perch && wins.length && pet.state !== "jump" && pet.state !== "fall") {
+    startJump(pickWindow(null));
+    return;
+  }
+
+  const SPEED = 62;   // px/s
+  if (pet.state === "walk") {
+    const margin=characterHeight()*characterAspect()*.5+8;
+    const left=Math.max(margin,Math.min(W-margin,perch ? perch.x+margin : margin));
+    const right=Math.max(left,Math.min(W-margin,perch ? perch.x+perch.w-margin : W-margin));
+    pet.x += SPEED * pet.dir * dt;
+    if (pet.x <= left)  { pet.x = left;  pet.dir = 1;  if (perch && Math.random() < 0.45) startJump(pickWindow(perch)); }
+    if (pet.x >= right) { pet.x = right; pet.dir = -1; if (perch && Math.random() < 0.45) startJump(pickWindow(perch)); }
+    pet.y = perch ? perchLine(perch) : H - 2;
+    pet.t += dt;
+    if (pet.t >= pet.walkFor) restFor(4+Math.random()*7);
+  } else if (pet.state === "idle") {
+    pet.idle -= dt;
+    if (perch) pet.y = perchLine(perch);
+    if (pet.idle <= 0) walkFor();
+  } else if (pet.state === "jump" && jump) {
+    jump.t += dt;
+    const k = Math.min(1, jump.t / jump.dur);
+    pet.x = jump.x0 + (jump.x1 - jump.x0) * k;
+    const baseY = jump.y0 + (jump.y1 - jump.y0) * k;
+    pet.y = baseY - Math.sin(Math.PI * k) * 90;
+    if (k >= 1) { pet.y = jump.y1; jump = null; pet.state = "idle"; pet.idle = 0.5; }
+  } else if (pet.state === "fall") {
+    pet.y += 520 * dt;
+    if (pet.y >= H - 2) { pet.y = H - 2; pet.state = "idle"; pet.idle = 0.8; }
+  }
+}
+
+/* 主循环 */
+
+let t0 = performance.now();
+function loop(now) {
+  const t = (now - t0) / 1000;
+
+  if (mode === "world" && !worldVideo.current) drawBackground(t);
+
+  const dt=loop._last == null ? 0 : Math.min(.1,(now-loop._last)/1000);
+  loop._last=now;
+  worldVideo.tick(dt);
+  const ps=travelHandoff?presence.state:presence.tick(dt,{width:W,height:H,charWidth:characterHeight()*characterAspect(),charHeight:characterHeight(),reducedMotion:motionPreference.matches});
+  if(ps.completed&&ps.kind==="peek"){pet.x=ps.x;pet.y=ps.y;pet.placed=true;perch=null;restFor(3);}
+  if(ps.completed&&ps.kind==="travel"&&ps.direction==="out"&&travelPending)finishTravel();
+  if (mode === "desktop") {
+    if (!motionPreference.matches && !(dshActive() && dshPlayer.sleeping)) updatePet(dt,now);
+    else if (!pet.placed) { pet.x=W*.5;pet.y=H-2;pet.placed=true;restFor(4); }
+    const margin=characterHeight()*characterAspect()*.5+8;
+    pet.x=Math.max(margin,Math.min(Math.max(margin,W-margin),pet.x));
+    pet.y=Math.min(H-2,Math.max(characterHeight(),pet.y));
+    if(roaming&&!motionPreference.matches&&now>=nextEdgePlay&&!presence.action&&performer.activity==="idle"&&!performer.event&&!performer.ambient&&!drag&&pet.state==="idle"&&!(pointer&&characterHit(pointer.x,pointer.y))){
+      if(peek(pet.x<W/2?"left":"right"))nextEdgePlay=now+60000+Math.random()*30000;
+    }
+    const r=characterRect(), lookX=pointer ? (pointer.x-(r.left+r.width*.5))/Math.max(120,r.width) : 0;
+    const pose=motion.tick(dt,{locomotion:roaming ? pet.state : "idle",speed:pet.state==="walk" ? 62 : 0,
+      dragging:!!(drag&&drag.moved),lookX,reducedMotion:motionPreference.matches});
+    const scene=performer.tick(dt,{locomotion:pet.state,dragging:!!(drag&&drag.moved),
+      userNear:!!(pointer&&characterHit(pointer.x,pointer.y)),gesture:motion.action?.name,reducedMotion:motionPreference.matches,
+      walkEnabled:!!(rigRenderer&&rigRenderer.ready&&rigRenderer.walkAtlas),walkFrames:rigRenderer?.walkAtlas?.frames?.length||0,
+      danceEnabled:!!(rigRenderer&&rigRenderer.ready&&rigRenderer.danceAtlas),danceFrames:rigRenderer?.danceAtlas?.frames?.length||0});
+    const renderScene=ps.kind==="peek"?{...scene,frame:15,tilt:(scene.tilt||0)+ps.rotation}:scene;
+    if(!motionPreference.matches&&!ps.active&&["celebrating","singing"].includes(scene.scene)&&now-lastDecoration>900){
+      spawnHearts(2,scene.scene==="celebrating"?["✦","✧"]:["♪","♫"]);lastDecoration=now;
+    }
+    let audioLevel=0;
+    if(speaking&&analyser&&mouthData){analyser.getByteFrequencyData(mouthData);audioLevel=Math.min(1,mouthData.reduce((sum,v)=>sum+v,0)/mouthData.length/65);}
+    const facial=face.tick(dt,{...scene,speaking,audioLevel,lookX,lookY:pointer?(pointer.y-r.top-r.height*.4)/Math.max(100,r.height):0,reducedMotion:motionPreference.matches});
+    const drawX=ps.kind==="peek"?ps.x:pet.x,drawY=ps.kind==="peek"?ps.y:pet.y;
+    ch.style.height=characterHeight()+"px";
+    ch.style.left=drawX+"px";ch.style.bottom=(H-drawY)+"px";
+    ch.style.transform="translateX(-50%)";
+    if(dshActive()) {
+      dshPlayer.tick({...renderScene,locomotion:pet.state,dragging:!!(drag&&drag.moved)});
+      dshPlayer.place(drawX,drawY,characterHeight(),!document.hidden);
+    }
+    if (desktopRigActive()) {
+      const size=rigRenderer.resize(characterHeight());
+      puppet.style.left=drawX+"px";puppet.style.bottom=(H-drawY-size.bottomPadding)+"px";
+      rigRenderer.render(pose,rigDebug?null:renderScene,facial);
+      humTick(renderScene);
+      if(rigDebug) {
+        rigDebug.style.display="block";
+        rigDebug.style.cssText=puppet.style.cssText+";pointer-events:none;position:absolute;z-index:3;transform:translateX(-50%)";
+        rigRenderer.drawDebug(rigDebug);
+      }
+    }
+  } else {
+    dshPlayer.place(0,0,180,false);
+    if(rigDebug) rigDebug.style.display="none";
+    const quiet=motionPreference.matches ? 0 : 1;
+    const breath=Math.sin(t*1.05)*.012*quiet,bob=Math.sin(t*.9)*9*quiet,sway=Math.sin(t*.55)*1.1*quiet;
+    ch.style.left="50%";ch.style.bottom="0px";
+    ch.style.transform=`translate(-50%, ${-bob}px) rotate(${sway}deg) scale(1, ${1+breath})`;
+  }
+  const transit=ps.kind==="travel",suffix=transit?` translateY(${-ps.lift}px) rotate(${ps.rotation}rad) scale(${ps.scale})`:"";
+  puppet.style.transform="translateX(-50%)"+suffix;
+  dshRoot.style.transform="translateX(-50%)"+suffix;dshRoot.style.opacity=transit?ps.opacity:1;
+  ch.style.transform+=suffix;
+  worldScene.style.opacity=transit?ps.opacity:1;
+  puppet.style.opacity=ch.style.opacity=transit?ps.opacity:1;
+
+  const portal=document.getElementById("portal");
+  portal.style.display=ps.portal>0?"block":"none";
+  if(ps.portal>0){
+    const width=(mode==="desktop"?characterHeight():H*.55)*(.45+ps.portal*.45);
+    Object.assign(portal.style,{left:(mode==="desktop"?pet.x:W*.5)+"px",top:((mode==="desktop"?pet.y:H)-20)+"px",
+      width:width+"px",height:width*.4+"px",opacity:ps.portal,transform:`translate(-50%,-50%) rotate(${-ps.progress*90}deg)`});
+  }
+  updateHit();
+
+  requestAnimationFrame(loop);
+}
+
+/* 消息 / 交互 */
+function showBubble(zh, en, ms = 6000) {
+  bubble.innerHTML = zh + (en ? `<span class="en">${en}</span>` : "");
+  bubble.classList.add("on");
+  clearTimeout(showBubble._t);
+  showBubble._t = setTimeout(() => bubble.classList.remove("on"), ms);
+}
+
+/* Esc → 回到休眠（壁纸） */
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && window.malfoyHost && window.malfoyHost.dormant) {
+    travelTo("dormant");
+  }
+});
+
+/* 萌娘模式命中测试：只有角色/输入区接收鼠标，其余穿透 */
+let lastHit = null;
+function updateHit() {
+  if (mode!=="desktop" || !window.malfoyHost?.stageHit || !pointer) return;
+  const cb=chatBox.getBoundingClientRect();
+  const overUI=chatBox.classList.contains("on") && pointer.x>=cb.left-12 && pointer.x<=cb.right+12 && pointer.y>=cb.top-12 && pointer.y<=cb.bottom+12;
+  const nav=document.getElementById("world-controls"),nr=nav.getBoundingClientRect();
+  const overNav=nav.classList.contains("on")&&pointer.x>=nr.left&&pointer.x<=nr.right&&pointer.y>=nr.top&&pointer.y<=nr.bottom;
+  const menu=document.getElementById("dsh-actions"),mr=menu?.getBoundingClientRect();
+  const overMenu=mr&&!menu.hidden&&pointer.x>=mr.left&&pointer.x<=mr.right&&pointer.y>=mr.top&&pointer.y<=mr.bottom;
+  const hit=!!(overMenu || drag || characterHit(pointer.x,pointer.y) || overUI || overNav);
+  if (hit!==lastHit) {lastHit=hit;window.malfoyHost.stageHit(hit);}
+}
+window.addEventListener("pointermove",e=>{pointer={x:e.clientX,y:e.clientY};updateHit();});
+window.addEventListener("blur",()=>{pointer=null;if(!drag && lastHit!==false){lastHit=false;window.malfoyHost?.stageHit?.(false);}});
+
+function poke(event) {
+  if (performance.now()<suppressClickUntil) return;
+  if(dshActive()&&dshPlayer.sleeping){dshPlayer.wake();setActivity("idle");}else if(dshActive())dshPlayer.play("wave");
+  spawnHearts(6);
+  window.malfoyHost?.tap?.();
+  // 点击台词：睡眠唤醒 / 趴屏 / 普通触摸各自轮换，台词来自 pack.json。
+  const state = worldVideo.machine.state;
+  const kind = state === "sleep" ? "wake" : state === "quiet" ? "quiet" : "touch";
+  window.malfoyHost?.touchLine?.(kind)
+    .then(line => { if (line) showBubble(line, "", 3500); })
+    .catch(() => {});
+  // 点她时也让关系称呼重新露一下，避免只在启动那 6 秒能看到。
+  window.malfoyHost?.affection?.().then(showRelation).catch(() => {});
+  if(mode==="desktop") {
+    const r=characterRect(),tail=event && event.clientX>r.left+r.width*.72 && event.clientY>r.top+r.height*.6;
+    pokeCount=performance.now()-lastPoke<5000?pokeCount+1:1;lastPoke=performance.now();
+    performer.notify(tail?"surprise":pokeCount>=3?"shy":"pet");restFor(3);return;
+  }
+  worldVideo.interact(true);
+}
+function attachPetInput(element) {
+  element.addEventListener("pointerdown",e=>{
+    if(mode!=="desktop" || e.button!==0 || !characterHit(e.clientX,e.clientY)) return;
+    if(presence.action?.kind==="peek"){
+      const p=presence.state,margin=characterHeight()*characterAspect()*.5+8;
+      pet.x=Math.max(margin,Math.min(W-margin,p.x));pet.y=Math.min(H-2,Math.max(characterHeight(),p.y));
+      presence.cancel();face.clear();restFor(3);
+    }
+    drag={id:e.pointerId,startX:e.clientX,startY:e.clientY,x:pet.x,y:pet.y,moved:false};
+    element.setPointerCapture(e.pointerId);updateHit();
+  });
+  element.addEventListener("pointermove",e=>{
+    if(!drag || drag.id!==e.pointerId) return;
+    const dx=e.clientX-drag.startX,dy=e.clientY-drag.startY;
+    if(!drag.moved && Math.hypot(dx,dy)<6) return;
+    drag.moved=true;perch=null;jump=null;pet.placed=true;
+    pet.x=drag.x+dx;pet.y=drag.y+dy;pet.state="idle";
+  });
+  const release=e=>{
+    if(!drag || drag.id!==e.pointerId) return;
+    const moved=drag.moved;drag=null;
+    if(element.hasPointerCapture(e.pointerId)) element.releasePointerCapture(e.pointerId);
+    if(moved){
+      pet.state=motionPreference.matches ? "idle" : "fall";
+      if(motionPreference.matches) pet.y=H-2;
+      suppressClickUntil=performance.now()+300;performer.notify("surprise");
+    }
+    updateHit();
+  };
+  element.addEventListener("pointerup",release);element.addEventListener("pointercancel",release);
+  element.addEventListener("lostpointercapture",release);
+  element.addEventListener("click",e=>{if(mode!=="desktop"||characterHit(e.clientX,e.clientY))poke(e);});
+}
+attachPetInput(ch);attachPetInput(puppet);attachPetInput(dshRoot);
+for (const video of worldScene.querySelectorAll("video")) video.addEventListener("click",poke);
+
+/* 聊天 */
+const chatBox = document.getElementById("chat");
+const input = document.getElementById("in");
+const sendBtn = document.getElementById("send");
+let history = [];
+
+async function sendChat() {
+  const text = input.value.trim();
+  if (!text || chatPending) return;
+  chatPending=true;setActivity("thinking");
+  input.value = "";
+  showBubble(text, "", 3000);
+  try {
+    const r = await window.malfoyHost.chat(text, history);
+    history.push({ role: "user", content: text }, { role: "assistant", content: r.text });
+    if (history.length > 12) history = history.slice(-12);
+    setEmotion(r.emo);
+    showBubble(r.text, "", 8000);
+    if (r.voice && !r.deliveredToStage) speak(r.voice);
+    else {setActivity("idle");if(!performer.event)performer.notify("greet");}
+  } catch (e) {
+    showBubble("……信号断了。", "", 4000);
+    setActivity("idle");performer.notify("chat-failed");
+  } finally {chatPending=false;}
+}
+if (sendBtn) sendBtn.addEventListener("click", sendChat);
+if (input) input.addEventListener("keydown", (e) => { if (e.key === "Enter") sendChat(); });
+
+/* Desktop pack controls stay inside the existing hit-tested navigation. */
+const packNav=document.getElementById('world-controls');
+const packButton=document.createElement('button');packButton.textContent='动作';packButton.id='dsh-action-toggle';packButton.setAttribute('aria-expanded','false');
+const packMenu=document.createElement('div');packMenu.id='dsh-actions';packMenu.hidden=true;
+packMenu.style.cssText='position:absolute;right:0;top:44px;width:270px;max-height:65vh;overflow:auto;box-sizing:border-box;padding:14px;border:1px solid #d9e8e0;border-radius:16px;background:#f7faf5f7;color:#32575f;box-shadow:0 12px 40px #1235;';
+const packTitle=document.createElement('strong');packTitle.textContent='桌面动作';packTitle.style.cssText='display:block;font:14px -apple-system,sans-serif;margin-bottom:10px';packMenu.append(packTitle);
+const packSwitch=document.createElement('button');
+const syncPack=()=>{packSwitch.textContent=dshEnabled?'动作包：大肥鱼 · 切回原版':'动作包：原版 · 使用大肥鱼';};syncPack();
+packSwitch.onclick=()=>{dshEnabled=!dshEnabled;dshPlayer.enabled=dshEnabled;try{localStorage.setItem('lan.desktop.pack',dshEnabled?'dsh':'original');}catch(_){}syncPack();syncCharacterVisibility();};
+packMenu.append(packSwitch);
+const actionGrid=document.createElement('div');actionGrid.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:12px 0;';
+for(const [key,label] of Object.entries(DshMotion.LABELS)){const b=document.createElement('button');b.textContent=label;b.style.cssText='padding:8px 4px;border:1px solid #c6d8cf;background:#e8f0e8;color:#32575f;font-size:11px';b.onclick=()=>{if(!dshEnabled){dshEnabled=true;dshPlayer.enabled=true;syncPack();syncCharacterVisibility();}setActivity('idle');performer.event=null;performer.ambient=null;pet.state='idle';restFor(12);dshPlayer.play(key);};actionGrid.append(b);}
+packMenu.append(actionGrid);
+const credit=document.createElement('a');credit.href='https://github.com/PC2005-cloud/dsh-pet';credit.target='_blank';credit.rel='noopener';credit.textContent='dsh-pet / PC2005-cloud · 大肥鱼';credit.style.cssText='display:block;color:#507974;font-size:10px;margin:6px 0;';
+const license=document.createElement('small');license.textContent='上善无形 / ZipZipPipe · CC BY-NC-SA 4.0，非商业动作素材。';license.style.cssText='display:block;color:#84958a;font-size:9px;line-height:1.7';packMenu.append(credit,license);
+packButton.onclick=()=>{packMenu.hidden=!packMenu.hidden;packButton.setAttribute('aria-expanded',String(!packMenu.hidden));updateHit();};
+packNav.prepend(packButton);packNav.append(packMenu);
+document.addEventListener('pointerdown',e=>{if(!packNav.contains(e.target)){packMenu.hidden=true;packButton.setAttribute('aria-expanded','false');}});
+
+/* 初始化 */
+function init() {
+  resize(); seedScene();
+  const q = new URLSearchParams(location.search);
+  setMode(q.get("mode") === "desktop" ? "desktop" : "world");
+  // The native app uses composer.html. Keep embedded input only for an
+  // explicitly requested standalone preview, never on the desktop surface.
+  if (q.get("chat") === "1" && chatBox && !window.malfoyHost) chatBox.classList.add("on");
+  document.body.classList.toggle("wallpaper", q.get("wallpaper") === "1");
+  document.getElementById("world-controls").classList.toggle("on",q.get("chat")==="1"||!!window.malfoyHost);
+  if (q.get("chat") === "1") document.getElementById("hint").style.display = "block";
+  else document.getElementById("hint").style.display = "none";
+
+  if (window.malfoyHost) {
+    window.malfoyHost.affection?.().then(showRelation).catch(() => {});
+    window.malfoyHost.onAffection?.(showRelation);
+    if (window.malfoyHost.onCharacterMode) {
+      window.malfoyHost.onCharacterMode((p) => setMode(p && p.mode === "desktop" ? "desktop" : "world"));
+    }
+    window.malfoyHost.onSceneVideo?.(videoMode);
+    window.malfoyHost.onDesktopSize?.(setDesktopSize);
+    window.malfoyHost.onSceneVisible?.(visible => {
+      worldVideo.hide(!visible); loop._last = null;
+      if (visible) { travelHandoff=false; presence.travel("in", mode); }
+    });
+    window.malfoyHost.onStopVoice?.(() => mediaPlayback.stop());
+    window.malfoyHost.onSceneMedia?.(p=>mediaPlayback.command(p));
+    window.malfoyHost.onCharacterActivity?.(activity => {
+      chatPending = activity !== "idle";
+      worldVideo.busy(chatPending || speaking);
+      if (!speaking) setActivity(activity);
+    });
+    if (window.malfoyHost.onCharacterSay) {
+      window.malfoyHost.onCharacterSay((p) => {
+        if (!p) return;
+        if (p.text) showBubble(p.text, p.en || "", 8000);
+        if (p.emo) setEmotion(p.emo);
+        if (p.voice || p.audio) {
+          // chunk = 流式回复的其中一句，接队尾；否则是整段，直接换台
+          if (p.chunk) speakChunk(p.voice || p.audio, p.mime);
+          else speak(p.voice || p.audio);
+        } else if (!p.partial) worldVideo.interact();
+      });
+    }
+  }
+  requestAnimationFrame(loop);
+}
+
+window.addEventListener("resize", () => { resize();pet.x=Math.min(W,pet.x);pet.y=Math.min(H-2,pet.y); });
+document.addEventListener("visibilitychange",()=>{
+  loop._last=null;worldVideo.hide(document.hidden);
+  // Restore the last desktop position immediately, before the next animation
+  // frame, so the first pointer event after activation still hits the pet.
+  if(mode==="desktop")dshPlayer.place(pet.x,pet.y,characterHeight(),!document.hidden&&dshActive());
+});
+init();
+
+window.Character = {
+  setMode, setRoam, setEmotion, getEmotion, speak, showBubble, spawnHearts,
+  showVideo, hideVideo,
+  videoMode,
+  get video() { return { ...worldVideo.snapshot, name: worldVideo.snapshot.state, failed: !!worldVideo.error, active: videoActive() }; },
+  get speaking() { return speaking; },
+  get playback(){return mediaPlayback.snapshot;},
+  get roaming() { return roaming; },
+  get mode() { return mode; },
+  get lastHit() { return lastHit; },
+  action: (name,options) => {const accepted=motion.requestAction(name,options);if(accepted)performer.emote(({greet:"waving",nod:"happy",look:"thinking",stretch:"waving",sway:"shy"})[name]);return accepted;},
+  setActivity,
+  react: name => {
+    if((name==="task-complete"||name==="task-failed")&&performer.activity==="working")setActivity("idle");
+    return performer.notify(name);
+  },
+  emote: scene => performer.emote(scene),
+  setExpression: (name,options)=>face.setExpression(name,options),
+  setFace: parameters=>face.setParameters(parameters),
+  clearFace: ()=>face.clear(),
+  blink: ()=>face.blink(),
+  get face(){return {...face.state,ready:!!rigRenderer?.atlas?.independentFaces};},
+  peek,travel:travelTo,
+  get presence(){return {...presence.state};},
+  clearReaction: () => {performer.event=null;performer.ambient=null;},
+  setPresentationScale: value => {if(!Number.isFinite(value)||value<.6||value>1.6)return false;presentationScale=value;return true;},
+  setDesktopSize,
+  get desktopSize(){return {preferred:desktopSize,height:characterHeight(),aspect:characterAspect()};},
+  get performance() {return {...performer.state,atlasReady:!!rigRenderer?.atlas,error:atlasError};},
+  setRigDebug: on => {
+    if(on && !rigDebug){rigDebug=document.createElement("canvas");document.getElementById("stage").appendChild(rigDebug);}
+    else if(!on && rigDebug){rigDebug.remove();rigDebug=null;}
+  },
+  hitTest: (x,y) => characterHit(x,y),
+  get rigStats() { return rigRenderer ? {vertices:rigRenderer.rig.vertices.length,triangles:rigRenderer.rig.triangles.length/3,ready:rigRenderer.ready} : null; },
+  get desktopPack(){return dshPlayer.snapshot;},
+  get motion() { return {...motion.state, renderer:dshActive()?"dsh-webm":desktopRigActive() ? rigRenderer.displayMode : "png-fallback",error:rigError}; },
+  get pet() { return { ...pet, wins: wins.length, perch: perch && perch.app }; },
+};
+</script>
+</body>
+</html>

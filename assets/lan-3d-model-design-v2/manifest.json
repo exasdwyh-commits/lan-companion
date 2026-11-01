@@ -1,0 +1,147 @@
+{
+  "task": "WORLD-MODEL-10",
+  "date": "2026-11-01",
+  "reference_video": {
+    "user_url": "https://v.douyin.com/_d2HD3Ow9Ts/",
+    "resolved_url": "https://www.douyin.com/video/7678318798419910905",
+    "title": "这个大肥鱼🐟 #Deepseek #可爱到爆炸💥",
+    "duration_seconds": 9.775,
+    "evidence": "benchmarks/2026-11-01-WORLD-MODEL-10/",
+    "use": "form_study_only_not_runtime_media",
+    "license": "third_party_rights_not_verified"
+  },
+  "identity_reference": "assets/whale-chibi-directions-2026-10-31/B-master-v1.png",
+  "files": [
+    {
+      "file": "modeling-back-v1.png",
+      "sha256": "532e2692c38d242db3371eb5326c1db99c8d187b1afa4ce4764509353877edaf",
+      "bytes": 1568107,
+      "width": 1374,
+      "height": 1145,
+      "role": "multiview_model_input",
+      "integration_state": "internal_review_only",
+      "provider": "OpenAI imagegen"
+    },
+    {
+      "file": "modeling-front-v1.png",
+      "sha256": "18c5e46464d8d54f658110b21f64aab37e7a3103896fa058b116473a96fb1d5d",
+      "bytes": 1742840,
+      "width": 1374,
+      "height": 1145,
+      "role": "multiview_model_input",
+      "integration_state": "internal_review_only",
+      "provider": "OpenAI imagegen"
+    },
+    {
+      "file": "modeling-side-v1.png",
+      "sha256": "e223331a548fd240354623e654a1b8bbbec40320450275a84004152d6849a53a",
+      "bytes": 1644989,
+      "width": 1374,
+      "height": 1145,
+      "role": "multiview_model_input",
+      "integration_state": "internal_review_only",
+      "provider": "OpenAI imagegen"
+    },
+    {
+      "file": "turnaround-study-v1.png",
+      "sha256": "3bea5b9dabc5f3623b7b141f5922ba8a3d9c74e91c795c8ba3c557fb68c10103",
+      "bytes": 1984234,
+      "width": 1774,
+      "height": 887,
+      "role": "design_study",
+      "integration_state": "internal_review_only",
+      "provider": "OpenAI imagegen"
+    },
+    {
+      "file": "turnaround-study-v2.png",
+      "sha256": "45e63c53b9d7f15979538fe10537024930e11d1aa7dcf3d3755d15071e59765f",
+      "bytes": 1957936,
+      "width": 1774,
+      "height": 887,
+      "role": "design_study",
+      "integration_state": "internal_review_only",
+      "provider": "OpenAI imagegen"
+    },
+    {
+      "file": "volume-look-study-v1.png",
+      "sha256": "716fc9714b60fd6fcbdf3b351cb5b1080e540c259c75caf0f5233531043c2f76",
+      "bytes": 1990046,
+      "width": 1197,
+      "height": 1315,
+      "role": "design_study",
+      "integration_state": "internal_review_only",
+      "provider": "OpenAI imagegen"
+    }
+  ],
+  "hunyuan_trial": {
+    "state": "downloaded_and_blender_reviewed",
+    "model": "3.1",
+    "mode": "image_to_3d_multiview",
+    "selected_faces": "500k",
+    "slots": {
+      "front": "modeling-front-v1.png",
+      "left": "modeling-side-v1.png",
+      "back": "modeling-back-v1.png"
+    },
+    "credits_before": 19,
+    "credits_after": 18,
+    "cost_credits": 1,
+    "download_filename": "bce6895fad36211ffe5dd943f897d0dc.glb",
+    "artifact": "model-trial-v1/lan-b-multiview-original.glb",
+    "artifact_sha256": "808000038ee523be6c5e23f7c231555b71f4d1af9933a60f4f0ee123a73db459",
+    "artifact_bytes": 56946276,
+    "triangles": 497910,
+    "vertices": 327237,
+    "skeletons": 0,
+    "animations": 0,
+    "shape_keys": 0,
+    "visual_review": {
+      "front": "Identity and short-round proportions retained; hands and skirt details somewhat noisy.",
+      "side": "Head and torso depth visible; hair contours separate from tail.",
+      "back": "Layered blue hair replaces old white inflated back; tail handedness matches front.",
+      "material": "Original PBR too glossy; separate soft-material preview being prepared.",
+      "acceptance": "base_candidate_pending_user_visual_acceptance"
+    }
+  },
+  "limitations": [
+    "AI-generated independent views have detail differences and are not exact CAD projections.",
+    "Turnaround v1 has inconsistent tail handedness and must not be used as modeling input.",
+    "Images are not a 3D mesh, layered PSD, rig, or animation.",
+    "Internal design study; source asset public redistribution rights have not been cleared."
+  ],
+  "game_preview": {
+    "file": "lan-b-multiview-game-preview.glb",
+    "bytes": 9213768,
+    "sha256": "bee05205aadf9dcb0b92c2ff739a1c2be323fb834391c57949d613a7a08b6824",
+    "images": [
+      {
+        "name": "texture_pbr_20250901_normal-2k",
+        "mimeType": "image/jpeg",
+        "bytes": 282683,
+        "size": [
+          2048,
+          2048
+        ]
+      },
+      {
+        "name": "texture_pbr_20250901-2k",
+        "mimeType": "image/jpeg",
+        "bytes": 952341,
+        "size": [
+          2048,
+          2048
+        ]
+      }
+    ],
+    "external_uris": [],
+    "skins": 0,
+    "animations": 0,
+    "triangles": 199999,
+    "roughness": 0.55,
+    "metallic": 0,
+    "state": "four_views_reviewed_base_candidate_pending_user_acceptance",
+    "purpose": "static_base_candidate_for_user_review",
+    "retopology": "automated_decimation_not_animation_topology",
+    "visual_review": "Head depth, layered back hair and tail silhouette retained after reduction; softer highlights. Hair edges/fingers/skirt retain mesh-generation noise."
+  }
+}

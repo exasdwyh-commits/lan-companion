@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<title>澜 3D 模型检查 · Hyper3D Gen-2.5</title>
+<style>html,body{margin:0;height:100%;background:#0d1622;overflow:hidden}#hud{position:fixed;left:10px;top:10px;color:#9fd8ff;font:13px/1.7 -apple-system,"PingFang SC",sans-serif;text-shadow:0 1px 2px #000;z-index:9}</style>
+<div id="hud">澜 · Hyper3D Gen-2.5 模型检查<br>拖动旋转 · 滚轮缩放 · 双指平移</div>
+<canvas id="c"></canvas>
+<script src="./vendor/three.min.js"></script>
+<script src="./vendor/OrbitControls.js"></script>
+<script src="./vendor/GLTFLoader.js"></script>
+<script>
+const T=THREE,canvas=document.getElementById('c');
+const renderer=new T.WebGLRenderer({canvas,antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+if('outputEncoding' in renderer) renderer.outputEncoding=T.sRGBEncoding;
+const scene=new T.Scene();scene.background=new T.Color(0x0d1622);
+scene.add(new T.HemisphereLight(0xcfe8ff,0x1a2436,1.05));
+const key=new T.DirectionalLight(0xffffff,1.1);key.position.set(2,4,3);scene.add(key);
+const camera=new T.PerspectiveCamera(38,1,.01,60);camera.position.set(0,1.0,3.4);
+const controls=new T.OrbitControls(camera,canvas);controls.target.set(0,.8,0);
+const hud=document.getElementById('hud');
+const info=m=>hud.innerHTML+='<br>'+m;
+info('加载中… 26MB');
+new T.GLTFLoader().load('../../../assets/lan-3d-hyper3d-v1/base_basic_pbr.glb',g=>{
+  try{
+    scene.add(g.scene);
+    const box=new T.Box3().setFromObject(g.scene),size=box.getSize(new T.Vector3());
+    const s=1.7/Math.max(size.x,size.y,size.z||1);
+    g.scene.scale.setScalar(s);
+    box.setFromObject(g.scene);const c=box.getCenter(new T.Vector3());
+    g.scene.position.sub(c);g.scene.position.y+=box.getSize(new T.Vector3()).y/2;
+    let tris=0;g.scene.traverse(o=>{if(o.isMesh&&o.geometry)tris+=((o.geometry.index&&o.geometry.index.count)||o.geometry.attributes.position.count)/3;});
+    info('OK · 三角形 '+(tris/1000|0)+'k');
+  }catch(e){info('<b style="color:#fa5">回调错误</b> '+e.message);}
+},p=>{if(p.loaded&&p.total)info('下载 '+(p.loaded/1048576|0)+'/'+(p.total/1048576|0)+'MB');},
+ e=>{console.error(e);info('<b style="color:#f88">加载失败</b> '+(e&&e.message||e));});
+function fit(){renderer.setSize(innerWidth,innerHeight);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();}
+addEventListener('resize',fit);fit();
+(function loop(){requestAnimationFrame(loop);controls.update();renderer.render(scene,camera);})();
+</script>
+</html>

@@ -1,0 +1,21 @@
+{
+  "source": "lan-b-multiview-original.glb",
+  "target_triangles": 200000,
+  "texture_max": 2048,
+  "roughness": 0.55,
+  "metallic": 0.0,
+  "rigged": false,
+  "changes": [
+    {
+      "mesh": "node_0",
+      "before_triangles": 497910,
+      "after_triangles": 199999
+    }
+  ],
+  "bytes": 9213768,
+  "limitations": [
+    "No skeleton, animations or face shape keys.",
+    "Decimation is not deformation-ready retopology.",
+    "Preview requires visual review before use."
+  ]
+}

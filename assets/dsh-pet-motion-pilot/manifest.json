@@ -1,0 +1,22 @@
+{
+  "source": "https://github.com/PC2005-cloud/dsh-pet",
+  "sourceRevision": "8ad3d957f83052d332f0d0f09e90993e9756d2ec",
+  "status": "isolated non-commercial motion pilot; not wired into app or build",
+  "sourcePath": "dsh-pet/assets/webm/",
+  "rights": {
+    "code": "MIT (upstream LICENSE)",
+    "animations": "README permits open-source use and prohibits commercial use; attribution required for public derivatives",
+    "character": "README identifies community DeepSeek 大肥鱼 derivative under CC BY-NC-SA 4.0; not an original 澜 asset",
+    "publicDistribution": "not cleared by this pilot; audit exact attribution, share-alike, source permissions and bundle contents before release"
+  },
+  "motions": [
+    {"file":"待机呼吸休闲.webm","semantic":"idle","sha256":"deb965d05a85dacf5ff4a20faa757846f0d11679598c3ec578a5571487660395"},
+    {"file":"螃蟹走路.webm","semantic":"walk-reference","sha256":"5696b0878be38cc450d6eaace837aef1c1b5834f1382bc6c11c2de582f284673"},
+    {"file":"点击回应-元气挥手.webm","semantic":"touch-reference","sha256":"48cd729ccdcf746369942ea954d242e9afdd5643e1dac3827fa5e67450eb8776"},
+    {"file":"被鼠标拖拽悬空反馈.webm","semantic":"drag-reference","sha256":"31373a86026636eecc890db763760309360310eb095cf5575b13c9ca2a6cc80e"},
+    {"file":"睡觉-开始.webm","semantic":"sleep-start","sha256":"5352a208925e01e191c1529d07c61ae61bcda90d92f2b89549c25c949f207e11"},
+    {"file":"睡觉-循环.webm","semantic":"sleep-loop","sha256":"b49deb9b8dae4b83f84b6dc49efd41fdb654b05ad08ac6c5083977e17ef1122c"},
+    {"file":"睡觉-起来.webm","semantic":"sleep-end","sha256":"a2a4832e546e7639782b74f998d8a6ebc2ec3b3b933c0bcc709487fb4d19ab46"},
+    {"file":"工作状态-思考冒泡.webm","semantic":"thinking-reference","sha256":"b4a36cfa28ea5d7089e362a01972c6e880297c6dcd0d39f1994efd889a3c1be5"}
+  ]
+}

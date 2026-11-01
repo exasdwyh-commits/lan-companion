@@ -1,0 +1,50 @@
+{
+  "updated": "2026-10-31",
+  "generator": "OpenAI ImageGen",
+  "visualReference": "User-provided blue-haired whale-themed portrait collage; used as style and character-direction reference.",
+  "releaseNote": "Generated project assets. This record does not assign a separate third-party image license; review the applicable generation terms and project release policy before redistribution.",
+  "selection": "Six distinct expressions, each with portrait phone and landscape desktop versions. Three earlier soft-smile scene pairs (snow cottage, magnolia, sunset cove) were rejected as redundant and removed from this candidate folder.",
+  "shareReferenceReview": {
+    "reviewed": "2026-10-31",
+    "source": "https://chatgpt.com/share/6ae56d54-b944-83e9-bc80-542a92c74a28",
+    "use": "Visual reference only; not imported into project assets or release package.",
+    "selected": [
+      {
+        "id": "share-closeup-03",
+        "location": "Shared chat, first portrait image set, generated image 3",
+        "dimensions": "941x1672",
+        "description": "Blue-haired whale woman in the established blue-white costume, looking down and to the side; strong profile angle, composed expression, clean face and costume detail.",
+        "decision": "Keep as a distinct close-up reference; stronger angle variation than the near-frontal candidates."
+      },
+      {
+        "id": "share-landscape-arms-fixed",
+        "location": "Shared chat, final image after the request to fix the arm anatomy",
+        "dimensions": "1672x941",
+        "description": "Adult whale woman reclining on a dark sofa, arm resting along the back and hand near the temple; warm candlelit interior, corrected arm pose.",
+        "decision": "Keep as a landscape pose and lighting reference; the body pose reads clearly and the arm correction is visibly resolved."
+      },
+      {
+        "id": "share-landscape-coffee",
+        "location": "Shared chat, first themed photo set, generated image 1",
+        "dimensions": "1672x941",
+        "description": "Relaxed seated pose with coffee in a sea-view room; white knit top and navy skirt, bright natural window light.",
+        "decision": "Keep as a distinct casual daily-life scene reference."
+      }
+    ],
+    "rejected": [
+      {
+        "location": "Shared chat, first portrait image set, generated images 1, 2, and 4",
+        "reason": "High production quality, but the near-frontal face and costume framing repeat one another; selected image 3 for stronger angle variety."
+      }
+    ],
+    "licenseBoundary": "The share is recorded as a user-supplied reference. No image bytes were imported; authorship, generation terms, and redistribution rights have not been separately verified."
+  },
+  "items": [
+    {"id":"30-alluring-aquarium","mood":"魅惑","phone":"30-alluring-aquarium-mobile.png","desktop":"30-alluring-aquarium-desktop.png","direction":"Adult woman with deep navy hair and whale-fin ears; half-lidded direct gaze, knowing asymmetric smirk, poised hand near hair ornament; tasteful navy evening outfit in luminous jellyfish aquarium. Landscape adaptation places her on the right with calm open left space."},
+    {"id":"31-cute-whale","mood":"可爱","phone":"31-cute-whale-mobile.png","desktop":"31-cute-whale-desktop.png","direction":"Joyful closed-eye laugh while hugging a small whale plush; bright blue coastal afternoon. Wide version keeps the character and plush clear in a light seaside scene."},
+    {"id":"32-mischievous-cafe","mood":"古灵精怪","phone":"32-mischievous-cafe-mobile.png","desktop":"32-mischievous-cafe-desktop.png","direction":"Clear wink and playful V-sign beside whale latte in an elegant seaside cafe; lively expression separate from the cute laugh."},
+    {"id":"33-pouty-seaside","mood":"生气","phone":"33-pouty-seaside-mobile.png","desktop":"33-pouty-seaside-desktop.png","direction":"Furrowed brows, pout and folded arms on a moonlit seaside terrace; preserve annoyed expression without softening into a smile."},
+    {"id":"34-shy-snow","mood":"害羞","phone":"34-shy-snow-mobile.png","desktop":"34-shy-snow-desktop.png","direction":"Lowered eyes, blush, hands holding a scarf close in a snowy night scene; soft bashful expression, distinct from sadness."},
+    {"id":"35-sad-letter","mood":"悲伤","phone":"35-sad-letter-mobile.png","desktop":"35-sad-letter-desktop.png","direction":"Quiet, visibly sorrowful eyes while holding a letter beside a rain-covered window and harbor lights; restrained mood rather than neutral or smiling."}
+  ]
+}

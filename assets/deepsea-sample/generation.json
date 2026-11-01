@@ -1,0 +1,9 @@
+{
+  "tool": "image_gen.imagegen",
+  "mode": "built-in",
+  "reference": "reference.png",
+  "output": "scene.png",
+  "transparent_background": false,
+  "date": "2026-10-29",
+  "notes": "Unmodified generated image. Static scene; camera drift is implemented in AppKit. Reference is a design target, not a guarantee of exact identity."
+}

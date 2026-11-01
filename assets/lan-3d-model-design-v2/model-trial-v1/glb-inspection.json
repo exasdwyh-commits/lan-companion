@@ -1,0 +1,28 @@
+{
+  "file": "lan-b-multiview-original.glb",
+  "bytes": 56946276,
+  "sha256": "808000038ee523be6c5e23f7c231555b71f4d1af9933a60f4f0ee123a73db459",
+  "header": {
+    "magic": "glTF",
+    "version": 2,
+    "declared_size": 56946276
+  },
+  "meshes": 1,
+  "skins": 0,
+  "animations": 0,
+  "images": [
+    {
+      "mimeType": "image/png",
+      "embedded": true
+    },
+    {
+      "mimeType": "image/png",
+      "embedded": true
+    },
+    {
+      "mimeType": "image/png",
+      "embedded": true
+    }
+  ],
+  "external_uris": []
+}

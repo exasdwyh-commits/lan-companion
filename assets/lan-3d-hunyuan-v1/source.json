@@ -1,0 +1,28 @@
+{
+  "provider": "Tencent Hunyuan 3D",
+  "page": "https://3d.hunyuan.tencent.com/creation",
+  "batch": "WORLD-HY3D-09",
+  "model_version": "3.1",
+  "requested_faces": 500000,
+  "credits_consumed": 1,
+  "credits_after_submission": 19,
+  "reference": "assets/whale-chibi-directions-2026-10-31/B-master-v1.png",
+  "reference_sha256": "4f5f18d3233d74b21fc3780d94cd992d1511d041e525d110b688cb25601e528c",
+  "state": "download_complete_back_repair_not_accepted",
+  "license_status": "Public redistribution terms and reference provenance require review before release.",
+  "original_file": "lan-b-hunyuan-original.glb",
+  "original_bytes": 56549976,
+  "original_sha256": "bf7025dfc210ad040a115a2cb7057cc7717dcfb054c7c5d8ff312051f264f8ba",
+  "provider_filename": "518461f6859d4a85ccc24675a5123ddb.glb",
+  "download_required_subscription": false,
+  "candidate": "refined-v4/lan-b-room-static.glb",
+  "candidate_sha256": "d41531241af0b994c443f34aa27562e02d56b8d1cb93628b34ad304829cabe3d",
+  "candidate_bytes": 9405948,
+  "visual_review": {
+    "front": "Preserves main B identity features; user acceptance pending.",
+    "back": "Original invented whale-shaped cape. Repair candidates retain seams and silhouette defects. Not accepted for integration."
+  },
+  "rigged": false,
+  "animated": false,
+  "integrated": false
+}

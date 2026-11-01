@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>澜 · 她记得的事</title>
+  <link rel="stylesheet" href="./memory.css">
+  <script src="./memory.js" defer></script>
+</head>
+<body>
+  <main class="sheet">
+    <header class="masthead">
+      <div class="brand" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none"><path d="M16 23c-1-7-8-4-10-13 6-1 10 1 10 6 0-5 4-7 10-6-2 9-9 6-10 13Z" fill="currentColor"/><path d="M12 25c2-1 6-1 8 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+      <div class="heading"><span class="eyebrow">澜的记忆 · MEMORY</span><h1>她记得的事</h1></div>
+      <span id="count" class="count" aria-live="polite">正在读取…</span>
+    </header>
+    <section class="content" aria-label="记忆列表">
+      <div class="toolbar">
+        <label for="search">寻找一段记忆</label>
+        <input id="search" type="search" placeholder="搜索她记得的事…" autocomplete="off" spellcheck="false">
+      </div>
+      <div id="notice" class="notice" role="status" aria-live="polite"></div>
+      <div id="state" class="state" role="status">正在读取记忆…</div>
+      <ul id="memories" class="memories" aria-label="她记得的事" hidden></ul>
+    </section>
+    <footer class="footer">
+      <div class="danger-copy"><strong>清空全部记忆</strong><span>这会永久删除所有记忆，无法撤销。</span></div>
+      <div class="clear-controls">
+        <label for="clear-confirm">输入「清空」以确认</label>
+        <input id="clear-confirm" type="text" autocomplete="off" placeholder="清空" aria-label="输入清空以确认删除全部记忆">
+        <button id="clear-all" type="button" class="danger" disabled>清空全部记忆</button>
+      </div>
+    </footer>
+  </main>
+</body>
+</html>

@@ -1,0 +1,29 @@
+{
+  "photos": [
+    {
+      "file": "journey-0.jpg",
+      "source": "assets/whale-video-test/album-01-tide-meeting.jpg",
+      "sha256": "d86e998b9fad43193dcf36beb795d91f54c4e4cc7a150f4327fb702389793699",
+      "use": "Illustration accompanying fictional travel journal; not a new generated trip photo"
+    },
+    {
+      "file": "journey-1.jpg",
+      "source": "assets/whale-video-test/album-03-rain-library.jpg",
+      "sha256": "b5ed54a3738a89e8db30f24195f7e7e528c99484b12462762e9da61d72ad6a3a",
+      "use": "Illustration accompanying fictional travel journal; not a new generated trip photo"
+    },
+    {
+      "file": "journey-2.jpg",
+      "source": "assets/whale-video-test/album-10-forest-spirit.jpg",
+      "sha256": "be79450aae934123a71d3cc4884cc43a7179ba1f5dd02c2156a38a064b13c29f",
+      "use": "Illustration accompanying fictional travel journal; not a new generated trip photo"
+    },
+    {
+      "file": "journey-3.jpg",
+      "source": "assets/whale-video-test/album-11-city-streetstyle.jpg",
+      "sha256": "fc88692a6554623232638a57aeb02ebc39b89ec09aa32b42bb4f9a2c4fa212db",
+      "use": "Illustration accompanying fictional travel journal; not a new generated trip photo"
+    }
+  ],
+  "rights": "Existing internal character album derivatives. Public redistribution not cleared."
+}

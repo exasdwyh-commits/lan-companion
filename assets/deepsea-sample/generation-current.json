@@ -1,0 +1,13 @@
+{
+  "mode": "built-in image_gen",
+  "master": "character-master-greenscreen.png",
+  "display": "character.png",
+  "background": "background.png",
+  "reference": "reference-modern.png",
+  "design": "fictional clearly adult 21-year-old photorealistic modern woman, long black hair, natural makeup, opaque white casual sleeveless top, close conversational portrait",
+  "master_prompt": "modern-green-prompt.txt",
+  "cutout_prompt": "modern-cutout-prompt.txt",
+  "video_prompts": "YOUTH-VIDEO-PROMPTS.md",
+  "date": "2026-10-29",
+  "edge_refinement_prompt": "modern-edge-prompt.txt"
+}

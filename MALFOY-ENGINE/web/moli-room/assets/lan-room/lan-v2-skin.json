@@ -1,0 +1,34 @@
+{
+  "modelSha256": "bee05205aadf9dcb0b92c2ff739a1c2be323fb834391c57949d613a7a08b6824",
+  "vertices": 174278,
+  "weldedVertices": 130875,
+  "bones": [
+    "lan-root",
+    "lan-spine",
+    "lan-head",
+    "lan-skirt",
+    "lan-arm-upper-0",
+    "lan-arm-upper-1",
+    "lan-arm-lower-0",
+    "lan-arm-lower-1",
+    "lan-leg-upper-0",
+    "lan-leg-upper-1",
+    "lan-leg-lower-0",
+    "lan-leg-lower-1"
+  ],
+  "seedCounts": [
+    64043,
+    11810,
+    19712,
+    4872,
+    5009,
+    4123,
+    3854
+  ],
+  "transitionScale": 0.025,
+  "bytes": 4182688,
+  "skinSha256": "9edc9d10f638ac6b3139587058228536b9dc8fa377866ceb0af3502e8667c31e",
+  "bodyCentreOffsetX": 0.039,
+  "contactTrianglesRemoved": 2070,
+  "cutsSha256": "8180dce97cac98203a2f2d98ba9db5d7cba76759e356d9f57dcf15200b507d35"
+}

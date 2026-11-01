@@ -1,0 +1,15 @@
+{
+  "source": "/Users/exasdwyh/Documents/VScode/vidu/desktop-companion/assets/lan-3d-hunyuan-v1/review-v1/model-review.blend",
+  "output": "/Users/exasdwyh/Documents/VScode/vidu/desktop-companion/assets/lan-3d-hunyuan-v1/refined-v4/lan-b-room-static.glb",
+  "recolored_back_faces": 116108,
+  "deformed_back_vertices": 82609,
+  "added_back_locks": 13,
+  "triangles_before_decimation": 512650,
+  "triangles_after_decimation": 99999,
+  "file_bytes": 9405948,
+  "state": "visual_review_failed_not_for_integration",
+  "limitations": [
+    "No skeleton, facial blendshapes, animation or room integration.",
+    "Back-only repair fitted to this batch; not automatic retopology."
+  ]
+}

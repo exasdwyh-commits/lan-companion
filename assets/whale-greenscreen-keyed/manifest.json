@@ -1,0 +1,70 @@
+{
+  "generated": "2026-10-30",
+  "pipeline": "scripts/key-green-video.py → ffmpeg libvpx-vp9 (yuva420p)",
+  "key": {
+    "method": "边界色聚类 + 多源洪水填充（等价 flood fill thresh=110）",
+    "thresh": 110,
+    "seeds": "四边采样 + 底边两侧，绿幕打光不均也能覆盖",
+    "despill": "G → min(G, max(R,B))",
+    "edge_extend": "透明区 RGB 用可见区均值外扩，消除缩放插值带出的绿边",
+    "de_island": "面积 < 60px 的孤立块丢弃（水印残点/毛刺）"
+  },
+  "clips": [
+    {
+      "name": "closeup-idle",
+      "source": "source/closeup-idle.mp4",
+      "origin": "~/Downloads/绿幕鲸鱼娘近景视频.mp4",
+      "frames": 145,
+      "fps": 24,
+      "cropped_size": [478, 480],
+      "green_residue_max": 0.0,
+      "opaque_mean_pct": 40.05,
+      "webm": "encoded/closeup-idle.webm",
+      "used_by": "桌面模式：冷落她 25s 后凑近张望"
+    },
+    {
+      "name": "idle-smile",
+      "source": "source/idle-smile.mp4",
+      "origin": "~/Downloads/绿幕视频制作（桌面宠物素材）.mp4",
+      "frames": 193,
+      "fps": 24,
+      "cropped_size": [360, 360],
+      "green_residue_max": 0.0,
+      "opaque_mean_pct": 30.44,
+      "webm": "encoded/idle-smile.webm",
+      "used_by": "她的世界：活立绘（替代静态 whale.png）"
+    },
+    {
+      "name": "action-heart",
+      "source": "source/action-heart.mp4",
+      "origin": "~/Downloads/绿幕视频制作（桌面宠物素材） (1).mp4",
+      "frames": 193,
+      "fps": 24,
+      "cropped_size": [370, 360],
+      "green_residue_max": 0.0,
+      "opaque_mean_pct": 30.58,
+      "webm": "encoded/action-heart.webm",
+      "used_by": "桌面模式：点她 → 比心"
+    },
+    {
+      "name": "sleep",
+      "source": "source/sleep.mp4",
+      "origin": "~/Downloads/绿幕视频制作（桌面宠物素材） (2).mp4",
+      "frames": 193,
+      "fps": 24,
+      "cropped_size": [626, 359],
+      "green_residue_max": 0.0,
+      "opaque_mean_pct": 48.39,
+      "webm": "encoded/sleep.webm",
+      "used_by": "预留（睡觉状态）"
+    }
+  ],
+  "skipped": [
+    {
+      "origin": "~/Downloads/绿幕视频制作（桌面宠物素材） (3).mp4",
+      "reason": "不是绿幕素材，是带「豆包AI生成」水印的完整场景图，没有可抠的背景"
+    }
+  ],
+  "reproduce": "python3 scripts/key-green-video.py assets/whale-greenscreen-keyed/source/<name>.mp4 <out>/frames --width 640 --crop",
+  "note": "frames/ 是中间产物，已被 .gitignore 排除；成品在 encoded/*.webm，源片在 source/"
+}

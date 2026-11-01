@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>打开小屋</title></head>
+<body><p>正在打开复用版小屋… <a id="room" href="../moli-room/">进入小屋</a></p><p><a href="geometry.html">查看历史空间实验</a></p>
+<script>
+const roomURL = new URL('../moli-room/', location.href);
+roomURL.search = location.search;
+roomURL.hash = location.hash;
+document.getElementById('room').href = roomURL.href;
+location.replace(roomURL.href);
+</script></body></html>

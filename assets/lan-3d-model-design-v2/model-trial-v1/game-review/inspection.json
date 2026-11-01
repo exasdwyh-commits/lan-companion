@@ -1,0 +1,30 @@
+{
+  "state": "imported_model_pending_visual_review",
+  "source": "/Users/exasdwyh/Documents/VScode/vidu/desktop-companion/assets/lan-3d-model-design-v2/model-trial-v1/lan-b-multiview-game-preview.glb",
+  "reference": "/Users/exasdwyh/Documents/VScode/vidu/desktop-companion/assets/lan-3d-model-design-v2/modeling-front-v1.png",
+  "mesh_objects": 1,
+  "vertices": 174278,
+  "triangles": 199999,
+  "armatures": [],
+  "actions": [],
+  "shape_keys": {},
+  "images": [
+    {
+      "name": "texture_pbr_20250901-2k",
+      "width": 2048,
+      "height": 2048,
+      "has_data": true
+    },
+    {
+      "name": "texture_pbr_20250901_normal-2k",
+      "width": 2048,
+      "height": 2048,
+      "has_data": true
+    }
+  ],
+  "limitations": [
+    "Front camera assumes imported Blender -Y facing; inspect all views.",
+    "Mesh/material/bone counts do not establish identity or animation quality.",
+    "No retopology, weight corrections or game integration performed by this script."
+  ]
+}

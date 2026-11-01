@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>澜 · Live2D 内部对照小样</title>
+  <style>
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: transparent; }
+    #stage { width: 100vw; height: 100vh; }
+    #error { display: none; position: fixed; inset: 12px auto auto 12px; max-width: calc(100vw - 48px);
+      padding: 12px; color: #f33; background: rgba(30, 0, 0, .85); font: 14px/1.5 monospace;
+      white-space: pre-wrap; overflow-wrap: anywhere; z-index: 10; }
+  </style>
+</head>
+<body>
+  <div id="stage"></div><div id="error" role="alert"></div>
+  <script>
+    // Keep script failures visible instead of silently leaving an empty transparent page.
+    function showPocError(message) {
+      const error = document.getElementById('error');
+      error.textContent = message;
+      error.style.display = 'block';
+      console.error(message);
+    }
+    function missingPocScript(event) {
+      showPocError('资源加载失败：' + event.target.src);
+    }
+    window.addEventListener('error', function (event) {
+      if (event.target && event.target.tagName === 'SCRIPT') return;
+      showPocError('脚本运行错误：' + (event.message || '未知错误') + '\n' + (event.filename || location.href));
+    }, true);
+  </script>
+  <!-- From web/live2d, three ascents reach the repository root (not four). -->
+  <script src="../../../assets/live2d-poc/vendor/pixi.min.js" onerror="missingPocScript(event)"></script>
+  <script src="../../../assets/live2d-poc/vendor/live2dcubismcore.min.js" onerror="missingPocScript(event)"></script>
+  <script src="../../../assets/live2d-poc/vendor/cubism4.min.js" onerror="missingPocScript(event)"></script>
+  <script src="live2d-poc.js" onerror="missingPocScript(event)"></script>
+</body>
+</html>

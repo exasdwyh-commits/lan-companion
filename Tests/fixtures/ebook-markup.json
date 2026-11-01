@@ -1,0 +1,16 @@
+[
+  {"name":"plain-newlines","raw":"第一行。\r\n第二行。","text":"第一行。\n第二行。"},
+  {"name":"break-variants","raw":"第一句。<br>第二句。<BR/>第三句。<br />第四句。","text":"第一句。\n第二句。\n第三句。\n第四句。"},
+  {"name":"quoted-angle-in-attribute","raw":"前文。<br class=\"x>y\">后文。","text":"前文。\n后文。"},
+  {"name":"paragraphs-and-inline","raw":"<h2>第一章 海边</h2><p>她<b>抬头</b>。</p><p>风来了。</p>","text":"第一章 海边\n她抬头。\n风来了。"},
+  {"name":"escaped-break","raw":"甲。&lt;br /&gt;乙。","text":"甲。\n乙。"},
+  {"name":"numeric-escaped-break","raw":"甲。&#x3C;br&#x3E;乙。","text":"甲。\n乙。"},
+  {"name":"double-escaped-break","raw":"甲。&amp;lt;br&amp;gt;乙。","text":"甲。\n乙。"},
+  {"name":"spaces-and-entities","raw":"她&nbsp;来了。&lt;br&gt;我等你。","text":"她 来了。\n我等你。"},
+  {"name":"comments-scripts-styles","raw":"正文。<!-- br 说明 --><script>br();</script><style>.br{}</style>继续。","text":"正文。继续。"},
+  {"name":"image-alt-is-not-body","raw":"<p>正文<img src=\"x\" alt=\"br 图注\">继续。</p>","text":"正文继续。"},
+  {"name":"head-is-not-body","raw":"<head><title>br 噪音</title></head><p>正文。</p>","text":"正文。"},
+  {"name":"ordinary-letters","raw":"这是 br 缩写，bravo 和 BRCA1 都保留。","text":"这是 br 缩写，bravo 和 BRCA1 都保留。"},
+  {"name":"comparisons","raw":"大小比较：2 < 3，4 > 1。","text":"大小比较：2 < 3，4 > 1。"},
+  {"name":"nested-hidden-containers","raw":"正文。<figure>图注<figcaption>br</figcaption></figure>继续。","text":"正文。继续。"}
+]

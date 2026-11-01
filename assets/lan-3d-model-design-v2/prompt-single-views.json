@@ -1,0 +1,14 @@
+[
+  {
+    "name": "front",
+    "prompt": "Create one standalone modeling reference from the supplied corrected three-view sheet: isolate ONLY the LEFTMOST front-facing figure. The tail must remain on the viewer's RIGHT. Preserve that figure's exact face, head/body proportions, sculpted volumes, hairstyle, tail, costume, pose, colors and neutral studio light. It is the same character seen from the specified direction. Do not redesign or add any elements. Center the full-body single figure on an opaque uniform light warm-grey background with 10% clear margins on all sides, head upright and soles on one horizontal baseline. No other figures, no panels, no text, no cropped tail/ahoge/shoes, no cast objects. Weak-perspective orthographic camera, keep the source view. This is a source image for multi-view 3D reconstruction; geometry and pose consistency matter."
+  },
+  {
+    "name": "side",
+    "prompt": "Create one standalone modeling reference from the supplied corrected three-view sheet: isolate ONLY the MIDDLE strict left-facing side-profile figure. The face points LEFT. Preserve the visible tail behind the body to the RIGHT. Preserve that figure's exact face, head/body proportions, sculpted volumes, hairstyle, tail, costume, pose, colors and neutral studio light. It is the same character seen from the specified direction. Do not redesign or add any elements. Center the full-body single figure on an opaque uniform light warm-grey background with 10% clear margins on all sides, head upright and soles on one horizontal baseline. No other figures, no panels, no text, no cropped tail/ahoge/shoes, no cast objects. Weak-perspective orthographic camera, keep the source view. This is a source image for multi-view 3D reconstruction; geometry and pose consistency matter."
+  },
+  {
+    "name": "back",
+    "prompt": "Create one standalone modeling reference from the supplied corrected three-view sheet: isolate ONLY the RIGHTMOST rear-facing figure. The back of the head faces the viewer and the tail must remain on the viewer's LEFT. Preserve that figure's exact face, head/body proportions, sculpted volumes, hairstyle, tail, costume, pose, colors and neutral studio light. It is the same character seen from the specified direction. Do not redesign or add any elements. Center the full-body single figure on an opaque uniform light warm-grey background with 10% clear margins on all sides, head upright and soles on one horizontal baseline. No other figures, no panels, no text, no cropped tail/ahoge/shoes, no cast objects. Weak-perspective orthographic camera, keep the source view. This is a source image for multi-view 3D reconstruction; geometry and pose consistency matter."
+  }
+]

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>澜 · 相册与剧情</title>
+  <link rel="stylesheet" href="./gallery.css">
+  <script src="./gallery.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="masthead">
+      <div class="masthead__title"><span class="eyebrow">LAN · MEMORY ARCHIVE</span><h1>相册</h1><p>把一起走过的片刻，留在这里。</p></div>
+      <div class="masthead__meta"><span id="demo-badge" class="demo-badge" hidden>演示 · 非真实内容</span><span id="photo-count" class="count" aria-live="polite">— / — 已解锁</span></div>
+    </header>
+    <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+    <div id="error" class="error" role="alert" hidden></div>
+    <div id="content" hidden>
+      <section class="section" aria-labelledby="album-heading">
+        <div class="section__heading"><div><span class="section__index">01 / MOMENTS</span><h2 id="album-heading">记忆相框</h2></div><span id="album-description" class="section__note"></span></div>
+        <div id="album-grid" class="album-grid"></div>
+      </section>
+      <section class="section chapters" aria-labelledby="chapter-heading">
+        <div class="section__heading"><div><span class="section__index">02 / STORIES</span><h2 id="chapter-heading">剧情章节</h2></div><span class="section__note">慢慢讲，我们的故事</span></div>
+        <div id="chapter-list" class="chapter-list"></div>
+      </section>
+    </div>
+  </main>
+  <div id="lightbox" class="overlay" hidden>
+    <div class="dialog lightbox" role="dialog" aria-modal="true" aria-labelledby="photo-title" tabindex="-1">
+      <div class="dialog__top"><span class="eyebrow">A MEMORY, KEPT CLOSE</span><button id="photo-close" class="icon-button" type="button">关闭 <span aria-hidden="true">×</span></button></div>
+      <div class="lightbox__body"><div class="lightbox__image"><div id="photo-variants" class="photo-variants" hidden><button id="photo-mobile" type="button" aria-pressed="true">手机竖版</button><button id="photo-desktop" type="button" aria-pressed="false">电脑横版</button></div><img id="photo-image" alt=""><div id="photo-fallback" class="image-fallback" hidden>这张照片暂时无法显示</div></div><div class="lightbox__copy"><span id="photo-position" class="section__index"></span><h2 id="photo-title"></h2><p id="photo-zh"></p><dl><div><dt>地点</dt><dd id="photo-where"></dd></div><div><dt>日期</dt><dd id="photo-date"></dd></div></dl><div class="lightbox__actions"><button id="photo-previous" type="button">← 上一张</button><button id="photo-next" type="button">下一张 →</button><button id="photo-save" class="primary" type="button">保存手机壁纸</button></div><p id="photo-status" role="status" aria-live="polite"></p></div></div>
+    </div>
+  </div>
+  <div id="story-overlay" class="overlay" hidden>
+    <div class="dialog story" role="dialog" aria-modal="true" aria-labelledby="story-title" tabindex="-1">
+      <div class="dialog__top"><span class="eyebrow">STORY / 剧情</span><button id="story-close" class="icon-button" type="button">返回章节 <span aria-hidden="true">×</span></button></div>
+      <div class="story__body"><div class="story__frame"><img id="story-image" alt=""><div id="story-fallback" class="image-fallback">这一幕没有可显示的画面</div></div><div class="story__copy"><span id="story-progress" class="section__index"></span><h2 id="story-title"></h2><p id="story-text"></p><div id="story-choices" class="story__choices" hidden></div><button id="story-continue" class="primary" type="button">继续 →</button><p id="story-status" role="status" aria-live="polite"></p></div></div>
+    </div>
+  </div>
+</body>
+</html>

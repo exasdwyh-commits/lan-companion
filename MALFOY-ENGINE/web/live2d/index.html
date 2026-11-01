@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8" />
+<title>Live2D 原型 · Hiyori</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #1a1a20; overflow: hidden; }
+  #c { display: block; width: 100vw; height: 100vh; }
+  #hud { position: fixed; left: 12px; top: 12px; color: #ddd; font: 12px/1.6 -apple-system, sans-serif; opacity: .8; }
+  #btns { position: fixed; left: 12px; bottom: 12px; display: flex; gap: 8px; }
+  #btns button { background: #2a2a33; color: #ddd; border: 1px solid #444; border-radius: 6px; padding: 6px 10px; cursor: pointer; font-size: 12px; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="hud">Live2D Cubism 4 · pixi-live2d-display<br><span id="st">加载中…</span></div>
+<div id="btns">
+  <button data-emo="happy">笑</button>
+  <button data-emo="sad">难过</button>
+  <button data-emo="surprised">惊讶</button>
+  <button data-motion="1">动作1</button>
+  <button data-motion="2">动作2</button>
+  <button id="mouth">口型测试</button>
+</div>
+
+<script src="./pixi.min.js"></script>
+<script src="./live2dcubismcore.min.js"></script>
+<script src="./cubism4.min.js"></script>
+<script>
+(async function () {
+  const st = document.getElementById('st');
+  try {
+    const app = new PIXI.Application({
+      view: document.getElementById('c'),
+      resizeTo: window,
+      backgroundAlpha: 0,
+      antialias: true,
+      autoDensity: true,
+      resolution: window.devicePixelRatio || 1,
+    });
+
+    const model = await PIXI.live2d.Live2DModel.from('./Hiyori/Hiyori.model3.json', {
+      ticker: PIXI.Ticker.shared,
+      autoInteract: true,
+    });
+
+    app.stage.addChild(model);
+
+    function fit() {
+      const mw = model.width || model.internalModel.width || 1;
+      const mh = model.height || model.internalModel.height || 1;
+      const s = Math.min(app.screen.width / mw, app.screen.height / mh) * 0.92;
+      model.scale.set(s);
+      model.anchor.set(0.5, 0.5);
+      model.x = app.screen.width / 2;
+      model.y = app.screen.height / 2;
+    }
+    fit();
+    window.addEventListener('resize', fit);
+
+    // 鼠标视线跟随
+    window.addEventListener('mousemove', (e) => {
+      model.focus(e.clientX, e.clientY);
+    });
+
+    window.__live2d = model;
+    window.__app = app;
+
+    const emoMap = { happy: 0, sad: 1, surprised: 2 };
+    document.querySelectorAll('[data-emo]').forEach((b) => {
+      b.onclick = () => {
+        const idx = emoMap[b.dataset.emo];
+        try { model.expression(idx); } catch (e) { console.warn('expr fail', e); }
+      };
+    });
+    document.querySelectorAll('[data-motion]').forEach((b) => {
+      b.onclick = () => {
+        try { model.motion('Idle', parseInt(b.dataset.motion, 10)); } catch (e) { console.warn('motion fail', e); }
+      };
+    });
+    document.getElementById('mouth').onclick = () => {
+      let t = 0;
+      const id = setInterval(() => {
+        t += 0.25;
+        model.internalModel.coreModel.setParameterValueById('ParamMouthOpenY', (Math.sin(t) + 1) / 2);
+        if (t > 12) clearInterval(id);
+      }, 80);
+    };
+
+    st.textContent = '已加载 ✓ 动作数=' + (model.internalModel.motionManager.definitions ? Object.keys(model.internalModel.motionManager.definitions).length : '?');
+    document.title = 'LIVE2D-OK';
+  } catch (e) {
+    st.textContent = '失败: ' + e.message;
+    document.title = 'LIVE2D-FAIL';
+    console.error(e);
+  }
+})();
+</script>
+</body>
+</html>

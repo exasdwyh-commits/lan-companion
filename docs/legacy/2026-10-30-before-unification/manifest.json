@@ -1,0 +1,106 @@
+[
+  {
+    "path": "AGENTS.md",
+    "sha256": "d7651963b3956a26d94a53fd9dda8c1e3f7d1cc3efa866b6e2fd50a4550b7d5c"
+  },
+  {
+    "path": "README.md",
+    "sha256": "04343879cf093b0f08135966dc9505ac40109fbbf8fba792bbc8f0bd2608950a"
+  },
+  {
+    "path": "desktop-companion/CHARACTER-PIPELINE-BRIEF.md",
+    "sha256": "fa00029a634592bdd14dac00c34d8d1fb96a435e0e3d2b1fbac8addcb6ce92e8"
+  },
+  {
+    "path": "desktop-companion/DUAL-WORLD.md",
+    "sha256": "a6abec22274fa3bfb51496b5644a53b62015ab911192a99e6fa339a61a62cf64"
+  },
+  {
+    "path": "desktop-companion/MALFOY-APP-LESSONS.md",
+    "sha256": "52ad2ca64a71b104efc88416435f1e4b5e4331fbb55a10da77ee1443b3d8ab06"
+  },
+  {
+    "path": "desktop-companion/CHARACTER-SPEC-01-DEEPSEEK-WHALE.md",
+    "sha256": "f493550d5870e023646382d7eedbb18bfe03d84b29bbddd356432fc60e2c26a4"
+  },
+  {
+    "path": "desktop-companion/SHELL-DECISION.md",
+    "sha256": "0cc222c572d6eba349064acb93505c50a512f7350eb41d6f68526aafff4e5ce9"
+  },
+  {
+    "path": "desktop-companion/PRODUCT-PLAN.md",
+    "sha256": "832e6c040781013266cca144f58b83f89f470597052396c8026ee2227c29617b"
+  },
+  {
+    "path": "desktop-companion/INTEGRATION-REPORT.md",
+    "sha256": "88d92690d302b018145eb64a23b19bc0fdb211649b7d8afc999e59a217f8bc53"
+  },
+  {
+    "path": "desktop-companion/YUNQUE-PIPELINE.md",
+    "sha256": "6726c31619e518f9ea844754851295d050939fba0443057d3e84f1006be2a79b"
+  },
+  {
+    "path": "desktop-companion/README.md",
+    "sha256": "7a7f16639bcb4404ab93179c9b12367150ca191b645c0c647a77b9dee686b90c"
+  },
+  {
+    "path": "desktop-companion/MALFOY-LESSONS.md",
+    "sha256": "d37ad8719cf225f7d10902be26ce8deb870a5fab32b0dd9a919be597527c8131"
+  },
+  {
+    "path": "desktop-companion/WORKBUDDY-FIXES.md",
+    "sha256": "aa2a00d3c03a2d10ab80af2b3d6781ff5c427e8aa9f4a0b6aff5bc32f836f895"
+  },
+  {
+    "path": "desktop-companion/MUSE-LAYERED-HANDOFF.md",
+    "sha256": "e7a38081601aa175f5c180b322f83aaca573c12e595da62d827d257483ffd2fb"
+  },
+  {
+    "path": "desktop-companion/MALFOY-INTEGRATION-REVIEW.md",
+    "sha256": "176d45717e46afe8dd8c8f5eaf421df225e2fbf17b7916bf722b14e4adb606eb"
+  },
+  {
+    "path": "desktop-companion/PET-DESK.md",
+    "sha256": "d56f8707c838a43b0646a4adbd46c3f665166a6070565e243bc12c624bb62fea"
+  },
+  {
+    "path": "desktop-companion/MALFOY-TO-WHALE.md",
+    "sha256": "8a5fd9c1c18c803695486201a62ae8238a9e22f8ef19c5631f2cc27dd03b0e90"
+  },
+  {
+    "path": "desktop-companion/OPERATION.md",
+    "sha256": "125bf07bdb7c8f4f22faff7edd9931a0f7678af98fc64020a571484ca8d2a831"
+  },
+  {
+    "path": "desktop-companion/ARCHITECTURE-ROADMAP.md",
+    "sha256": "23f6f2bd04147638551c451e41aa8233e8f7f0ada9a041039801e3dad208b398"
+  },
+  {
+    "path": "desktop-companion/LIVE2D-INTEGRATION.md",
+    "sha256": "892e91736d24c49cca133659a2e8acb2cb07833bc7ecd4da16567b5f81c92a8d"
+  },
+  {
+    "path": "desktop-companion/MALFOY-SOURCE-ANALYSIS.md",
+    "sha256": "bb7c2f740bcae2151b8566499dc1745c8a4b3c0ee98e911b9900523c270c0edd"
+  },
+  {
+    "path": "desktop-companion/DEEPSEA-SAMPLE.md",
+    "sha256": "193f633175d25af5e33cc3f0e941a859539518fce0ff37a77cab146410ce39c1"
+  },
+  {
+    "path": "desktop-companion/docs/DEVELOPMENT.md",
+    "sha256": "46c5ceece723a31ca9def3a055ed993e33dc96333810fd530fe71dcf887ff206"
+  },
+  {
+    "path": "desktop-companion/docs/ASSETS.md",
+    "sha256": "e0a126ef76fb91f40e5c14f0fb885a566ce2c54ecfe937d9beb590f47659ac40"
+  },
+  {
+    "path": "desktop-companion/assets/whale-video-test/README.md",
+    "sha256": "e55c524e50e8a356e7b43c68821bf33250203d2b5d72b6214bc597f183ec1da0"
+  },
+  {
+    "path": "desktop-companion/assets/whale-album-2026-10-29/README.md",
+    "sha256": "f80d302a35b06e31d9a619bd9e322f6dc765707f3418d6c364fe8921455b953d"
+  }
+]

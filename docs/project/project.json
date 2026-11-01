@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "decisionDate": "2026-10-30",
+  "productName": "澜",
+  "direction": "dual-world-companion",
+  "releaseIntent": "free-noncommercial-open-source",
+  "entryDocument": "docs/project/README.md",
+  "taskDocument": "docs/project/TASKS.md",
+  "changeDocument": "docs/project/CHANGELOG.md",
+  "primary": {
+    "source": "MALFOY-ENGINE",
+    "buildScript": "scripts/build-companion.sh",
+    "app": "dist/DeepWhale.app",
+    "bundleId": "com.koudouma.deepwhale",
+    "runtimeDonor": "SmartCompanion.app",
+    "page": "MALFOY-ENGINE/web/live2d/world.html"
+  },
+  "reference": {
+    "source": "Sources/PetDesk",
+    "buildScript": "scripts/build-whale-video.sh",
+    "app": "dist/WhaleVideoCompanion.app",
+    "assets": "assets/whale-video-test"
+  },
+  "styleReferences": "assets/whale-chibi-reference-2026-10-30",
+  "guides": [
+    "docs/project/README.md",
+    "docs/project/PRODUCT.md",
+    "docs/project/ARCHITECTURE.md",
+    "docs/project/STATUS.md",
+    "docs/project/DEVELOPMENT.md",
+    "docs/project/ASSETS.md",
+    "docs/project/TASKS.md",
+    "docs/project/CHANGELOG.md",
+    "docs/project/ARCHIVE.md",
+    "docs/project/updates/TEMPLATE.md",
+    "docs/project/CHIBI-MOTION.md"
+  ]
+}

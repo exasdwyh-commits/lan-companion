@@ -1,0 +1,552 @@
+{
+  "format": 1,
+  "created": "2026-10-30",
+  "tool": "built-in image_gen",
+  "texture": "atlas.png",
+  "sha256": "ac49e101777328c196868e2876e6fe89fdf39d88e6c9994628bc54169a14a147",
+  "width": 1254,
+  "height": 1254,
+  "frames": [
+    {
+      "name": "idle",
+      "rect": [
+        0,
+        0,
+        317,
+        323
+      ],
+      "alphaBounds": [
+        31,
+        31,
+        302,
+        323
+      ],
+      "layout": {
+        "width": 1.0418881118881118,
+        "height": 1.0616083916083916,
+        "x": -0.047237762237762215,
+        "y": -0.09160839160839163
+      },
+      "face": {
+        "x": 145,
+        "y": 171,
+        "angle": 0,
+        "gap": 60,
+        "width": 120,
+        "height": 90,
+        "eyeY": 32,
+        "mouthY": 58,
+        "glasses": false,
+        "mouthOccluded": false
+      }
+    },
+    {
+      "name": "happy",
+      "rect": [
+        317,
+        0,
+        307,
+        323
+      ],
+      "alphaBounds": [
+        346,
+        32,
+        620,
+        323
+      ],
+      "layout": {
+        "width": 1.009020979020979,
+        "height": 1.0616083916083916,
+        "x": -0.04559440559440553,
+        "y": -0.09160839160839163
+      },
+      "face": {
+        "x": 462,
+        "y": 171,
+        "angle": 0,
+        "gap": 60,
+        "width": 120,
+        "height": 90,
+        "eyeY": 32,
+        "mouthY": 58,
+        "glasses": false,
+        "mouthOccluded": false
+      }
+    },
+    {
+      "name": "shy",
+      "rect": [
+        624,
+        0,
+        313,
+        323
+      ],
+      "alphaBounds": [
+        662,
+        31,
+        930,
+        323
+      ],
+      "layout": {
+        "width": 1.0287412587412588,
+        "height": 1.0616083916083916,
+        "x": -0.06531468531468532,
+        "y": -0.09160839160839163
+      },
+      "face": {
+        "x": 780,
+        "y": 175,
+        "angle": 0,
+        "gap": 60,
+        "width": 120,
+        "height": 90,
+        "eyeY": 32,
+        "mouthY": 58,
+        "glasses": false,
+        "mouthOccluded": false
+      }
+    },
+    {
+      "name": "thinking",
+      "rect": [
+        937,
+        0,
+        317,
+        324
+      ],
+      "alphaBounds": [
+        971,
+        32,
+        1243,
+        324
+      ],
+      "layout": {
+        "width": 1.0418881118881118,
+        "height": 1.0648951048951047,
+        "x": -0.058741258741258684,
+        "y": -0.09489510489510478
+      },
+      "face": {
+        "x": 1100,
+        "y": 173,
+        "angle": -0.13,
+        "gap": 60,
+        "width": 120,
+        "height": 90,
+        "eyeY": 32,
+        "mouthY": 58,
+        "glasses": false,
+        "mouthOccluded": false
+      }
+    },
+    {
+      "name": "working-open",
+      "rect": [
+        0,
+        323,
+        317,
+        302
+      ],
+      "alphaBounds": [
+        27,
+        354,
+        307,
+        625
+      ],
+      "layout": {
+        "width": 1.0418881118881118,
+        "height": 0.9925874125874126,
+        "x": -0.04888111888111879,
+        "y": -0.022587412587412592
+      },
+      "face": {
+        "x": 144,
+        "y": 504,
+        "angle": 0,
+        "gap": 58,
+        "width": 120,
+        "height": 90,
+        "eyeY": 32,
+        "mouthY": 58,
+        "glasses": true,
+        "mouthOccluded": false
+      }
+    },
+    {
+      "name": "working-blink",
+      "rect": [
+        317,
+        323,
+        307,
+        303
+      ],
+      "alphaBounds": [
+        342,
+        354,
+        624,
+        626
+      ],
+      "layout": {
+        "width": 1.009020979020979,
+        "height": 0.9958741258741258,
+        "x": -0.04559440559440553,
+        "y": -0.025874125874125853
+      },
+      "face": {
+        "x": 462,
+        "y": 504,
+        "angle": 0,
+        "gap": 58,
+        "width": 120,
+        "height": 90,
+        "eyeY": 32,
+        "mouthY": 58,
+        "glasses": true,
+        "mouthOccluded": false
+      }
+    },
+    {
+      "name": "reading",
+      "rect": [
+        624,
+        323,
+        313,
+        302
+      ],
+      "alphaBounds": [
+        655,
+        353,
+        937,
+        625
+      ],
+      "layout": {
+        "width": 1.0287412587412588,
+        "height": 0.9925874125874126,
+        "x": -0.06531468531468532,
+        "y": -0.022587412587412592
+      },
+      "face": {
+        "x": 778,
+        "y": 503,
+        "angle": 0,
+        "gap": 58,
+        "width": 120,
+        "height": 90,
+        "eyeY": 32,
+        "mouthY": 58,
+        "glasses": false,
+        "mouthOccluded": false
+      }
+    },
+    {
+      "name": "page-turn",
+      "rect": [
+        937,
+        324,
+        317,
+        302
+      ],
+      "alphaBounds": [
+        970,
+        354,
+        1245,
+        626
+      ],
+      "layout": {
+        "width": 1.0418881118881118,
+        "height": 0.9925874125874126,
+        "x": -0.06038461538461537,
+        "y": -0.022587412587412592
+      },
+      "face": {
+        "x": 1096,
+        "y": 503,
+        "angle": 0,
+        "gap": 58,
+        "width": 120,
+        "height": 90,
+        "eyeY": 32,
+        "mouthY": 58,
+        "glasses": false,
+        "mouthOccluded": false
+      }
+    },
+    {
+      "name": "singing-open",
+      "rect": [
+        0,
+        625,
+        317,
+        306
+      ],
+      "alphaBounds": [
+        25,
+        644,
+        317,
+        931
+      ],
+      "layout": {
+        "width": 1.0418881118881118,
+        "height": 1.0057342657342656,
+        "x": -0.062027972027971945,
+        "y": -0.035734265734265636
+      },
+      "face": {
+        "x": 145,
+        "y": 777,
+        "angle": 0,
+        "gap": 60,
+        "width": 120,
+        "height": 90,
+        "eyeY": 32,
+        "mouthY": 58,
+        "glasses": false,
+        "mouthOccluded": false
+      }
+    },
+    {
+      "name": "singing-closed",
+      "rect": [
+        317,
+        626,
+        307,
+        305
+      ],
+      "alphaBounds": [
+        342,
+        645,
+        624,
+        931
+      ],
+      "layout": {
+        "width": 1.009020979020979,
+        "height": 1.0024475524475525,
+        "x": -0.04559440559440553,
+        "y": -0.032447552447552486
+      },
+      "face": {
+        "x": 461,
+        "y": 777,
+        "angle": 0,
+        "gap": 60,
+        "width": 120,
+        "height": 90,
+        "eyeY": 32,
+        "mouthY": 58,
+        "glasses": false,
+        "mouthOccluded": false
+      }
+    },
+    {
+      "name": "sleepy",
+      "rect": [
+        624,
+        625,
+        313,
+        290
+      ],
+      "alphaBounds": [
+        654,
+        651,
+        935,
+        915
+      ],
+      "layout": {
+        "width": 1.0287412587412588,
+        "height": 0.9531468531468531,
+        "x": -0.06038461538461537,
+        "y": 0.016853146853146872
+      },
+      "face": {
+        "x": 777,
+        "y": 788,
+        "angle": 0,
+        "gap": 58,
+        "width": 120,
+        "height": 90,
+        "eyeY": 32,
+        "mouthY": 58,
+        "glasses": false,
+        "mouthOccluded": true
+      }
+    },
+    {
+      "name": "asleep",
+      "rect": [
+        937,
+        626,
+        317,
+        290
+      ],
+      "alphaBounds": [
+        957,
+        661,
+        1246,
+        916
+      ],
+      "layout": {
+        "width": 1.0418881118881118,
+        "height": 0.9531468531468531,
+        "x": -0.04066433566433558,
+        "y": 0.016853146853146872
+      },
+      "face": {
+        "x": 1094,
+        "y": 797,
+        "angle": 0.12,
+        "gap": 58,
+        "width": 120,
+        "height": 90,
+        "eyeY": 32,
+        "mouthY": 58,
+        "glasses": false,
+        "mouthOccluded": true
+      }
+    },
+    {
+      "name": "surprised",
+      "rect": [
+        0,
+        931,
+        317,
+        323
+      ],
+      "alphaBounds": [
+        26,
+        944,
+        305,
+        1230
+      ],
+      "layout": {
+        "width": 1.0418881118881118,
+        "height": 1.0616083916083916,
+        "x": -0.043951048951048954,
+        "y": -0.012727272727272698
+      },
+      "face": {
+        "x": 146,
+        "y": 1083,
+        "angle": 0,
+        "gap": 60,
+        "width": 120,
+        "height": 90,
+        "eyeY": 32,
+        "mouthY": 58,
+        "glasses": false,
+        "mouthOccluded": false
+      }
+    },
+    {
+      "name": "sad",
+      "rect": [
+        317,
+        931,
+        307,
+        323
+      ],
+      "alphaBounds": [
+        343,
+        944,
+        623,
+        1230
+      ],
+      "layout": {
+        "width": 1.009020979020979,
+        "height": 1.0616083916083916,
+        "x": -0.04559440559440553,
+        "y": -0.012727272727272698
+      },
+      "face": {
+        "x": 463,
+        "y": 1085,
+        "angle": 0,
+        "gap": 60,
+        "width": 120,
+        "height": 90,
+        "eyeY": 32,
+        "mouthY": 58,
+        "glasses": false,
+        "mouthOccluded": false
+      }
+    },
+    {
+      "name": "celebrating",
+      "rect": [
+        624,
+        915,
+        313,
+        339
+      ],
+      "alphaBounds": [
+        643,
+        940,
+        934,
+        1230
+      ],
+      "layout": {
+        "width": 1.0287412587412588,
+        "height": 1.1141958041958042,
+        "x": -0.04066433566433558,
+        "y": -0.06531468531468532
+      },
+      "face": {
+        "x": 779,
+        "y": 1083,
+        "angle": 0,
+        "gap": 60,
+        "width": 120,
+        "height": 90,
+        "eyeY": 32,
+        "mouthY": 58,
+        "glasses": false,
+        "mouthOccluded": false
+      }
+    },
+    {
+      "name": "waving",
+      "rect": [
+        937,
+        916,
+        317,
+        338
+      ],
+      "alphaBounds": [
+        969,
+        938,
+        1247,
+        1230
+      ],
+      "layout": {
+        "width": 1.0418881118881118,
+        "height": 1.1109090909090908,
+        "x": -0.062027972027971945,
+        "y": -0.062027972027971945
+      },
+      "face": {
+        "x": 1100,
+        "y": 1081,
+        "angle": 0,
+        "gap": 60,
+        "width": 120,
+        "height": 90,
+        "eyeY": 32,
+        "mouthY": 58,
+        "glasses": false,
+        "mouthOccluded": false
+      }
+    }
+  ],
+  "reference": "assets/whale-chibi-rig-v2/texture.png",
+  "originalGeneration": "exec-f2c31328-2d2a-4973-a87a-ac82f003f0d2.png",
+  "layoutGeneration": "exec-738158c7-ad82-4ef7-b78d-e7013a970918.png",
+  "processing": "Original PNG pixels preserved; alpha analysis creates sampling rectangles and floor anchors only",
+  "license": "generated from user references; reference redistribution rights not verified",
+  "pixelsToWorld": 0.0032867132867132865,
+  "faceBase": {
+    "file": "atlas-face-base.png",
+    "sha256": "57cef5887b2e57c18b730b64d7bfec923b5b0b6ab527c339cf2932b3f22b6e51",
+    "generation": "exec-9dfd4774-e50c-4cc2-993a-3c5706857d95.png",
+    "prompt": "face-base-prompt.txt",
+    "purpose": "independent procedural eye/brow/mouth/blush layer; original atlas preserved"
+  }
+}

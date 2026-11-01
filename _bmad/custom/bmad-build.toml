@@ -1,0 +1,12 @@
+[workflow]
+persistent_facts = [
+  "file:../AGENTS.md",
+  "file:docs/project/README.md",
+  "file:docs/project/PRODUCT.md",
+  "file:docs/project/ARCHITECTURE.md",
+  "file:docs/project/STATUS.md",
+  "file:docs/project/TASKS.md",
+  "Read docs/project/DEVELOPMENT.md before choosing verification commands. Record ownership in TASKS.md and preserve all unrelated changes.",
+  "The integration mainline is MALFOY-ENGINE -> dist/DeepWhale.app. Use only Ego Lite for browser validation; isolate personal data before runtime tests.",
+]
+on_complete = "Update docs/project/STATUS.md and TASKS.md; write a delivery note in docs/project/updates/ and link it from CHANGELOG.md. Distinguish source, automated checks, packaged output and visual or real-service acceptance."

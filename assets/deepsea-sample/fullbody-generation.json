@@ -1,0 +1,13 @@
+{
+  "mode": "built-in image_gen",
+  "output": "character-fullbody-greenscreen.png",
+  "image_size": [
+    1024,
+    1536
+  ],
+  "prompt": "fullbody-green-prompt.txt",
+  "reference": "character-master-greenscreen.png",
+  "date": "2026-10-29",
+  "design": "clearly adult 22-year-old modern woman, neutral everyday fashion, full-body green-screen source",
+  "background_removal": false
+}

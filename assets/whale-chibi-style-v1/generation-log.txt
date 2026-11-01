@@ -1,0 +1,9 @@
+montage: /tmp/chibi03/ref-montage.png (2693, 1330)
+[walk] a1 direct: filled 6/6 blue [70.0, 62.6, 63.0, 65.4, 56.2, 57.4]
+[walk] PASS attempt 1
+[dance] a1 direct: filled 8/8 blue [59.6, 60.8, 57.6, 57.3, 53.3, 53.4, 53.4, 56.1]
+[dance] PASS attempt 1
+[poses] a1 direct: filled 16/16 blue [67.3, 66.8, 66.5, 66.2, 64.7, 55.6, 57.0, 61.4, 54.1, 64.0, 76.3, 77.3, 64.0, 78.6, 63.0, 57.7]
+[poses] PASS attempt 1
+[facebase] PASS(edit) attempt 1
+SUMMARY {"walk": true, "dance": true, "poses": true, "facebase": true}

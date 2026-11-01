@@ -1,0 +1,296 @@
+{
+ "format": 1,
+ "created": "2026-10-31",
+ "grid": [
+  4,
+  4
+ ],
+ "tool": "agnes-image-2.5-flash i2i (montage ref: rig-v2 identity + user style reference)",
+ "texture": "atlas.png",
+ "sha256": "1ce2d815287f1dcf9df376a7e1e510a6a3b44f914b65a436b6ab0106431407b1",
+ "width": 1024,
+ "height": 1024,
+ "frames": [
+  {
+   "name": "facebase-0",
+   "rect": [
+    42,
+    32,
+    201,
+    223
+   ],
+   "alphaBounds": [
+    42,
+    32,
+    201,
+    223
+   ]
+  },
+  {
+   "name": "facebase-1",
+   "rect": [
+    290,
+    34,
+    195,
+    219
+   ],
+   "alphaBounds": [
+    290,
+    34,
+    195,
+    219
+   ]
+  },
+  {
+   "name": "facebase-2",
+   "rect": [
+    538,
+    34,
+    195,
+    219
+   ],
+   "alphaBounds": [
+    538,
+    34,
+    195,
+    219
+   ]
+  },
+  {
+   "name": "facebase-3",
+   "rect": [
+    786,
+    34,
+    193,
+    219
+   ],
+   "alphaBounds": [
+    786,
+    34,
+    193,
+    219
+   ]
+  },
+  {
+   "name": "facebase-4",
+   "rect": [
+    56,
+    256,
+    199,
+    169
+   ],
+   "alphaBounds": [
+    56,
+    256,
+    199,
+    169
+   ]
+  },
+  {
+   "name": "facebase-5",
+   "rect": [
+    256,
+    282,
+    227,
+    213
+   ],
+   "alphaBounds": [
+    256,
+    282,
+    227,
+    213
+   ]
+  },
+  {
+   "name": "facebase-6",
+   "rect": [
+    542,
+    282,
+    189,
+    213
+   ],
+   "alphaBounds": [
+    542,
+    282,
+    189,
+    213
+   ]
+  },
+  {
+   "name": "facebase-7",
+   "rect": [
+    792,
+    282,
+    187,
+    213
+   ],
+   "alphaBounds": [
+    792,
+    282,
+    187,
+    213
+   ]
+  },
+  {
+   "name": "facebase-8",
+   "rect": [
+    38,
+    526,
+    193,
+    215
+   ],
+   "alphaBounds": [
+    38,
+    526,
+    193,
+    215
+   ]
+  },
+  {
+   "name": "facebase-9",
+   "rect": [
+    294,
+    526,
+    189,
+    215
+   ],
+   "alphaBounds": [
+    294,
+    526,
+    189,
+    215
+   ]
+  },
+  {
+   "name": "facebase-10",
+   "rect": [
+    544,
+    526,
+    205,
+    219
+   ],
+   "alphaBounds": [
+    544,
+    526,
+    205,
+    219
+   ]
+  },
+  {
+   "name": "facebase-11",
+   "rect": [
+    772,
+    528,
+    225,
+    217
+   ],
+   "alphaBounds": [
+    772,
+    528,
+    225,
+    217
+   ]
+  },
+  {
+   "name": "facebase-12",
+   "rect": [
+    46,
+    772,
+    187,
+    219
+   ],
+   "alphaBounds": [
+    46,
+    772,
+    187,
+    219
+   ]
+  },
+  {
+   "name": "facebase-13",
+   "rect": [
+    274,
+    772,
+    229,
+    221
+   ],
+   "alphaBounds": [
+    274,
+    772,
+    229,
+    221
+   ]
+  },
+  {
+   "name": "facebase-14",
+   "rect": [
+    536,
+    774,
+    203,
+    217
+   ],
+   "alphaBounds": [
+    536,
+    774,
+    203,
+    217
+   ]
+  },
+  {
+   "name": "facebase-15",
+   "rect": [
+    772,
+    772,
+    219,
+    219
+   ],
+   "alphaBounds": [
+    772,
+    772,
+    219,
+    219
+   ]
+  }
+ ],
+ "reference": "../ref-montage.png",
+ "checks": {
+  "bluePct": [
+   68.7,
+   68.6,
+   68.5,
+   68.1,
+   56.4,
+   56.9,
+   57.6,
+   63.1,
+   54.2,
+   66.0,
+   78.2,
+   79.2,
+   64.5,
+   79.5,
+   61.5,
+   58.9
+  ],
+  "heights": [
+   223,
+   219,
+   219,
+   219,
+   169,
+   213,
+   213,
+   213,
+   215,
+   215,
+   219,
+   217,
+   219,
+   221,
+   217,
+   219
+  ],
+  "strictRows": false
+ },
+ "license": "generated for this project; user style reference redistribution terms unverified - keep out of public release until cleared"
+}

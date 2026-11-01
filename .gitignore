@@ -1,0 +1,43 @@
+.build/
+dist/
+.runtime/
+__pycache__/
+.venv/
+*.pyc
+.DS_Store
+
+# 本机 Electron 构建母体；当前 build-companion.sh 仍依赖它。
+# 排除入库不代表可以删除；独立构建替代见 docs/project/TASKS.md 的 DW-08。
+SmartCompanion.app/
+
+# MALFOY-ENGINE 是集成主线，现行约定见 docs/project/ARCHITECTURE.md。
+# web/media 是旧版素材；旧 index/app.js 仍有引用，当前 world.html 未接入。
+# 保留本地，不因忽略入库就删除；迁移与发布按素材清单核实。
+MALFOY-ENGINE/web/media/
+
+# 绿幕抠像的中间产物（逐帧 PNG，约 196 MB）。可由 scripts/key-green-video.py
+# 从 assets/whale-greenscreen-keyed/source/ 重新生成，不入库；
+# 成品在 encoded/*.webm（2.5 MB），那部分入库。
+assets/whale-greenscreen-keyed/*/frames/
+
+# 翻唱用的模型权重（约 1.9 GB）：能重新下载，不该进版本库。
+# 拉取方式见 scripts/fetch_sing_models.py。
+.models/
+# third_party/seed-vc 的源码可以入库（MIT），但仓库里自带的 27 MB 声纹模型不行。
+third_party/seed-vc/campplus_cn_common.bin
+
+# 第三方许可素材只作本地体验验证，禁止入库/再分发/商用
+# （Malfoy 安装包内素材：仅个人体验，不授权再分发、二次剪辑或商用）
+_testonly/
+
+# Generated browser video copies; regenerate via scripts/prepare-world-video.py.
+MALFOY-ENGINE/web/live2d/world-media/
+MALFOY-ENGINE/web/live2d/companion-content/
+
+# User-provided local cover evaluation input/output, not a distributable asset.
+assets/whale-cover-test-20261030/
+
+# BMAD personal answers and transient workflow snapshots.
+_bmad/config.user.toml
+_bmad/custom/*.user.toml
+_bmad/render/*/

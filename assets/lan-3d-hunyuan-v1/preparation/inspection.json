@@ -1,0 +1,17 @@
+{
+  "state": "reference_preparation_only_no_model",
+  "source": null,
+  "reference": "/Users/exasdwyh/Documents/VScode/vidu/desktop-companion/assets/whale-chibi-directions-2026-10-31/B-master-v1.png",
+  "mesh_objects": 0,
+  "vertices": 0,
+  "triangles": 0,
+  "armatures": [],
+  "actions": [],
+  "shape_keys": {},
+  "images": [],
+  "limitations": [
+    "Front camera assumes imported Blender -Y facing; inspect all views.",
+    "Mesh/material/bone counts do not establish identity or animation quality.",
+    "No retopology, weight corrections or game integration performed by this script."
+  ]
+}

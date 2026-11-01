@@ -1,0 +1,296 @@
+{
+ "format": 1,
+ "created": "2026-10-31",
+ "grid": [
+  4,
+  4
+ ],
+ "tool": "agnes-image-2.5-flash i2i (montage ref: rig-v2 identity + user style reference)",
+ "texture": "atlas.png",
+ "sha256": "8ea7ef84c4a52c41b51ecd81e3861751023e8c86f09dd709c2b44e8bd2b9c8d0",
+ "width": 1024,
+ "height": 1024,
+ "frames": [
+  {
+   "name": "poses-0",
+   "rect": [
+    42,
+    28,
+    201,
+    227
+   ],
+   "alphaBounds": [
+    42,
+    28,
+    201,
+    227
+   ]
+  },
+  {
+   "name": "poses-1",
+   "rect": [
+    290,
+    32,
+    195,
+    217
+   ],
+   "alphaBounds": [
+    290,
+    32,
+    195,
+    217
+   ]
+  },
+  {
+   "name": "poses-2",
+   "rect": [
+    538,
+    32,
+    195,
+    217
+   ],
+   "alphaBounds": [
+    538,
+    32,
+    195,
+    217
+   ]
+  },
+  {
+   "name": "poses-3",
+   "rect": [
+    786,
+    32,
+    193,
+    217
+   ],
+   "alphaBounds": [
+    786,
+    32,
+    193,
+    217
+   ]
+  },
+  {
+   "name": "poses-4",
+   "rect": [
+    60,
+    256,
+    195,
+    165
+   ],
+   "alphaBounds": [
+    60,
+    256,
+    195,
+    165
+   ]
+  },
+  {
+   "name": "poses-5",
+   "rect": [
+    256,
+    280,
+    227,
+    211
+   ],
+   "alphaBounds": [
+    256,
+    280,
+    227,
+    211
+   ]
+  },
+  {
+   "name": "poses-6",
+   "rect": [
+    542,
+    280,
+    189,
+    211
+   ],
+   "alphaBounds": [
+    542,
+    280,
+    189,
+    211
+   ]
+  },
+  {
+   "name": "poses-7",
+   "rect": [
+    792,
+    280,
+    187,
+    211
+   ],
+   "alphaBounds": [
+    792,
+    280,
+    187,
+    211
+   ]
+  },
+  {
+   "name": "poses-8",
+   "rect": [
+    40,
+    522,
+    191,
+    215
+   ],
+   "alphaBounds": [
+    40,
+    522,
+    191,
+    215
+   ]
+  },
+  {
+   "name": "poses-9",
+   "rect": [
+    296,
+    522,
+    187,
+    215
+   ],
+   "alphaBounds": [
+    296,
+    522,
+    187,
+    215
+   ]
+  },
+  {
+   "name": "poses-10",
+   "rect": [
+    544,
+    522,
+    205,
+    219
+   ],
+   "alphaBounds": [
+    544,
+    522,
+    205,
+    219
+   ]
+  },
+  {
+   "name": "poses-11",
+   "rect": [
+    772,
+    526,
+    225,
+    215
+   ],
+   "alphaBounds": [
+    772,
+    526,
+    225,
+    215
+   ]
+  },
+  {
+   "name": "poses-12",
+   "rect": [
+    46,
+    768,
+    187,
+    219
+   ],
+   "alphaBounds": [
+    46,
+    768,
+    187,
+    219
+   ]
+  },
+  {
+   "name": "poses-13",
+   "rect": [
+    274,
+    768,
+    229,
+    221
+   ],
+   "alphaBounds": [
+    274,
+    768,
+    229,
+    221
+   ]
+  },
+  {
+   "name": "poses-14",
+   "rect": [
+    538,
+    768,
+    201,
+    219
+   ],
+   "alphaBounds": [
+    538,
+    768,
+    201,
+    219
+   ]
+  },
+  {
+   "name": "poses-15",
+   "rect": [
+    772,
+    768,
+    219,
+    219
+   ],
+   "alphaBounds": [
+    772,
+    768,
+    219,
+    219
+   ]
+  }
+ ],
+ "reference": "../ref-montage.png",
+ "checks": {
+  "bluePct": [
+   67.3,
+   66.8,
+   66.5,
+   66.2,
+   64.7,
+   55.6,
+   57.0,
+   61.4,
+   54.1,
+   64.0,
+   76.3,
+   77.3,
+   64.0,
+   78.6,
+   63.0,
+   57.7
+  ],
+  "heights": [
+   227,
+   217,
+   217,
+   217,
+   165,
+   211,
+   211,
+   211,
+   215,
+   215,
+   219,
+   215,
+   219,
+   221,
+   219,
+   219
+  ],
+  "strictRows": false
+ },
+ "license": "generated for this project; user style reference redistribution terms unverified - keep out of public release until cleared"
+}

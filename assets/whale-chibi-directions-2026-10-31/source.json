@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-31",
+  "task": "CHIBI-04",
+  "tool": "built-in imagegen",
+  "selectedDirection": "B",
+  "selectionQuote": "b可以比较好，看看后续怎么优化",
+  "status": "candidate; not a layered PSD or Live2D model; not packaged",
+  "files": [
+    {
+      "file": "directions-ABC.png",
+      "size": [
+        1774,
+        887
+      ],
+      "mode": "RGB",
+      "sha256": "dc2f6f8576e8fc501b916229f420b8c3476555d8c15a80fbbe3f840c120d9d34"
+    },
+    {
+      "file": "B-master-v1.png",
+      "size": [
+        1196,
+        1315
+      ],
+      "mode": "RGBA",
+      "sha256": "4f5f18d3233d74b21fc3780d94cd992d1511d041e525d110b688cb25601e528c"
+    },
+    {
+      "file": "directions-video-ABC.png",
+      "size": [
+        1942,
+        809
+      ],
+      "mode": "RGB",
+      "sha256": "e6b206452ac8051a76e91ef44ec7d7ecb1e9ed5f7c3783b17180b923269477ec"
+    }
+  ]
+}

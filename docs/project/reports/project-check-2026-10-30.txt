@@ -1,0 +1,18 @@
+主线: MALFOY-ENGINE → dist/DeepWhale.app
+Git: main @ a7d844f，remote=0
+鲸鱼内容: album=20, chapters=1, clips=6, songs=2
+Swift 素材/包: 29/29 一致
+Electron 核心/包: 4/4 一致
+检查: 63/63；错误=0，待办提示=6
+待办: generation.json: 缺 12 个原图引用，导入前需选版/补齐（DW-03）。
+待办: generation-v3.json: 缺 20 个原图引用，导入前需选版/补齐（DW-03）。
+待办: 相册已接 20 张，初版原图 26 张（DW-03）。
+待办: 鲸鱼 pack/相册/剧情/歌曲尚未迁入当前双世界入口（DW-03/05）。
+待办: Electron 个人数据尚未提供可靠测试隔离；本检查不运行聊天、记忆或工作（DW-01）。
+待办: 静态检查不验证窗口行为、模型/音色、视觉听感或公开发行条件。
+
+PASS: git diff --check
+PASS: no tracked business source, existing build script or whale config changes
+PASS: primary App/build route and reference build route exist (checked without launch/build)
+PASS: help exit=0; unknown command exit=2; unknown route exit=1
+PASS: both copied Q-style attachments match originals by SHA-256

@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>澜的小房间 · 预览</title>
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#0a1420;font:13px/1.6 -apple-system,"PingFang SC",sans-serif}
+  #stage{position:fixed;inset:0}
+  #hud{position:fixed;left:12px;top:12px;color:#bfe3f5;background:#0a1420cc;border:1px solid #2a4a5f;border-radius:10px;padding:10px 14px;pointer-events:none;max-width:300px}
+  #hud b{color:#8eddd5}
+  #hud .act{font-size:15px;color:#ffe9a8}
+  #tips{position:fixed;left:12px;bottom:12px;color:#7fa8bf;pointer-events:none}
+</style>
+<div id="stage"></div>
+<div id="hud">澜的小房间 <span id="clock"></span><br><span class="act" id="act"></span><br>拖动转视角 · 滚轮缩放 · <span id="wx">天气待接入</span></div>
+<div id="tips">?act=sleep|read|work|sing|walk|dance 可指定活动 · 设计学习自 moli-room（CC BY-NC，独立实现）</div>
+<script src="./vendor/three.min.js"></script>
+<script src="./vendor/OrbitControls.js"></script>
+<script src="./chibi-texture.js"></script>
+<script src="./chibi-atlas.js"></script>
+<script src="./chibi-walk.js"></script>
+<script src="./chibi-dance.js"></script>
+<script src="./room-lan.js"></script>
+</html>

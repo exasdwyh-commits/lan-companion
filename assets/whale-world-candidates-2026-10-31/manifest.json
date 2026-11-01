@@ -1,0 +1,102 @@
+{
+  "version": 1,
+  "runtimeIntegrated": true,
+  "releaseAllowed": false,
+  "source": "User-provided local Doubao AIGC videos (4)-(7)",
+  "clips": [
+    {
+      "id": "palm-magic",
+      "sourceNumber": 4,
+      "original": "originals/source-4.mp4",
+      "originalSha256": "2499121aeea0b2c3ea29c8201b7e3d1ae3cc3be8841faf3546a4c76a264a3aa9",
+      "size": [
+        1280,
+        720
+      ],
+      "fps": "24/1",
+      "duration": 8.041667,
+      "role": "one-shot click interaction closeup",
+      "loopApproved": false,
+      "audioPolicy": "discard in derivative; retain original audio in original file",
+      "publicRedistribution": "unverified",
+      "fullSourceDecode": true,
+      "runtimeReady": true,
+      "qualityNotes": "One-shot touch response; detached green artefacts removed from keyed frames.",
+      "frames": 193,
+      "derived": "derived/palm-magic.webm",
+      "alpha": true,
+      "sha256": "43e45ce550d86e1aafa1603aa1d488397185d915ce7e7f2ffc71818f35b4d43d",
+      "fullDerivedDecode": true
+    },
+    {
+      "id": "moon-room",
+      "sourceNumber": 5,
+      "original": "originals/source-5.mp4",
+      "originalSha256": "03877abef9a549f8d28f32ee79dd58b7a5cea87c66d32f67fc871988849f6a5f",
+      "size": [
+        1280,
+        720
+      ],
+      "fps": "24/1",
+      "duration": 6.041667,
+      "role": "full-screen selectable scene",
+      "loopApproved": false,
+      "audioPolicy": "discard in derivative; retain original audio in original file",
+      "publicRedistribution": "unverified",
+      "fullSourceDecode": true,
+      "runtimeReady": true,
+      "qualityNotes": "Full scene with crossfaded loop boundary.",
+      "derived": "derived/moon-room.mp4",
+      "alpha": false,
+      "sha256": "4f1477b9aa128b34205fc666667759118c92d1a04ef3cf7df98b0a35e8d28b00",
+      "fullDerivedDecode": true
+    },
+    {
+      "id": "gentle-smile",
+      "sourceNumber": 6,
+      "original": "originals/source-6.mp4",
+      "originalSha256": "2bf98366bf94d9963270781f06639d007f9c5121814bb236d21843f2c9a3d9b5",
+      "size": [
+        1280,
+        720
+      ],
+      "fps": "24/1",
+      "duration": 8.041667,
+      "role": "quiet-state intro closeup",
+      "loopApproved": false,
+      "audioPolicy": "discard in derivative; retain original audio in original file",
+      "publicRedistribution": "unverified",
+      "fullSourceDecode": true,
+      "runtimeReady": true,
+      "qualityNotes": "One-shot quiet intro; detached green artefacts removed from keyed frames.",
+      "frames": 193,
+      "derived": "derived/gentle-smile.webm",
+      "alpha": true,
+      "sha256": "10b592202aff9da171c1edb59161b35217865d5ca131922df093c620cb2f88ec",
+      "fullDerivedDecode": true
+    },
+    {
+      "id": "prayer-scene",
+      "sourceNumber": 7,
+      "original": "originals/source-7.mp4",
+      "originalSha256": "be3defc05377b13ad64b40e248aba68d85a6bf73435d9f7cb82806ae2ebcddb4",
+      "size": [
+        1280,
+        720
+      ],
+      "fps": "24/1",
+      "duration": 8.041667,
+      "role": "user-triggered full-screen one-shot",
+      "loopApproved": false,
+      "audioPolicy": "discard in derivative; retain original audio in original file",
+      "publicRedistribution": "unverified",
+      "fullSourceDecode": true,
+      "runtimeReady": true,
+      "qualityNotes": "Full-scene prayer clip, manually triggered.",
+      "derived": "derived/prayer-scene.mp4",
+      "alpha": false,
+      "sha256": "161b1d1bc4336ee5f86a70d31f542ee26810608609e7d1e54490b5f71d2a5031",
+      "fullDerivedDecode": true
+    }
+  ]
+}

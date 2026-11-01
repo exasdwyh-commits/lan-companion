@@ -1,0 +1,22 @@
+{
+  "format": 2,
+  "created": "2026-10-30",
+  "tool": "built-in image_gen",
+  "generationFile": "exec-52a8cd63-814e-4fb9-b1d9-e7b2c0b44fbb.png",
+  "texture": "texture.png",
+  "sha256": "08e0e3c46467ee1988e3247488883f44ca5f10bc82e17d739e5c78272150fc72",
+  "references": [
+    "assets/whale-chibi-reference-2026-10-30/chibi-crossed-arms.png",
+    "assets/whale-chibi-reference-2026-10-30/chibi-rice.png"
+  ],
+  "intent": "User correction: round chubby two-head whale girl; replace tall thin v1",
+  "dimensions": [
+    1254,
+    1254
+  ],
+  "alpha": true,
+  "type": "single-texture weighted mesh; 16 bones including constrained tail",
+  "license": "generated from user-provided references; reference redistribution rights not verified",
+  "prompt": "prompt.txt",
+  "originalPreserved": "assets/whale-chibi-rig-v1/texture.png"
+}

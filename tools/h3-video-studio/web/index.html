@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>H3 Video Studio</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/"><span class="brand-mark">H3</span><span>VIDEO STUDIO<small>LOCAL GENERATION WORKSPACE</small></span></a>
+    <div class="engine-state"><i id="status-dot"></i><span id="engine-status">正在检查本地引擎</span></div>
+  </header>
+  <main class="layout">
+    <section class="studio panel">
+      <div class="eyebrow">CREATE A CLIP <span>01 / GENERATE</span></div>
+      <h1>把想象，变成一段影像。</h1>
+      <p class="intro">在本机用 MiniMax H3 生成视频与原生音频。提示词、参考图和生成参数都留在本地。</p>
+      <form id="job-form">
+        <label class="field-label" for="prompt">场景描述 <span>建议具体描述人物、动作、镜头和光线</span></label>
+        <textarea id="prompt" required maxlength="12000" placeholder="A young woman with long blue hair sits beside a moonlit window. She slowly looks up and smiles softly. Static medium shot, cool silver-blue light, natural movement."></textarea>
+        <div class="field-row mode-row">
+          <label class="field-label" for="mode">生成模式</label>
+          <select id="mode"><option value="text">文生视频</option><option value="first_last">首帧 / 首尾帧</option><option value="references">多参考图</option></select>
+        </div>
+        <div class="upload-box" id="upload-box">
+          <label class="upload-label" for="references"><span class="upload-icon">＋</span><span><b>添加参考图</b><small id="upload-help">可选，PNG / JPG / WebP</small></span></label>
+          <input id="references" type="file" accept="image/png,image/jpeg,image/webp" multiple>
+          <div id="file-list" class="file-list"></div>
+        </div>
+        <div class="controls-grid">
+          <label class="field-label">质量预设<select id="preset"><option value="balanced">平衡 · 推荐</option><option value="quality">高质量 · 较慢</option><option value="draft">草稿 · 快速试构图</option></select></label>
+          <label class="field-label">画幅<select id="ratio"><option value="portrait">竖屏 9:16</option><option value="landscape">横屏 16:9</option><option value="square">正方形 1:1</option></select></label>
+          <label class="field-label">时长<select id="seconds"><option>5</option><option>8</option><option>10</option><option>12</option><option>15</option></select></label>
+          <label class="field-label">随机种子<input id="seed" type="number" placeholder="自动生成"></label>
+        </div>
+        <details class="advanced"><summary>高级参数</summary><label class="check"><input id="int8" type="checkbox"> 启用 M5 int8-row-fc2 优化</label><p>只影响支持该选项的 M5 h3.c 构建；生成速度和画质仍需用实际素材比较。</p></details>
+        <div class="form-footer"><span>生成任务在本机串行运行</span><button class="primary" type="submit"><span>开始生成</span><b>↗</b></button></div>
+        <div id="notice" role="status"></div>
+      </form>
+    </section>
+    <aside class="side-column">
+      <section class="preview panel">
+        <div class="section-head"><div><div class="eyebrow">YOUR WORKSPACE</div><h2>本地素材库</h2></div><span id="job-count" class="count">0</span></div>
+        <p id="empty-state" class="empty">生成结果会出现在这里。每条成片都保留提示词、种子和参数，方便复用与比较。</p>
+        <div id="jobs" class="jobs"></div>
+      </section>
+      <section class="note panel"><div class="eyebrow">ENGINE</div><h3>由 h3.c 驱动</h3><p>这款界面使用本机原生 Metal 引擎运行。模型权重需按上游说明单独下载配置。</p><a href="https://github.com/antirez/h3.c" target="_blank" rel="noreferrer">查看引擎文档 ↗</a></section>
+    </aside>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>

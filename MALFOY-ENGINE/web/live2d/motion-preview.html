@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>澜 · Q版动作预览</title>
+<style>
+  *{box-sizing:border-box}body{margin:0;background:#101925;color:#e5eef8;font:14px/1.6 -apple-system,"PingFang SC",sans-serif}
+  main{max-width:1160px;margin:auto;padding:28px}h1{font-size:26px;margin:0 0 6px}p{color:#9bb0c8;margin:0 0 18px}
+  .layout{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:18px}.stage{position:relative;border:1px solid #344359;border-radius:18px;overflow:hidden;background-color:#243344;background-image:linear-gradient(45deg,#293b4e 25%,transparent 25%),linear-gradient(-45deg,#293b4e 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#293b4e 75%),linear-gradient(-45deg,transparent 75%,#293b4e 75%);background-size:32px 32px;background-position:0 0,0 16px,16px -16px,-16px 0}
+  iframe{display:block;width:100%;height:570px;border:0;background:transparent}.label{position:absolute;left:18px;top:14px;color:#9bb0c8;pointer-events:none;font-size:12px}
+  aside{background:#182434;padding:20px;border:1px solid #344359;border-radius:18px;max-height:570px;overflow-y:auto}h2{font-size:14px;margin:0 0 10px}.buttons{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+  button,select{color:#e4f1ff;border:1px solid #456079;background:#253c52;border-radius:8px;padding:8px 12px;font:inherit;cursor:pointer}button:hover{background:#34536f}select{width:100%;margin-bottom:20px}label{display:block;margin:12px 0}input{accent-color:#68ddcf}output{display:block;white-space:pre-wrap;color:#8eddd5;font-size:12px;border-top:1px solid #344359;padding-top:16px}
+  .sliders label{font-size:12px;display:flex;align-items:center;gap:10px;margin:6px 0}.sliders input{min-width:0;flex:1}.sliders{margin-bottom:22px}
+  .foot{font-size:12px;margin-top:18px;max-width:800px}@media(max-width:760px){.layout{grid-template-columns:1fr}main{padding:16px}iframe{height:480px}aside{max-height:none}}
+</style>
+<main>
+  <h1>澜 · 情境表演</h1>
+  <p>身体带道具，五官独立动 · 可摸头、拖起、躲边框、穿过光环回到她的世界</p>
+  <div class="layout">
+    <div class="stage"><span class="label">圆润鲸鱼 · 情境动作 / 透明舞台</span><iframe id="stage" src="./world.html?mode=desktop" title="Q版动作舞台"></iframe></div>
+    <aside>
+      <div class="buttons"><button id="demo">暂停情境轮播</button></div>
+      <h2>活动状态</h2>
+      <select id="activity" aria-label="活动状态"><option value="idle">自由陪伴</option><option value="thinking">托腮思考</option><option value="working">戴眼镜敲电脑</option><option value="reading">拿书阅读 / 翻页</option><option value="speaking">说话</option><option value="singing">拿麦克风唱歌</option><option value="sleeping">抱枕打瞌睡</option></select>
+      <h2>独立面部 · 保持当前身体与道具</h2>
+      <select id="face" aria-label="独立面部表情"><option value="auto">跟随情境</option><option value="calm">平静看着你</option><option value="happy">开心</option><option value="playful">俏皮眨一只眼</option><option value="shy">脸红害羞</option><option value="pout">鼓嘴小生气</option><option value="sad">含泪委屈</option><option value="surprised">惊讶</option><option value="sleepy">半睁眼困倦</option></select>
+      <div class="sliders"><label>眼睛<input id="eyes" aria-label="睁眼程度" type="range" min="0" max="1.2" step=".05" value="1"></label><label>张嘴<input id="mouth" aria-label="张嘴程度" type="range" min="0" max="1" step=".05" value="0"></label><label>脸红<input id="blush" aria-label="脸红程度" type="range" min="0" max="1" step=".05" value=".2"></label></div>
+      <div class="buttons"><button id="blink">眨眨眼</button></div>
+      <h2>边框与世界</h2>
+      <div class="buttons"><button data-peek="left">左边探头</button><button data-peek="right">右边探头</button><button data-peek="bottom">底边躲猫猫</button><button data-travel="world">回她的世界</button><button data-travel="desktop">来到桌面</button></div>
+      <h2>表情与反馈</h2>
+      <div class="buttons"><button data-emote="happy">开心</button><button data-emote="shy">害羞</button><button data-emote="surprised">惊讶</button><button data-emote="sad">委屈</button><button data-emote="waving">招手</button><button data-react="dance">巴西顺拐舞</button><button data-react="task-complete">完成庆祝</button><button data-react="task-failed">失败失落</button></div>
+      <label><input id="roam" type="checkbox"> 自由走停</label>
+      <label><input id="bones" type="checkbox"> 显示骨骼</label>
+      <output id="state">正在加载…</output>
+    </aside>
+  </div>
+  <p class="foot">16 幅身体姿态 + 独立五官 + 走路循环帧（缺走路图集时自动退回原步态），眼睛可跟随鼠标，实际语音播放时嘴随音量变化。工作、阅读、唱歌为视觉预览；边框当前指舞台/屏幕边界。预览直接引用正式舞台，不连接模型或个人数据。</p>
+</main>
+<script>
+const frame=document.getElementById("stage"),status=document.getElementById("state");
+const character=()=>frame.contentWindow.Character;
+let demo=true,demoIndex=0,nextDemo=0;
+const demoSteps=[{activity:"working",face:"calm",duration:3500},{activity:"working",face:"playful",duration:2500},{activity:"reading",duration:4500},{activity:"singing",duration:3200},{walk:true,duration:6500},{react:"dance",duration:7500},{activity:"sleeping",duration:3500},{peek:"right",duration:5800},{travel:"world",duration:3000},{travel:"desktop",duration:3000},{scene:"celebrating",duration:3500},{scene:"sad",duration:3500}];
+function stopDemo(){demo=false;document.getElementById("demo").textContent="播放情境轮播";}
+function reset(){const c=character();if(c?.mode!=="desktop")c?.setMode("desktop");c?.clearReaction();c?.clearFace();c?.setActivity("idle");return c;}
+document.getElementById("demo").onclick=()=>{if(demo)stopDemo();else{demo=true;nextDemo=0;document.getElementById("demo").textContent="暂停情境轮播";}};
+document.querySelectorAll("[data-emote]").forEach(button=>button.onclick=()=>{stopDemo();reset()?.emote(button.dataset.emote);});
+document.querySelectorAll("[data-react]").forEach(button=>button.onclick=()=>{stopDemo();reset()?.react(button.dataset.react);});
+document.getElementById("activity").onchange=e=>{stopDemo();reset()?.setActivity(e.target.value);};
+document.getElementById("face").onchange=e=>{stopDemo();const c=character();if(e.target.value==="auto")c?.clearFace();else c?.setExpression(e.target.value,{duration:20});};
+document.getElementById("blink").onclick=()=>{stopDemo();character()?.blink();};
+document.querySelectorAll(".sliders input").forEach(input=>input.oninput=()=>{stopDemo();const value=id=>Number(document.getElementById(id).value),mouth=value("mouth");character()?.setFace({eyes:value("eyes"),mouthOpen:mouth,mouth:mouth>.05?"open":"small",blush:value("blush")});});
+document.querySelectorAll("[data-peek]").forEach(button=>button.onclick=()=>{stopDemo();reset()?.peek(button.dataset.peek);});
+function previewTravel(target){const c=character();return c?.travel(target).then(()=>{if(c.mode==="desktop")c.setRoam(false);});}
+document.querySelectorAll("[data-travel]").forEach(button=>button.onclick=()=>{stopDemo();previewTravel(button.dataset.travel);});
+document.getElementById("roam").onchange=e=>{stopDemo();reset()?.setRoam(e.target.checked);};
+document.getElementById("bones").onchange=e=>{stopDemo();character()?.setRigDebug(e.target.checked);};
+frame.onload=()=>{character()?.setPresentationScale(1.45);character()?.setRoam(false);};
+frame.addEventListener("load",()=>frame.contentWindow.document.addEventListener("pointerdown",()=>{if(demo){stopDemo();reset();}}));
+setInterval(()=>{
+  const c=character();if(!c)return;
+  if(demo&&c.performance.atlasReady&&performance.now()>=nextDemo){
+    const step=demoSteps[demoIndex++%demoSteps.length];
+    if(step.travel)previewTravel(step.travel);
+    else if(step.walk){const c=reset();c?.setRoam(true);}
+    else if(step.react){const c=reset();c?.react(step.react);}
+    else {const c=reset();if(c?.mode==="desktop")c.setRoam(false);if(step.peek)c.peek(step.peek);else if(step.activity)c.setActivity(step.activity);else c.emote(step.scene);if(step.face)c.setExpression(step.face);}
+    document.getElementById("activity").value=step.activity||"idle";
+    nextDemo=performance.now()+step.duration;
+  }
+  const s=c.motion,r=c.rigStats,p=c.performance;
+  status.textContent=`表演：${p.scene||"加载中"}\n面部：${c.face.expression||"—"} / ${c.face.ready?"独立":"原图"}\n道具：${p.prop||"无"}\n出入：${c.presence.phase}\n渲染：${s.renderer}\n减少动态：${s.reducedMotion ? "开启" : "关闭"}${s.error||p.error ? "\n降级："+(s.error||p.error) : ""}`;
+},250);
+</script>
+</html>

@@ -1,0 +1,126 @@
+{
+ "format": 1,
+ "created": "2026-10-31",
+ "grid": [
+  3,
+  2
+ ],
+ "tool": "agnes-image-2.5-flash i2i (montage ref: rig-v2 identity + user style reference)",
+ "texture": "atlas.png",
+ "sha256": "52721556cd451e99827f7999580538d2627b642a1f8246389b619a5466fd8dc2",
+ "width": 1024,
+ "height": 1024,
+ "frames": [
+  {
+   "name": "walk-0",
+   "rect": [
+    40,
+    64,
+    279,
+    447
+   ],
+   "alphaBounds": [
+    40,
+    64,
+    279,
+    447
+   ]
+  },
+  {
+   "name": "walk-1",
+   "rect": [
+    417,
+    44,
+    219,
+    467
+   ],
+   "alphaBounds": [
+    417,
+    44,
+    219,
+    467
+   ]
+  },
+  {
+   "name": "walk-2",
+   "rect": [
+    748,
+    44,
+    219,
+    467
+   ],
+   "alphaBounds": [
+    748,
+    44,
+    219,
+    467
+   ]
+  },
+  {
+   "name": "walk-3",
+   "rect": [
+    84,
+    512,
+    227,
+    469
+   ],
+   "alphaBounds": [
+    84,
+    512,
+    227,
+    469
+   ]
+  },
+  {
+   "name": "walk-4",
+   "rect": [
+    411,
+    512,
+    233,
+    469
+   ],
+   "alphaBounds": [
+    411,
+    512,
+    233,
+    469
+   ]
+  },
+  {
+   "name": "walk-5",
+   "rect": [
+    742,
+    512,
+    227,
+    469
+   ],
+   "alphaBounds": [
+    742,
+    512,
+    227,
+    469
+   ]
+  }
+ ],
+ "reference": "../ref-montage.png",
+ "checks": {
+  "bluePct": [
+   70.0,
+   62.6,
+   63.0,
+   65.4,
+   56.2,
+   57.4
+  ],
+  "heights": [
+   447,
+   467,
+   467,
+   469,
+   469,
+   469
+  ],
+  "strictRows": true
+ },
+ "license": "generated for this project; user style reference redistribution terms unverified - keep out of public release until cleared"
+}

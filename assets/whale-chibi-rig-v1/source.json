@@ -1,0 +1,9 @@
+{
+  "format": 1,
+  "source": "MALFOY-ENGINE/web/live2d/whale-chibi.png (existing local asset, preserved)",
+  "texture": "texture.png",
+  "sha256": "8c3e43364b40db3444f86d58ab401491e27a58e66e72444d450ab338adba2812",
+  "type": "single-texture weighted mesh",
+  "largeOccludedLimbMotionSupported": false,
+  "license": "not verified for redistribution"
+}

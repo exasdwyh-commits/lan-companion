@@ -1,0 +1,132 @@
+{
+ "format": 1,
+ "created": "2026-10-31",
+ "tool": "agnes-image-2.5-flash i2i (reference: whale-chibi-rig-v2/texture.png), retry loop",
+ "texture": "atlas.png",
+ "sha256": "15e2d33164da3a17565fb53a4d13f90023496f61ef190c5caa741ec822234e8b",
+ "width": 1024,
+ "height": 1024,
+ "frames": [
+  {
+   "name": "walk-0",
+   "rect": [
+    60,
+    75,
+    281,
+    389
+   ],
+   "alphaBounds": [
+    60,
+    75,
+    281,
+    389
+   ]
+  },
+  {
+   "name": "walk-1",
+   "rect": [
+    341,
+    75,
+    329,
+    389
+   ],
+   "alphaBounds": [
+    341,
+    75,
+    329,
+    389
+   ]
+  },
+  {
+   "name": "walk-2",
+   "rect": [
+    724,
+    75,
+    258,
+    389
+   ],
+   "alphaBounds": [
+    724,
+    75,
+    258,
+    389
+   ]
+  },
+  {
+   "name": "walk-3",
+   "rect": [
+    60,
+    567,
+    281,
+    388
+   ],
+   "alphaBounds": [
+    60,
+    567,
+    281,
+    388
+   ]
+  },
+  {
+   "name": "walk-4",
+   "rect": [
+    341,
+    568,
+    327,
+    387
+   ],
+   "alphaBounds": [
+    341,
+    568,
+    327,
+    387
+   ]
+  },
+  {
+   "name": "walk-5",
+   "rect": [
+    703,
+    568,
+    271,
+    387
+   ],
+   "alphaBounds": [
+    703,
+    568,
+    271,
+    387
+   ]
+  }
+ ],
+ "reference": "../whale-chibi-rig-v2/texture.png",
+ "processing": "edge-seeded flood-fill white->alpha (thresh 110), residual white halo zeroed; cels sliced by per-cell content bbox; no pixel resampling",
+ "checks": {
+  "cellsWithContent": 6,
+  "feetPx": [
+   463,
+   463,
+   463,
+   954,
+   954,
+   954
+  ],
+  "heights": [
+   389,
+   389,
+   389,
+   388,
+   387,
+   387
+  ],
+  "bluePct": [
+   60.8,
+   60.4,
+   65.6,
+   58.6,
+   58.1,
+   83.6
+  ],
+  "minPairwiseMaskDiff": 0.137
+ },
+ "license": "generated for this project; reference art redistribution terms unverified - keep out of public release until cleared"
+}
