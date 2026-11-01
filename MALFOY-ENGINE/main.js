@@ -366,6 +366,8 @@ function getPersona() {
     persona: getPersonaObj(),
     mode: currentMode,
     memory: memoryDigest(),
+    // 性格段：只放"她此刻偏向什么"，身份段（她是谁）仍然逐字节不变。
+    soul: soulPrompt(),
   });
 }
 
@@ -851,6 +853,32 @@ function stopWindowPolling() {
 // ── 三态：dormant(休眠/壁纸) | world(她的世界) | desktop(你的世界) ──
 let stage = null, stageMode = null;
 let contentPages = null;
+// ── 她自己的四个状态：灵魂 / 花园 / 钓鱼 / 小屋布局 ────────────────
+// 全部落在 DATA.dir 下，和好感度、旅行日记同级；都不认识窗口，只管规则与落盘。
+let soulStore = null, gardenStore = null, fishingStore = null, roomStore = null;
+function soul() {
+  if (!soulStore) soulStore = require('./lib/soul').createSoul({ dir: DATA.dir });
+  return soulStore;
+}
+function garden() {
+  if (!gardenStore) gardenStore = require('./lib/garden').createGarden({ dir: DATA.dir });
+  return gardenStore;
+}
+function fishing() {
+  if (!fishingStore) fishingStore = require('./lib/fishing').createFishing({ dir: DATA.dir });
+  return fishingStore;
+}
+function roomPlan() {
+  if (!roomStore) roomStore = require('./lib/room-plan').createRoomPlan({ dir: DATA.dir });
+  return roomStore;
+}
+// 灵魂计算失败不该影响聊天：提示词少一段，比整轮报错好。
+function soulPrompt() {
+  try { return soul().prompt(); } catch (_) { return ""; }
+}
+function feelSoul(kind, options) {
+  try { return soul().feel(kind, options); } catch (_) { return null; }
+}
 let desktopSize = 180;
 let mediaController = null, coverController = null, currentChatRequest = null, albumStore = null;
 function media() {
@@ -1295,6 +1323,8 @@ app.whenReady().then(() => {
   setTimeout(() => { if (wakeEnabled) prewarmComposer(); }, 1200);
   // 她的旅行：按真实时间对账，app 关着的时候也照样"出去过"
   try { startJourneyClock(); } catch (_) {}
+  // 她自己也会变：app 关着的这段时间，性格会往原位漂一点（一天最多记一次）。
+  try { soul().settle(); } catch (_) {}
   // 相册/剧情与记忆管理：独立窗口，失败只影响这两页，不阻断主舞台。
   try {
     contentPages = createContentPages({
@@ -1401,7 +1431,7 @@ app.whenReady().then(() => {
       if (r.timedOut) {request.cancelled=true;controller.abort();}
       r.ms = Date.now() - t0;
       // 真实聊天成功才加好感（冷却由 pack.affection.chatCooldown 控制）；超时/失败不算。
-      if (!r.timedOut && r.text) contentPages?.bump("chat");
+      if (!r.timedOut && r.text) { contentPages?.bump("chat"); feelSoul("chat"); }
       return r;
     } finally {if(currentChatRequest===request)sendToScene("character:activity", "idle");}
   });
@@ -1410,10 +1440,38 @@ app.whenReady().then(() => {
     return toggleComposer(expanded);
   });
   ipcMain.on("character:stop-voice", () => {cancelChat();mediaController?.stop();});
-  ipcMain.on("character:tap", () => { contentPages?.bump("touch"); });
+  ipcMain.on("character:tap", () => { contentPages?.bump("touch"); feelSoul("touch"); });
   // query 可选：面板的搜索框透传过来，空查询返回整个曲库
   ipcMain.handle('companion:library',(e,query)=>media().library(query));
   ipcMain.handle('companion:journey',()=>journeys().snapshot());
+  // ── 灵魂 / 花园 / 钓鱼 / 小屋 ──────────────────────────────────
+  // 只认自己的两个窗口（和麦克风权限同一口径），失败一律返回 {ok:false}
+  // 而不是把异常抛过 IPC —— 渲染层拿到的是一个能直接显示的对象。
+  const ownSender = (e) => !!e && !!e.sender && !e.sender.isDestroyed() &&
+    (e.sender === composer?.webContents || e.sender === stage?.webContents);
+  const homesteadHandle = (channel, fn) => ipcMain.handle(channel, (e, ...args) => {
+    if (!ownSender(e)) return { ok: false, error: '无效窗口' };
+    try { return fn(...args); } catch (error) { return { ok: false, error: String((error && error.message) || error) }; }
+  });
+  homesteadHandle('soul:snapshot', () => ({ ok: true, ...soul().snapshot() }));
+  homesteadHandle('soul:note', (text) => soul().note(text));
+  homesteadHandle('homestead:snapshot', () => ({
+    ok: true, soul: soul().snapshot(), garden: garden().snapshot(),
+    fishing: fishing().snapshot(), room: roomPlan().snapshot(),
+  }));
+  homesteadHandle('garden:plant', (p = {}) => garden().plant(p.plot, p.species));
+  homesteadHandle('garden:water', (p = {}) => garden().water(p.plot));
+  homesteadHandle('garden:harvest', (p = {}) => garden().harvest(p.plot, Date.now(), { receiptId: p.receiptId || null }));
+  homesteadHandle('garden:clear', (p = {}) => garden().clear(p.plot));
+  homesteadHandle('fishing:cast', (p = {}) => {
+    const result = fishing().cast({ spot: p.spot, weather: p.weather || 'clear' });
+    // 钓上来就记一笔：钓鱼是她的性情来源之一。
+    if (result.ok) feelSoul('fish');
+    return result;
+  });
+  homesteadHandle('fishing:take', (p = {}) => fishing().take(p.fish, p.count || 1));
+  homesteadHandle('room:snapshot', () => ({ ok: true, ...roomPlan().snapshot() }));
+  homesteadHandle('room:apply', (p = {}) => roomPlan().apply(p.plan, { receiptId: p.receiptId || null }));
   ipcMain.handle('companion:cover',async(e,p={})=>{
     if(e.sender!==composer?.webContents)return {ok:false,error:'无效窗口'};
     try{
