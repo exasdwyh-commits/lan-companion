@@ -335,3 +335,11 @@ BMAD-01 安装校验补充（Codex / 本聊天，已完成）：新增 `scripts/
 - 验收：新增 41 单测全 PASS；全量 336 用例 325 PASS，11 项失败均为既有缺 fixture；`main.js` 语法通过；`project.sh check` 不再在干净 clone 上崩（修 `ROOT.parent` 硬假设与文档链接检查口径），剩余 10 项为未发布素材缺失。
 - **未做且必须真机做**：3D 动作自然度、场景/室内元素、旅行与服装、多款猫、新小游戏、以及上述四引擎的**渲染与界面层**。这几项都需要 macOS + 母体 App + WebGL 迭代，本环境无法验证，硬写等于交付不可测代码。下一项 `SOUL-HOMESTEAD-02`：小屋与花园界面 + `lib/intent.js`（把 `soul().wants()` 接进闲置调度，让行为由性情驱动）。
 - 影响：无新增外部依赖、无新素材、运行入口不变；新增 4 个数据目录 JSON 状态。
+
+### SOUL-HOMESTEAD-01 第二批：主动行为 + 改造闭环（2026-11-01，Arena Agent）【完成，界面层未接】
+
+- `lib/intent.js`：从 `soul().wants()` 派发到「真的去做」。可行性优先于意愿（屋里摆满就不硬改）、夜里只休息、每动作独立冷却 + 全局 20 分钟闸、时钟回拨不会被当成永久冷却。
+- `lib/decorator.js`：模型出 `plan` → `room-plan.apply` 原子校验 → `describeErrors` 把错误翻成人话回灌 → 重试 ≤3 轮 → 不成则房间保持原样。`generate` 注入，无网络可测；`extractPlan` 只认括号配平的 JSON，不宽松解析。
+- 主进程：`startIntentClock()`（默认 5 分钟，`INTENT_TICK_MS` 可调）+ `runIntent()` 执行真实后果 + `intent:peek`/`intent:run` 两个 IPC。台词走 `character:say` 且不碰 `seq`，不打断正在进行的对话。
+- 新增 `docs/project/AGENT-SCOPE.md`：把「可以独立做完、靠单测验收」与「必须 macOS + 母体 App + WebGL 才能验」分成 A/B 两类，并给出 3D 动作自然度的诊断→归类→改法流程（不盲改 `lan-model.js` 里按实测定死的姿势常数）。
+- 验收：6 个新模块测试合计 62/62 PASS；全量 357 用例 346 PASS，11 项失败均为既有缺 fixture；`main.js`/`lib/*.js` 语法全通过。
