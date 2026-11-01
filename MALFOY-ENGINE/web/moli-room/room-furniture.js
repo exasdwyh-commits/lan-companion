@@ -79,12 +79,9 @@ window.createRoomFurniture = function ({ scene, THREE }) {
     } else {
       const h = kind === 'sleep' ? 0.28 : kind === 'seat' ? 0.22 : kind === 'storage' ? 0.5 : 0.16;
       mesh = new T.Mesh(new T.BoxGeometry(fp.w * CELL * 0.92, h, fp.h * CELL * 0.92), mat);
-      mesh.position.y = h / 2 + 0.5;
+      mesh.position.y = h / 2 + 0.02;
     }
-    if (mesh.position.y < 0.5 && kind !== 'pet' && kind !== 'plant') mesh.position.y = 0.58;
-    if (kind === 'plant') mesh.position.y = 0.68;
-    if (kind === 'pet') { /* group already positioned */ }
-    else if (kind !== 'plant') { /* box y set */ }
+    if (kind === 'plant') mesh.position.y = 0.2;
     mesh.userData.itemId = itemId;
     mesh.castShadow = true;
     mesh.receiveShadow = true;
@@ -116,7 +113,6 @@ window.createRoomFurniture = function ({ scene, THREE }) {
       const pos = cellToWorld(it.x, it.y, fp.w, fp.h);
       mesh.position.x = pos.x;
       mesh.position.z = pos.z;
-      if (mesh.position.y === 0) mesh.position.y = 0.58;
       mesh.rotation.y = -((it.rot || 0) * Math.PI) / 180;
       mesh.userData.uid = it.uid;
       mesh.userData.planItem = it;
@@ -154,7 +150,16 @@ window.createRoomFurniture = function ({ scene, THREE }) {
   function worldToCell(wx, wz) {
     const cx = Math.floor((wx - ORIGIN.x) / CELL);
     const cy = Math.floor((wz - ORIGIN.z) / CELL);
-    return { x: cx, y: cy };
+    return {
+      x: Math.max(0, Math.min(GRID.w - 1, cx)),
+      y: Math.max(0, Math.min(GRID.h - 1, cy)),
+      rawX: cx,
+      rawY: cy,
+    };
+  }
+
+  function inBounds(cell, fp) {
+    return cell.x >= 0 && cell.y >= 0 && cell.x + fp.w <= GRID.w && cell.y + fp.h <= GRID.h;
   }
 
   function hover(wx, wz) {
@@ -166,8 +171,14 @@ window.createRoomFurniture = function ({ scene, THREE }) {
     ghost.visible = true;
     ghost.position.x = pos.x;
     ghost.position.z = pos.z;
-    if (!ghost.position.y) ghost.position.y = 0.58;
-    return { x: cell.x, y: cell.y, item: pending.item, rot: pending.rot };
+    const ok = inBounds(cell, fp);
+    ghost.traverse((o) => {
+      if (o.material && o.material.color) {
+        o.material.color.setHex(ok ? 0x88ccee : 0xcc6666);
+        o.material.opacity = 0.5;
+      }
+    });
+    return { x: cell.x, y: cell.y, item: pending.item, rot: pending.rot, ok };
   }
 
   function aquariumMeshes() {

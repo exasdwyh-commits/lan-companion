@@ -235,7 +235,7 @@
     // shoulders and the cloth easing ~0.35 m backwards, anything further toward
     // the foot leaves her face under the blanket.
     const LYING_SLIDE=.26;
-    function pose(C,look,time,dt) {
+    function pose(C,look,time,dt,bookHeld=false) {
       if(!info.rigged||!C)return;
       const J=joints,G=kGeom,b=bonesByName;
       const lying=smooth(.8,1.45,Math.abs(C.pitch));
@@ -270,6 +270,13 @@
         const lift=smooth(.32,.50,target.y/G);
         target.x=sign*Math.max(Math.abs(target.x),(.163+.15*lift)*G);
         target.y=Math.min(target.y,.50*G);
+        // A book is held in front of the bodice, below the face. The generic
+        // cheek-avoidance clamp kept the fingertips away from the book edges.
+        // A small reading-only adjustment avoids pulling fused cuff cloth.
+        if (bookHeld && lying < .01) {
+          target.x=sign*.150*G;
+          target.z=Math.max(target.z,.16*G);
+        }
         // Lying: the standing arm offsets splay her wrists out past the quilt.
         // Fold both arms along her sides using the model's own shoulder->wrist
         // vector, so nothing pokes through the blanket.
@@ -342,7 +349,13 @@
         bloomers.scale.set(.118 * G * (1 + .12 * lying), .055 * G * t, .108 * G * (1 + .10 * lying));
       }
     }
-    return {root,info,ready,pose,dbg,
+    function handAnchors() {
+      if (!info.rigged) return null;
+      root.updateWorldMatrix(true, true);
+      const hands = [0,1].map(s => joints.wrist[s].clone().sub(joints.elbow[s]).applyMatrix4(bonesByName.armLo[s].matrixWorld));
+      return { left: hands[0], right: hands[1], rotation: bonesByName.root.getWorldQuaternion(new T.Quaternion()) };
+    }
+    return {root,info,ready,pose,dbg,handAnchors,
       // Place `mesh` as a world-space box wrapping her lying body, derived from
       // the live bones. Returns false when she is not lying (blanket must not
       // wrap a standing body).

@@ -1,5 +1,15 @@
 # 开发任务总表
 
+> **WORLD-STYLE-21（Codex / 01a191bf，2026-11-02）：进行中**
+> 用户要求美化3D人物、可换衣/新造型、坐姿手中由平板换成实体书。负责新增 `lan-wardrobe.js/css`、`lan-book.js` 及衣装配置/原创装饰，`lan-model.js` 仅外观接入/手部道具锚点，`index.html` 仅模块加载/读书道具/更新接线；保留 HOMESTEAD-LEISURE-01 的布料内衬、家园、出门和现有骨骼权重，不改 main/preload/声音/桌面。验收：三造型可选与保存、换装前后姿态/蒙皮不变、坐地/床/桌读书书脊厚度/翻页/手部接触、Ego实拍、专项与只读检查、构建源包一致。
+
+
+> **HOMESTEAD-LEISURE-01（Composer / 本聊天，2026-11-02）：代码完成，真机观感待验**
+>
+> 用户选定 C 分期 + 第三人称出门。负责：`lan-model.js` 去马赛克改布料内衬/短裤；`lan-companion.js` 家园页；新建 `room-furniture.js` / `outdoor-world.js` / `lib/aquarium.js`；`index.html` 浴缸与出门渲染；`main.js`/`preload.js` 家园 IPC 与 `room:changed`；`fishing.deposit` + aquarium 单测。不触发翻唱、不改桌面 dsh 动作包。
+>
+> 验收：aquarium/fishing 单测 PASS；`project.sh check` 93/93；已重建 DeepWhale.app（414M / 33/33 / 75/75）。同夜续写出门 HUD、F 抛竿、浴缸游动、编辑幽灵格；室外改对照 img2threejs Tropical Island 构图（不引入 measured/浅水仿真）。真机裙口/出门观感待用户复验。交付：[小屋休闲扩展](updates/2026-11-02-HOMESTEAD-LEISURE-01.md)。
+
 > **GROK-HANDOFF-01（Codex / 01a191bf，2026-11-02）：完成**
 > 用户要求Grok Bot接手与部署文档。负责交接/部署说明、接手提示词、最小交接包与源码快照导出检查（如需排除原哼唱等未核实再分发素材，限导出规则）；不改业务主线、main/preload、小屋/声音模块。核对远端版本差异、启动/构建依赖与隔离命令，交付可读可上传文档，区分浏览器预览/原生App/真实模型声音。已交付 [接手部署手册](GROK-HANDOFF.md) 与 [启动提示词](GROK-START.md)，公开快照排除原参考视频/原音；验证及同步见 [记录](updates/2026-11-02-GROK-HANDOFF-01.md)。
 

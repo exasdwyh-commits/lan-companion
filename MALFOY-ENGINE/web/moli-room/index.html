@@ -354,14 +354,19 @@ applyStaticLang();
 <script src="ambience.js"></script>
 <script src="tvaudio.js"></script>
 <script src="vendor/GLTFLoader.js"></script><script src="assets/aura_glb.js"></script><script src="aura_rig.js"></script>
-<script src="lan-model.js?v=20261101-46"></script>
+<link rel="stylesheet" href="lan-wardrobe.css?v=20261102-style21-r4">
+<script src="lan-book.js?v=20261102-style21-r4"></script>
+<script src="lan-wardrobe.js?v=20261102-style21-r4"></script>
+<script src="lan-model.js?v=20261102-style21-r4"></script>
 <script src="lan-room.js?v=20261101-lc2"></script>
 <script src="lan-theme.js?v=20261101"></script>
 <script src="scene-extras.js?v=20261101"></script>
 <script src="lan-face.js?v=20261101"></script>
+<script src="room-furniture.js?v=20261102-b"></script>
+<script src="outdoor-world.js?v=20261102-tropical"></script>
 <!-- 朗读/聊天共用同一个 <audio>：直接用 live2d 那份播放器，不复制第二份实现 -->
 <script src="../live2d/companion-playback.js"></script>
-<script src="lan-companion.js?v=20261101-ux23"></script>
+<script src="lan-companion.js?v=20261102-homestead2"></script>
 <script src="ui-skin.js?v=20261101-ux21"></script>
 <script>
 function start() {
@@ -840,8 +845,67 @@ poster(0.4, 0.4, 240, 240, (g, w, h) => {
 }, -2.0, 1.66, 1.3, Math.PI / 2, 0.03);
 
 const lanRoom = window.createLanRoom({scene, originalPosters});
-/* LAN-COMPANION：相册 / 读书 / 聊天。只挂自己的物件与覆盖层，不碰房间原有接线。 */
-const lanCompanion = window.createLanCompanion({ scene, THREE, lanRoom, pose: command });
+const roomFurniture = window.createRoomFurniture({ scene, THREE });
+/* Fixed bathtub near the window wall — always present for aquarium fish. */
+const lanBathtub = (() => {
+  const g = new THREE.Group(); g.name = 'lan-bathtub'; g.position.set(-1.35, 0.5, 0.85);
+  const shell = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.28, 0.35),
+    new THREE.MeshStandardMaterial({ color: 0xe8eef5, roughness: 0.55, metalness: 0.05 }));
+  shell.position.y = 0.14; shell.castShadow = true; shell.receiveShadow = true;
+  const water = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.12, 0.28),
+    new THREE.MeshStandardMaterial({ color: 0x7ec8e3, transparent: true, opacity: 0.55, roughness: 0.2 }));
+  water.position.y = 0.18;
+  g.add(shell, water); scene.add(g);
+  const fishGroup = new THREE.Group(); fishGroup.name = 'lan-tank-fish'; g.add(fishGroup);
+  return { root: g, fishGroup, water };
+})();
+function applyAquariumVisual(snap) {
+  const fg = lanBathtub.fishGroup;
+  while (fg.children.length) fg.remove(fg.children[0]);
+  const tank = (snap && snap.tank) || [];
+  for (let i = 0; i < tank.length; i++) {
+    const f = new THREE.Mesh(new THREE.SphereGeometry(0.025 + (tank[i].cm || 10) * 0.0004, 8, 6),
+      new THREE.MeshStandardMaterial({ color: [0xff8a5c, 0x5cc8ff, 0xffd966, 0xb388ff][(tank[i].rarity || 1) % 4], roughness: 0.4 }));
+    f.position.set((i % 3) * 0.1 - 0.1, 0.16 + (i % 2) * 0.04, ((i / 3) | 0) * 0.08 - 0.04);
+    f.userData.swim = { i, phase: Math.random() * 6, amp: 0.03 + Math.random() * 0.02 };
+    fg.add(f);
+  }
+}
+function tickAquarium(t) {
+  const fg = lanBathtub && lanBathtub.fishGroup;
+  if (!fg) return;
+  for (const f of fg.children) {
+    const s = f.userData.swim; if (!s) continue;
+    f.position.x = ((s.i % 3) * 0.1 - 0.1) + Math.sin(t * 1.6 + s.phase) * s.amp;
+    f.position.z = (((s.i / 3) | 0) * 0.08 - 0.04) + Math.cos(t * 1.2 + s.phase) * s.amp * 0.6;
+    f.rotation.y = Math.sin(t * 1.6 + s.phase) * 0.4;
+  }
+}
+let outdoorWorld = null;
+/* LAN-COMPANION：相册 / 读书 / 聊天 / 家园。只挂自己的物件与覆盖层。 */
+const lanCompanion = window.createLanCompanion({
+  scene, THREE, lanRoom, pose: command, furniture: roomFurniture,
+  outdoor: {
+    get mode() { return outdoorWorld ? outdoorWorld.mode : 'house'; },
+    goOut() { return outdoorWorld && outdoorWorld.goOut(); },
+    goHome() { return outdoorWorld && outdoorWorld.goHome(); },
+  },
+  aquariumVisual: applyAquariumVisual,
+});
+outdoorWorld = window.createOutdoorWorld({
+  THREE, camera, controls, renderer, houseRoot: null,
+  onToast: (t) => lanCompanion.toast?.(t),
+  host: window.malfoyHost || null,
+});
+if (window.malfoyHost?.room?.state) {
+  window.malfoyHost.room.state().then((s) => { if (s && s.ok !== false) roomFurniture.applySnapshot(s); }).catch(() => {});
+}
+if (window.malfoyHost?.onRoomChanged) {
+  window.malfoyHost.onRoomChanged((s) => roomFurniture.applySnapshot(s));
+}
+if (window.malfoyHost?.aquarium?.state) {
+  window.malfoyHost.aquarium.state().then((s) => { if (s && s.ok !== false) applyAquariumVisual(s); }).catch(() => {});
+}
 
 const clockFace = canvasTex(256, 256, (g) => {
   g.fillStyle = '#f3ede2'; g.beginPath(); g.arc(128, 128, 126, 0, 7); g.fill();
@@ -1105,6 +1169,9 @@ function molink(kind) {
 }
 function placeReader(kind, x, y, z, yaw, lie = true) {
   const g = new THREE.Group(); g.position.set(x, y, z); g.rotation.y = yaw; g.scale.setScalar(1.45); scene.add(g);
+  if (window.createLanBook) {
+    const book = window.createLanBook({kind, THREE}); g.add(book); g.userData.lanBook = book.userData.lanBook; return g;
+  }
   const d = molink(kind); g.add(d);
   if (lie) { d.rotation.x = -Math.PI / 2; d.position.y = d.userData.t / 2; }
   else { d.rotation.x = -0.2; d.position.y = d.userData.h / 2 * Math.cos(0.2) + 0.002; d.position.z = d.userData.h / 2 * Math.sin(0.2) * 0.5; }
@@ -1966,6 +2033,7 @@ const moliShadow = blobShadow(MOLI_POS.x, MOLI_POS.z + 0.08, 1.1, 0.9, 0.016);
 const LAN_NOOP = { root: null, info: { state: 'missing', rigged: false }, ready: Promise.resolve(false),
   pose() {}, focus() {} };
 const lanModel = window.createLanModel ? window.createLanModel({ moli, rig }) : LAN_NOOP;
+const lanWardrobe = window.createLanWardrobe ? window.createLanWardrobe({model:lanModel, THREE, onFocus:() => document.querySelector('[aria-label="看澜"]')?.click()}) : null;
 
 /* ---------- lights ---------- */
 const hemi = new THREE.HemisphereLight(col(0xb7b6e6), col(0x7a6352), 0.8); scene.add(hemi);
@@ -2747,6 +2815,15 @@ for (const k in ITEMS) { const I = ITEMS[k]; I.key = k; I.spot = I.spots[0]; I.s
 const restPose = (I, sp) => ({ p: v3(sp[0], sp[1] + I.y0, sp[2]), q: qE(0, sp[3], 0) });
 const holdM = new THREE.Matrix4(), holdP = new V3(), holdQ = new THREE.Quaternion(), holdS = new V3();
 function heldPose(I, P) {
+  if (I.o.userData.lanBook && lanModel.handAnchors) {
+    const hands = lanModel.handAnchors();
+    if (hands) {
+      const q = hands.rotation.clone().multiply(I.held(P.it));
+      const p = hands.left.clone().add(hands.right).multiplyScalar(.5);
+      p.add(new V3(0,-.007,.006).applyQuaternion(hands.rotation));
+      return {p,q};
+    }
+  }
   const lp = P.ip.clone(); if (I.dy) lp.y += I.dy;
   holdM.compose(lp, I.held(P.it), new V3(1, 1, 1)).premultiply(rig.matrixWorld).decompose(holdP, holdQ, holdS);
   return { p: holdP, q: holdQ };
@@ -2763,6 +2840,7 @@ function updateItems(dt, P) {
     if (e >= 1) { I.o.position.copy(T.p); I.o.quaternion.copy(T.q); }
     else { I.o.position.copy(I.p0).lerp(T.p, e); I.o.quaternion.copy(I.q0).slerp(T.q, e); I.o.position.y += Math.sin(Math.PI * e) * 0.04; }
     I.o.scale.setScalar(I.s);
+    if (I.o.userData.lanBook) I.o.userData.lanBook.update(dt, I.state === 'held', life.page, reduceMotion);
   }
 }
 function approach(sp) {
@@ -2921,7 +2999,7 @@ function buildPose(kind, S) {
       P.ip = v3(0, desk ? 0.33 : 0.24, desk ? 0.21 : 0.23); P.it = desk ? 1.0 : 0.6;
       if (kind === 'read_bed') P.pitch = -0.15;
       const flip = Math.sin(life.page * Math.PI);
-      holdHands(P); P.hr.add(v3(0.01, flip * 0.05, flip * 0.02));
+      holdHands(P); P.hr.add(v3(0.003, flip * 0.010, flip * 0.006));
       look = ITEMS[held] ? ITEMS[held].o.position : null; break;
     }
     case 'laptop': {
@@ -3267,7 +3345,7 @@ function updateMoli(dt) {
      ink body is hidden, but the pose record C and look are still computed
      above exactly as before. Parts stay independent: hair follows the head,
      sleeves follow the arms, the skirt sways on its own. */
-  if (lanModel) lanModel.pose(C, look, t, dt);
+  if (lanModel) lanModel.pose(C, look, t, dt, !!(life.held && ITEMS[life.held]?.o.userData.lanBook));
 
   /* the duvet comes up when she sleeps */
   const tucked = life.at === 'lie' && life.act === 'sleep' && (!life.step || life.step.k === 'act');
@@ -4091,6 +4169,7 @@ function pick(e) {
 let down = null;
 renderer.domElement.addEventListener('pointerdown', e => {
   down = { x: e.clientX, y: e.clientY };
+  if (outdoorWorld && outdoorWorld.mode === 'outdoors') return;
   if (tvMode !== 0 || e.button !== 0) return;
   aim(e); const h = ray.intersectObject(moli, true)[0];
   if (!h) return;
@@ -4103,6 +4182,11 @@ renderer.domElement.addEventListener('pointerdown', e => {
 const RUA_SAY = ['duang～', '软乎乎～', '嘿嘿', '再rua一下嘛', '好舒服～'], POKE_SAY = ['痒痒～', '别戳啦', '嘻嘻'];
 let pokes = [];
 addEventListener('pointermove', e => {
+  if (roomFurniture && roomFurniture.edit && roomFurniture.pending && !(outdoorWorld && outdoorWorld.mode === 'outdoors')) {
+    aim(e);
+    const floorHits = ray.intersectObjects([floor, rug].filter(Boolean), true);
+    if (floorHits[0]) roomFurniture.hover(floorHits[0].point.x, floorHits[0].point.z);
+  }
   if (!rua) return;
   const dx = e.clientX - rua.x, dy = e.clientY - rua.y;
   if (Math.hypot(dx, dy) > 6) rua.moved = true;
@@ -4126,6 +4210,33 @@ addEventListener('pointerup', () => {
   rua = null; controls.enabled = tvMode === 0;
 }, { capture: true });
 renderer.domElement.addEventListener('pointerup', e => {
+  if (outdoorWorld && outdoorWorld.mode === 'outdoors') return;
+  if (roomFurniture && roomFurniture.edit && roomFurniture.pending && down && Math.hypot(e.clientX - down.x, e.clientY - down.y) <= 6) {
+    aim(e);
+    const floorHits = ray.intersectObjects([floor, rug].filter(Boolean), true);
+    const hit = floorHits[0];
+    if (hit) {
+      const cell = roomFurniture.hover(hit.point.x, hit.point.z) || roomFurniture.worldToCell(hit.point.x, hit.point.z);
+      if (cell && cell.ok === false) {
+        const node = document.querySelector('.lc-toast');
+        if (node) { node.textContent = '格子放不下'; node.classList.add('on'); }
+        return;
+      }
+      const plan = { place: [{ item: roomFurniture.pending.item, x: cell.x, y: cell.y, rot: roomFurniture.pending.rot || 0 }] };
+      const host = window.malfoyHost;
+      const sayToast = (t) => {
+        const node = document.querySelector('.lc-toast');
+        if (node) { node.textContent = t; node.classList.add('on'); clearTimeout(node._tt); node._tt = setTimeout(() => node.classList.remove('on'), 2400); }
+      };
+      if (host?.room?.apply) {
+        host.room.apply(plan).then((r) => {
+          if (!r || r.ok === false) sayToast((r && r.errors && r.errors[0] && r.errors[0].reason) || r.error || '摆不下');
+          else { roomFurniture.applySnapshot(r); sayToast('摆好了'); }
+        }).catch(() => sayToast('改造失败'));
+      } else sayToast('请在 App 中改造小屋');
+      return;
+    }
+  }
   if (!down || Math.hypot(e.clientX - down.x, e.clientY - down.y) > 6) return;
   if (tvMode === 2) {
     aim(e); const h = ray.intersectObject(screen)[0];
@@ -4195,7 +4306,7 @@ resetView();
 scene.updateMatrixWorld(true);
 const clk = new THREE.Clock();
 snapTo(desiredAct()); tvOn = tvWanted() ? 1 : 0;
-window.MOLI_DEBUG = { lanModel, lanRoom, lanCompanion, blanketDiag: () => ({ k: blanketK, ready: blanketReady, lan: blanketLan, err: window.__blanketErr || null }), summonAura, aura, holo, auraDev, radio, tvMusic, arcade, amb, controls, cat, catWalk, catBody, moli, rig, life, cs, rb, ITEMS, command, startRobot, catGo, camera, moliShadow, scene, update, robot, body, blanket, jelly, win, bd, fireflies, world, W };
+window.MOLI_DEBUG = { lanModel, lanWardrobe, lanRoom, lanCompanion, roomFurniture, outdoorWorld, lanBathtub, blanketDiag: () => ({ k: blanketK, ready: blanketReady, lan: blanketLan, err: window.__blanketErr || null }), summonAura, aura, holo, auraDev, radio, tvMusic, arcade, amb, controls, cat, catWalk, catBody, moli, rig, life, cs, rb, ITEMS, command, startRobot, catGo, camera, moliShadow, scene, update, robot, body, blanket, jelly, win, bd, fireflies, world, W };
 drawTV(0, false);
 if (Q.has('play')) arcade.debugStart(parseInt(Q.get('play'), 10) || 3);
 if (Q.has('contra')) arcade.debugContra(parseInt(Q.get('contra'), 10) || 0);
@@ -4210,9 +4321,15 @@ lanModel.ready.then(() => {
 (function loop() {
   try {
     const dt = Math.min(clk.getDelta(), 0.05);
-    update(dt); if (tvMode === 0) controls.update();
-    if (sceneExtras) sceneExtras.update(dt, PR);
-    composer.render(dt);
+    if (outdoorWorld && outdoorWorld.mode === 'outdoors') {
+      outdoorWorld.update(dt);
+      outdoorWorld.render();
+    } else {
+      update(dt); if (tvMode === 0) controls.update();
+      if (sceneExtras) sceneExtras.update(dt, PR);
+      tickAquarium(performance.now() * 0.001);
+      composer.render(dt);
+    }
   } catch (e) {
     window.__loopErr = window.__loopErr || (String(e && e.message || e) + ' | ' + String(e && e.stack || '').slice(0, 400));
     console.error('room loop died', e);

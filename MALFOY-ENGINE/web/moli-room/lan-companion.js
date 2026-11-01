@@ -12,7 +12,7 @@
 (function () {
 'use strict';
 
-window.createLanCompanion = function ({ scene, THREE, say, lanRoom, pose }) {
+window.createLanCompanion = function ({ scene, THREE, say, lanRoom, pose, furniture, outdoor, aquariumVisual }) {
   const host = window.malfoyHost || null;
   const T = THREE;
   const color = (h) => new T.Color(h).convertSRGBToLinear();
@@ -118,9 +118,11 @@ window.createLanCompanion = function ({ scene, THREE, say, lanRoom, pose }) {
     border:2px solid #1d1a22;border-radius:14px;box-shadow:6px 6px 0 rgba(29,26,34,.55);overflow:hidden;}
   .lc-panel.on{display:flex;}
   .lc-head{display:flex;align-items:center;gap:6px;padding:8px 10px;background:#f5c518;border-bottom:2px solid #1d1a22;}
-  .lc-tabs{display:flex;gap:4px;flex:1;}
-  .lc-tab{border:0;background:rgba(255,255,255,.55);border-radius:8px;padding:5px 12px;font:inherit;font-size:13px;
+  .lc-tabs{display:flex;gap:4px;flex:1;flex-wrap:wrap;}
+  .lc-tab{border:0;background:rgba(255,255,255,.55);border-radius:8px;padding:5px 10px;font:inherit;font-size:12.5px;
     font-weight:600;color:#2a2437;cursor:pointer;}
+  .lc-home-status{font-size:12.5px;padding:8px 10px;border-radius:10px;background:#eef4f8;border:1px solid #d5e0ea;margin-bottom:10px;color:#354765;}
+  .lc-body h3{font-size:13.5px;margin:14px 0 6px;color:#2a2437;}
   .lc-tab.on{background:#1d1a22;color:#fdf7e6;}
   .lc-x{border:0;background:transparent;font-size:18px;line-height:1;cursor:pointer;color:#2a2437;padding:2px 6px;}
   .lc-body{padding:10px 12px 14px;overflow:auto;display:none;}
@@ -212,22 +214,24 @@ window.createLanCompanion = function ({ scene, THREE, say, lanRoom, pose }) {
     const tabs = el('div', 'lc-tabs');
     const tabAlbum = el('button', 'lc-tab on', '相册');
     const tabRead = el('button', 'lc-tab', '小说书架');
+    const tabHome = el('button', 'lc-tab', '家园');
     const tabChat = el('button', 'lc-tab', '对话');
     const tabSound = el('button', 'lc-tab', '声音');
-    tabs.append(tabAlbum, tabRead, tabChat, tabSound);
+    tabs.append(tabAlbum, tabRead, tabHome, tabChat, tabSound);
     const close = el('button', 'lc-x', '×');
     close.setAttribute('aria-label', '关闭');
     head.append(tabs, close);
 
     const bodyAlbum = el('div', 'lc-body on');
     const bodyRead = el('div', 'lc-body');
+    const bodyHome = el('div', 'lc-body');
     panel.setAttribute('aria-label', '澜的小屋');
     const bodyChat = el('div', 'lc-body lc-conversation');
     const transcript = el('div', 'lc-transcript');
     transcript.setAttribute('role', 'log'); transcript.setAttribute('aria-label', '和澜的对话');
     bodyChat.append(el('p', 'lc-note', '同一段对话，从小屋继续到桌面。'), transcript);
     const bodySound = el('div', 'lc-body');
-    panel.append(head, bodyAlbum, bodyRead, bodyChat, bodySound);
+    panel.append(head, bodyAlbum, bodyRead, bodyHome, bodyChat, bodySound);
 
     // ── 相册 ──
     const albumTop = el('div', 'lc-row');
@@ -317,7 +321,7 @@ window.createLanCompanion = function ({ scene, THREE, say, lanRoom, pose }) {
       open(tab) {
         panel.classList.add('on');
         root.classList.add('panel-open'); document.body.classList.add('lc-panel-open');
-        select(['read', 'chat', 'sound'].includes(tab) ? tab : 'album');
+        select(['read', 'home', 'chat', 'sound'].includes(tab) ? tab : 'album');
       },
       close() { panel.classList.remove('on'); root.classList.remove('panel-open'); document.body.classList.remove('lc-panel-open'); chatOpen = false; },
       get isOpen() { return panel.classList.contains('on'); },
@@ -361,18 +365,151 @@ window.createLanCompanion = function ({ scene, THREE, say, lanRoom, pose }) {
 
     function select(tab) {
       chatOpen = tab === 'chat';
-      const pairs = [['album', tabAlbum, bodyAlbum], ['read', tabRead, bodyRead], ['chat', tabChat, bodyChat], ['sound', tabSound, bodySound]];
+      const pairs = [['album', tabAlbum, bodyAlbum], ['read', tabRead, bodyRead], ['home', tabHome, bodyHome], ['chat', tabChat, bodyChat], ['sound', tabSound, bodySound]];
       for (const [key, button, body] of pairs) { button.classList.toggle('on', tab === key); button.setAttribute('aria-selected', String(tab === key)); body.classList.toggle('on', tab === key); }
       panel.dataset.tab = tab;
       if (tab === 'read') void refreshReading();
       if (tab === 'album') { void refreshAlbum(); void refreshJourney(); }
+      if (tab === 'home') void renderHomestead();
       if (chatOpen) { bubble.classList.remove('on'); api.renderChat(); }
       if (tab === 'sound') renderSound();
     }
     tabAlbum.onclick = () => select('album');
     tabRead.onclick = () => select('read');
+    tabHome.onclick = () => select('home');
     tabChat.onclick = () => select('chat');
     tabSound.onclick = () => select('sound');
+
+    async function renderHomestead() {
+      bodyHome.replaceChildren();
+      const heading = el('div', 'lc-section-title');
+      heading.append(el('span', 'lc-eyebrow', 'HOMESTEAD'), el('h2', null, '花园、钓鱼与小屋改造'));
+      bodyHome.append(heading);
+
+      const journeyBar = el('div', 'lc-home-status', '正在读取旅行状态…');
+      bodyHome.append(journeyBar);
+      try {
+        const j = host?.journey ? await call(() => host.journey(), null) : null;
+        const due = j && Number.isFinite(j.dueInMs) ? j.dueInMs : null;
+        if (due != null && due < 15 * 60 * 1000) journeyBar.textContent = '她快回来了 · 见闻会写进冒险手账';
+        else if (j && Array.isArray(j.diary) && j.diary.length) journeyBar.textContent = `手账 ${j.diary.length} 则 · 约 ${Math.max(1, Math.round((due || 0) / 3600000))} 小时后再出门（见相册·冒险手账）`;
+        else journeyBar.textContent = '她这会儿在家 · 旅行见闻会写进冒险手账';
+      } catch (_) { journeyBar.textContent = '旅行状态暂时读不到'; }
+
+      const goOut = el('button', 'lc-btn pri', outdoor?.mode === 'outdoors' ? '回到小屋' : '出门到海边');
+      goOut.onclick = () => {
+        if (!outdoor) { api.toast('出门场景还没挂上'); return; }
+        if (outdoor.mode === 'outdoors') { outdoor.goHome(); goOut.textContent = '出门到海边'; api.toast('回到小屋了'); }
+        else { outdoor.goOut(); goOut.textContent = '回到小屋'; api.close(); api.toast('WASD 走动，点码头钓鱼，点菜地种收'); }
+      };
+      bodyHome.append(goOut);
+
+      const snap = host?.homestead ? await call(() => host.homestead(), null) : null;
+      if (!snap || snap.ok === false) {
+        bodyHome.append(el('p', 'lc-note', host ? ((snap && snap.error) || '家园数据暂时读不到') : '浏览器预览：请在 App 中打开家园玩法'));
+        return;
+      }
+
+      // Journey / fishing bestiary
+      const fishHead = el('h3', null, '钓鱼图鉴');
+      const fishList = el('div', 'lc-grid');
+      const FISH_NAMES = { minnow: '小银鱼', crab: '招潮蟹', bass: '石斑', eel: '青鳗', moonfish: '月纹鱼', seahorse: '海马', lanternfish: '灯笼鱼', whalelet: '小鲸影' };
+      const best = snap.fishing?.bestiary || {};
+      const bag = snap.fishing?.bag || {};
+      for (const id of Object.keys(FISH_NAMES)) {
+        const card = el('div', 'lc-card');
+        const unlocked = !!best[id];
+        card.append(el('strong', null, unlocked ? FISH_NAMES[id] : '？？？'));
+        card.append(el('p', 'lc-note', unlocked ? `最大 ${best[id].bestCm}cm · 背包 ${bag[id] || 0}` : '尚未遇见'));
+        if (unlocked && (bag[id] || 0) > 0) {
+          const put = el('button', 'lc-btn', '放入浴缸');
+          put.onclick = async () => {
+            const r = await call(() => host.aquarium.put(id));
+            if (!r || r.ok === false) api.toast(r?.reason === 'full' ? '浴缸满了（最多 6 条）' : (r?.error || r?.reason || '放不进去'));
+            else { api.toast('放进浴缸了'); aquariumVisual?.(r); void renderHomestead(); }
+          };
+          card.append(put);
+        }
+        fishList.append(card);
+      }
+      bodyHome.append(fishHead, fishList);
+
+      const tankHead = el('h3', null, `浴缸（${(snap.aquarium?.tank || []).length}/${snap.aquarium?.max || 6}）`);
+      const tankList = el('div', 'lc-row');
+      for (const [i, row] of (snap.aquarium?.tank || []).entries()) {
+        const b = el('button', 'lc-btn', `${row.name} · 取出`);
+        b.onclick = async () => {
+          const r = await call(() => host.aquarium.remove(i));
+          if (!r || r.ok === false) api.toast(r?.error || '取不出');
+          else { api.toast('取回背包了'); aquariumVisual?.(r); void renderHomestead(); }
+        };
+        tankList.append(b);
+      }
+      if (!(snap.aquarium?.tank || []).length) tankList.append(el('span', 'lc-note', '缸里还没有鱼'));
+      bodyHome.append(tankHead, tankList);
+      aquariumVisual?.(snap.aquarium);
+
+      // Garden summary
+      const gHead = el('h3', null, '小花园');
+      const gList = el('div', 'lc-grid');
+      for (const plot of snap.garden?.plots || []) {
+        const card = el('div', 'lc-card');
+        card.append(el('strong', null, plot.id));
+        if (!plot.species) card.append(el('p', 'lc-note', '空地'));
+        else card.append(el('p', 'lc-note', `${plot.name || plot.species} · ${plot.ready ? '可收' : plot.withered ? '枯了' : Math.round((plot.stage || 0) * 100) + '%'}`));
+        const row = el('div', 'lc-acts');
+        if (!plot.species) {
+          const species = Object.keys(snap.garden.seeds || {}).find((k) => (snap.garden.seeds[k] || 0) > 0) || 'daisy';
+          const plant = el('button', 'lc-btn', '种' + species);
+          plant.onclick = async () => { await call(() => host.garden.plant(plot.id, species)); void renderHomestead(); };
+          row.append(plant);
+        } else if (plot.ready) {
+          const harv = el('button', 'lc-btn pri', '收获');
+          harv.onclick = async () => { await call(() => host.garden.harvest(plot.id)); void renderHomestead(); };
+          row.append(harv);
+        } else if (!plot.withered) {
+          const water = el('button', 'lc-btn', '浇水');
+          water.onclick = async () => { await call(() => host.garden.water(plot.id)); void renderHomestead(); };
+          row.append(water);
+        } else {
+          const clear = el('button', 'lc-btn', '清理');
+          clear.onclick = async () => { await call(() => host.garden.clear(plot.id)); void renderHomestead(); };
+          row.append(clear);
+        }
+        card.append(row);
+        gList.append(card);
+      }
+      bodyHome.append(gHead, gList);
+
+      // Furniture edit
+      const editHead = el('h3', null, '小屋改造');
+      const editRow = el('div', 'lc-row');
+      const editToggle = el('button', 'lc-btn', furniture?.edit ? '退出编辑' : '进入编辑模式');
+      editToggle.onclick = () => {
+        if (!furniture) { api.toast('家具层未挂载'); return; }
+        furniture.setEditMode(!furniture.edit);
+        editToggle.textContent = furniture.edit ? '退出编辑' : '进入编辑模式';
+        api.toast(furniture.edit ? '点目录选家具，再点地板摆放' : '已退出编辑');
+        void renderHomestead();
+      };
+      editRow.append(editToggle);
+      bodyHome.append(editHead, editRow);
+      if (furniture) {
+        const cat = el('div', 'lc-grid');
+        for (const c of snap.room?.catalog || []) {
+          const b = el('button', 'lc-btn', c.name);
+          b.onclick = () => {
+            furniture.setEditMode(true);
+            furniture.setPending(c.id, c, 0);
+            api.toast('选中了「' + c.name + '」，点地板确认');
+            editToggle.textContent = '退出编辑';
+          };
+          cat.append(b);
+        }
+        bodyHome.append(el('p', 'lc-note', `已摆 ${(snap.room?.items || []).length}/${snap.room?.maxItems || 24}`), cat);
+        furniture.applySnapshot(snap.room);
+      }
+    }
     historyBtn.onclick = () => api.open('chat');
     soundBtn.onclick = () => api.open('sound');
 
@@ -771,6 +908,7 @@ window.createLanCompanion = function ({ scene, THREE, say, lanRoom, pose }) {
     },
     open(tab) { buildUI(); ui.open(tab); },
     close() { if (ui) ui.close(); },
+    toast(text) { buildUI(); ui.toast(text); },
     refreshAlbum,
     refreshReading,
     stopVoice,
@@ -798,6 +936,12 @@ window.createLanCompanion = function ({ scene, THREE, say, lanRoom, pose }) {
     };
     mk('相册', '翻相册，贴到墙上', () => api.open('album'));
     mk('书架', '接着上次读的地方', () => api.open('read'));
+    mk('家园', '钓鱼图鉴、花园、改造与出门', () => api.open('home'));
+    mk('出门', '到海边小岛走走', () => {
+      if (!outdoor) { api.toast('出门场景还没挂上'); return; }
+      if (outdoor.mode === 'outdoors') { outdoor.goHome(); api.toast('回到小屋了'); }
+      else { outdoor.goOut(); api.close(); }
+    });
   }
 
   window.LAN_COMPANION = api;
