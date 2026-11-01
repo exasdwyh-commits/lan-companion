@@ -48,6 +48,11 @@ contextBridge.exposeInMainWorld("malfoyHost", {
   see: (question) => ipcRenderer.invoke("companion:see", { question }),
   setHover: (over) => ipcRenderer.send("character:hover", !!over),
   windows: () => ipcRenderer.invoke("companion:windows"),
+  // 桌面形态的自我定位：她在哪、屏幕上盖着哪些窗口。主进程据此拼进提示词，
+  // 也据此判断她是不是被挡住了。单向 send，不需要回执。
+  presence: (p) => ipcRenderer.send("character:presence", p),
+  // 主进程让她挪位置（模型在回复里写 [move:left] 时触发）。
+  onCharacterMove: (cb) => ipcRenderer.on("character:move", (_e, p) => cb(p)),
   diagnostics: () => ipcRenderer.invoke("companion:diagnostics"),
   enterWorld: () => ipcRenderer.invoke("companion:world"),
   summon: () => ipcRenderer.invoke("companion:summon"),
@@ -80,4 +85,30 @@ contextBridge.exposeInMainWorld("malfoyHost", {
   touchLine: (kind) => ipcRenderer.invoke("companion:touch-line", kind),
   onAffection: (cb) => ipcRenderer.on("affection:changed", (_e, p) => cb(p)),
   tap: () => ipcRenderer.send("character:tap"),
+  // 家园四引擎：花园 / 钓鱼 / 改造 / 浴缸（舞台窗与对话窗都可调）
+  homestead: () => ipcRenderer.invoke("homestead:snapshot"),
+  garden: {
+    plant: (plot, species) => ipcRenderer.invoke("garden:plant", { plot, species }),
+    water: (plot) => ipcRenderer.invoke("garden:water", { plot }),
+    harvest: (plot, receiptId) => ipcRenderer.invoke("garden:harvest", { plot, receiptId }),
+    clear: (plot) => ipcRenderer.invoke("garden:clear", { plot }),
+  },
+  fishing: {
+    cast: (p) => ipcRenderer.invoke("fishing:cast", p || {}),
+    take: (fish, count) => ipcRenderer.invoke("fishing:take", { fish, count }),
+  },
+  aquarium: {
+    state: () => ipcRenderer.invoke("aquarium:snapshot"),
+    put: (fish) => ipcRenderer.invoke("aquarium:put", { fish }),
+    remove: (index) => ipcRenderer.invoke("aquarium:remove", { index }),
+  },
+  room: {
+    state: () => ipcRenderer.invoke("room:snapshot"),
+    apply: (plan, receiptId) => ipcRenderer.invoke("room:apply", { plan, receiptId }),
+  },
+  onRoomChanged: (cb) => ipcRenderer.on("room:changed", (_e, p) => cb(p)),
+  intent: {
+    peek: () => ipcRenderer.invoke("intent:peek"),
+    run: () => ipcRenderer.invoke("intent:run"),
+  },
 });

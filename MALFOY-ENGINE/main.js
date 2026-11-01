@@ -10,6 +10,9 @@ const { resolveDataDir, userDataDirFor } = require("./lib/data-dir");
 const { createStore } = require("./lib/memory-store");
 const { createSession } = require("./lib/session-store");
 const IDENTITY = require("./lib/identity");
+const PRESENCE_LIB = require("./lib/presence");
+// 回复里的 [emo:x] / [move:x]：解析与剥离放在一起，避免只改一半导致标签被念出来。
+const { parseEmotion, stripTags } = require("./lib/reply-tags");
 const { createVoiceScript } = require("./lib/voice-script");
 const { createReplySplitter } = require("./lib/reply-splitter");
 const { streamOnce } = require("./lib/llm-stream");
@@ -265,6 +268,12 @@ const MEM_FILE = STORE.memoryFile;
 const MEM_MAX = 200;
 
 function remember(userText, replyText) {
+  // 灵魂先动、记忆后写：这一次往返里「她因此偏了多少」和「她记住了什么」是两件事，
+  // 但都该在同一处收口。灵魂是旁注、记忆是主数据 —— 灵魂出错绝不能连累记忆。
+  //
+  // 挂在 remember() 而不是 companion:chat 的 IPC 上：remember 是三条真实聊天路径
+  // （视觉问答 / deliverReply / streamChat）的唯一收口，语音对话也算「聊过」。
+  feelSoul("chat");
   return STORE.remember(userText, replyText);
 }
 
@@ -308,16 +317,7 @@ ${dialog}`;
 }
 
 // ── 情绪标签解析（为 Live2D 表情驱动预留）──
-const EMO_LIST = ["happy","sad","shy","angry","calm","surprised","sleepy","thinking"];
-function parseEmotion(raw) {
-  const txt = String(raw || "");
-  const bare = txt.match(/^\s*\[(happy|sad|shy|angry|calm|surprised|sleepy|thinking)\]\s*/i);
-  const m = txt.match(/\[emo:([a-z]+)\]/i) || bare;
-  let emo = m ? m[1].toLowerCase() : "calm";
-  if (!EMO_LIST.includes(emo)) emo = "calm";
-  const clean = txt.replace(/\[emo:[a-z]+\]/ig, "").replace(/^\s*\[(happy|sad|shy|angry|calm|surprised|sleepy|thinking)\]\s*/i, "").trim();
-  return { text: clean, emo };
-}
+// 实现在 lib/reply-tags.js：[emo:x] 与 [move:x] 的解析和剥离必须同源。
 
 // data.js 里的 persona。带 mtime 缓存：原来每轮聊天要读三次文件再编译三次 vm。
 let _personaCache = { m: -1, v: {} };
@@ -361,12 +361,40 @@ function memoryDigest() {
   return `${profBlock}\n【你记得的最近对话（现在是${when}）】\n${lines}\n（自然地带入记忆和画像，别生硬复述。）`;
 }
 
+// ── 桌面形态的自我定位 ────────────────────────────────────────────
+// 渲染层每 ~1.2s 上报一次「我在哪 + 屏幕上有哪些窗口」，主进程据此算她被谁挡住。
+// 没有这份上报，她就只会对话：让她去左边，她走过去了、被窗口盖住，自己却毫不知情。
+let SELF_AT = null;            // { x,y,w,h,sw,sh,state,perch,wins,at }
+const SELF_STALE_MS = 20000;   // 超过这个时间没上报，就当不知道（别拿旧位置骗她）
+
+function presenceDescriptor() {
+  if (currentMode !== "desktop" || !SELF_AT) return "";
+  if (Date.now() - SELF_AT.at > SELF_STALE_MS) return "";
+  try { return PRESENCE_LIB.describe(SELF_AT); } catch (e) { return ""; }
+}
+
+// 只有桌面形态才需要这段：世界里她走的是小屋地板，没有「窗口」这回事。
+const DESKTOP_MOVE_HINT =
+  "\n\n【你在他桌面上，可以自己走动】上面的位置是系统刚测的，不是猜的。" +
+  "想换地方时，在回复最后加一个标签（系统会执行，不会念出来、也不会显示）：" +
+  "[move:left] 往左、[move:right] 往右、[move:center] 回中间、[move:floor] 从窗口跳到桌面。" +
+  "只有真的要挪位置时才加；被窗口挡住、或者他让你挪的时候才用，平时聊天不要加。";
+
 function getPersona() {
   return IDENTITY.buildSystemPrompt({
     persona: getPersonaObj(),
     mode: currentMode,
     memory: memoryDigest(),
+    soul: soulPrompt(),
+    place: presenceDescriptor(),
   });
+}
+
+// 执行模型给的 [move:x]。只发给舞台，世界形态下渲染层自己会忽略。
+// 走动不写记忆也不进会话：她挪个位置不算说过话。
+function applyMove(move) {
+  if (!move) return;
+  sendToScene("character:move", { side: move });
 }
 
 function llmOnce(url, key, body, proxy, timeoutSec, signal) {
@@ -581,7 +609,7 @@ let AUDIO_EPOCH = 0;  // chat / song / reading share one audible owner
 
 async function deliverReply({ raw, via, userMsg, seq, opts }) {
   const o = opts || {};
-  const { text, emo } = parseEmotion(raw);
+  const { text, emo, move } = parseEmotion(raw);
   const mode = currentMode;
   if (o.cancelled) return { text, voice: null, via, emo, mode, tts: "skipped", superseded: true };
   // 1) 记录：不看走的是哪条路
@@ -598,6 +626,8 @@ async function deliverReply({ raw, via, userMsg, seq, opts }) {
     return { text, voice: null, via, emo, mode, tts: "skipped", superseded: true };
   }
   SPOKEN_SEQ = seq;
+  // 只有真正赢下这一轮的回答才执行走动：被顶替的旧回答不该把她挪走。
+  if (move) applyMove(move);
   const epoch = AUDIO_EPOCH;
   const voiceJob = async () => {
     const sp = await synthesizeVoice(text, {mode:voiceSceneMode(mode),interactive:!!o.detachedVoice});
@@ -636,7 +666,8 @@ function chatProviders() {
 const VOICE_HINT = "\n\n（用户这一条是语音输入的转写：可能缺标点、有同音错字或口癖。按意思理解，别纠错，也不要反问「你是不是想说…」。）";
 
 function chatMessages(userMsg, hist, voice) {
-  const persona = getPersona() + (voice ? VOICE_HINT : "");
+  // 桌面形态才给走动指令：世界里她走的是小屋地板，没有「窗口」可绕。
+  const persona = getPersona() + (voice ? VOICE_HINT : "") + (currentMode === "desktop" ? DESKTOP_MOVE_HINT : "");
   return [{ role: "system", content: persona }]
     .concat(hist.map((h) => ({ role: h.role, content: h.content })))
     .concat([{ role: "user", content: userMsg }]);
@@ -649,7 +680,8 @@ function speechText(piece) {
   const raw = String(piece == null ? "" : piece).replace(EMOJI_RE, "");
   let out;
   try { out = toSpeech(raw, false); } catch (_) { out = raw; }
-  return out.replace(/\[emo:[a-z]+\]/ig, "").trim();
+  // [move:x] 是给系统看的动作标签，绝不能念出来（"往左走" 这种字面量会跟着读）。
+  return stripTags(out).trim();
 }
 
 /**
@@ -708,8 +740,9 @@ async function streamChat({ userMsg, msgs, providers, seq, opts }) {
   for (const piece of splitter.flush()) say(piece);
   if (!full.trim()) return null;  // 一个字都没有 → 交给下面的整段请求兜底
 
-  const { text, emo } = parseEmotion(full);
+  const { text, emo, move } = parseEmotion(full);
   SPOKEN_SEQ = seq;  // 让晚到的非流式回答知道这轮已经念过了
+  if (move) applyMove(move);
   if (o.noMemory) {
     SESSION.appendTurn(o.label || "（她先开口）", text, { mode, via: result.via });
   } else {
@@ -851,6 +884,47 @@ function stopWindowPolling() {
 // ── 三态：dormant(休眠/壁纸) | world(她的世界) | desktop(你的世界) ──
 let stage = null, stageMode = null;
 let contentPages = null;
+// ── 她自己的四个状态：灵魂 / 花园 / 钓鱼 / 小屋布局 ────────────────
+// 全部落在 DATA.dir 下，和好感度、旅行日记同级；都不认识窗口，只管规则与落盘。
+// 懒加载：任何一个坏掉都不该让整个主进程起不来。
+let soulStore = null, gardenStore = null, fishingStore = null, roomStore = null, intentStore = null, aquariumStore = null;
+function soul() {
+  if (!soulStore) soulStore = require('./lib/soul').createSoul({ dir: DATA.dir });
+  return soulStore;
+}
+function garden() {
+  if (!gardenStore) gardenStore = require('./lib/garden').createGarden({ dir: DATA.dir });
+  return gardenStore;
+}
+function fishing() {
+  if (!fishingStore) fishingStore = require('./lib/fishing').createFishing({ dir: DATA.dir });
+  return fishingStore;
+}
+function roomPlan() {
+  if (!roomStore) roomStore = require('./lib/room-plan').createRoomPlan({ dir: DATA.dir });
+  return roomStore;
+}
+function aquarium() {
+  if (!aquariumStore) aquariumStore = require('./lib/aquarium').createAquarium({ dir: DATA.dir, fishing: fishing() });
+  return aquariumStore;
+}
+function intent() {
+  if (!intentStore) intentStore = require('./lib/intent').createIntent({ dir: DATA.dir });
+  return intentStore;
+}
+function broadcastRoomPlan(snap) {
+  const payload = snap || roomPlan().snapshot();
+  for (const win of [stage, composer]) {
+    if (win && !win.isDestroyed()) win.webContents.send('room:changed', payload);
+  }
+}
+// 灵魂计算失败不该影响聊天：提示词少一段，比整轮报错好。
+function soulPrompt() {
+  try { return soul().prompt(); } catch (_) { return ""; }
+}
+function feelSoul(kind, options) {
+  try { return soul().feel(kind, options); } catch (_) { return null; }
+}
 let desktopSize = 180;
 let mediaController = null, coverController = null, currentChatRequest = null, albumStore = null;
 function media() {
@@ -1008,6 +1082,86 @@ function startJourneyClock() {
   journeys().tick().catch(() => {});
 }
 
+/**
+ * 她自己的时间表：不定时问一次「现在想做什么」，能做就真去做。
+ *
+ * 这里执行的是**真实后果**：摘掉熟了的番茄、钓上一条鱼、让模型改一次家具。
+ * 不是为了动效假装她做了事 —— 假装过两次用户就会发现花园永远是满的。
+ *
+ * 三条纪律：
+ *   - 没有窗口就整轮不动（pushToCharacter 会落到 wall/stage，都没有就白做）；
+ *   - 一句话不打断正在进行的对话：seq 不参与，渲染层只认 text/emo/voice；
+ *   - 模型改造小屋失败就当这次没改造，房间保持原样（room-plan 的 apply 是原子的）。
+ */
+function startIntentClock() {
+  const tick = Number(process.env.INTENT_TICK_MS) || 5 * 60 * 1000;
+  const timer = setInterval(() => { runIntent().catch(() => {}); }, tick);
+  timer.unref?.();
+  // 启动后先等一会儿再第一次开口，别一开机就弹一句。
+  const first = setTimeout(() => { runIntent().catch(() => {}); }, Math.min(tick, 90 * 1000));
+  first.unref?.();
+}
+
+async function runIntent() {
+  if (!stage && !wall) return null;
+  const now = Date.now();
+  const plan = intent().decide({
+    wants: soul().wants(now, 6),
+    context: { garden: garden().snapshot(now), fishing: fishing().snapshot(now), room: roomPlan().snapshot() },
+    now,
+  });
+  if (!plan.line || plan.action === 'idle') return plan;
+
+  // 「休息」不报备。夜里没有可行的事时 decide() 会返回 rest，而它只受 20 分钟
+  // 全局冷却约束 —— 也就是整夜每 20 分钟说一句「我在这儿安静待一会儿」。
+  // 那是打扰，不是陪伴。动作照记一笔（冷却照常推进），只是不出声。
+  if (plan.action === 'rest') {
+    intent().done('rest', now);
+    return { ...plan, silent: true };
+  }
+
+  let line = plan.line;
+  try {
+    if (plan.action === 'tendGarden') {
+      const ripe = garden().snapshot(now).plots.filter((p) => p.ready && !p.withered);
+      if (!ripe.length) return plan;
+      for (const plot of ripe) garden().harvest(plot.id, Date.now());
+      line = `${ripe.map((p) => p.name).join('、')}熟了，我摘下来了。`;
+      feelSoul('garden');
+    } else if (plan.action === 'fish') {
+      const spot = fishing().snapshot(now).spots.find((s) => s.open);
+      if (!spot) return plan;
+      const caught = fishing().cast({ spot: spot.id, now: Date.now() });
+      if (!caught.ok) return plan;
+      line = `${spot.name}风不大，我坐了一会儿。钓到一条${caught.name}。`;
+      feelSoul('fish');
+    } else if (plan.action === 'decorate') {
+      const { decorate } = require('./lib/decorator');
+      const result = await decorate({
+        roomPlan: roomPlan(),
+        goal: `按你现在的性情（${soul().snapshot(now).labels.join('、')}）把屋子重新摆一下`,
+        // 这里必须走 llmRaw 而不是 llmChat：llmChat 会把回复当成一句台词
+        // 送进 character:say 念出来 —— 那等于让她把一坨 JSON 念给用户听。
+        // llmRaw 是「不带人格、不带记忆的一次性问答」，正是给这种工具调用用的。
+        generate: async (prompt) => {
+          const r = await llmRaw([{ role: 'user', content: prompt }], { budgetMs: 45000, attemptMs: 18000, maxTokens: 900, temperature: 0.3 });
+          return r && r.ok ? r.text : '';
+        },
+      });
+      if (!result.ok) return { ...plan, action: 'idle', reason: 'decorate-failed' };
+      line = plan.line;
+      feelSoul('decorate');
+    }
+  } catch (error) {
+    console.warn('[intent] ' + ((error && error.message) || error));
+    return plan;
+  }
+
+  intent().done(plan.action, Date.now());
+  pushToCharacter({ text: line, emo: plan.action === 'rest' ? 'calm' : 'happy', voice: null, mode: currentMode, partial: false });
+  return { ...plan, line };
+}
+
 function openCompanionPanel(tab) {
   toggleComposer(true);
   if(composer.webContents.isLoadingMainFrame())composer.webContents.once('did-finish-load',()=>composer?.webContents.send('composer:tab',tab));
@@ -1152,6 +1306,9 @@ function openStage(mode) {
       backgroundThrottling: false, autoplayPolicy: "no-user-gesture-required" },
   });
   stage = window; stageMode = currentMode = mode; presentation = mode;
+  // 换形态就丢掉上一份自述：世界形态下没有「窗口遮挡」这回事，
+  // 留着旧坐标会让提示词里出现一句她已经不在的处境。
+  SELF_AT = null;
   window.setAlwaysOnTop(true, "floating");
   if (isDesktop) {
     window.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: false });
@@ -1193,6 +1350,7 @@ function showWallpaper() {
   if (!wall || wall.isDestroyed()) createWall();
   wall.showInactive(); wall.webContents.send("scene:visible", true);
   currentMode = "world"; presentation = "wallpaper";
+  SELF_AT = null;
   ensureComposer(); notifyComposer(); buildMenu();
 }
 function setSceneVideo(state) {
@@ -1295,6 +1453,10 @@ app.whenReady().then(() => {
   setTimeout(() => { if (wakeEnabled) prewarmComposer(); }, 1200);
   // 她的旅行：按真实时间对账，app 关着的时候也照样"出去过"
   try { startJourneyClock(); } catch (_) {}
+  // 她自己也会变：app 关着的这段时间，性格会往原位漂一点（一天最多记一次）。
+  try { soul().settle(); } catch (_) {}
+  // 她自己的时间表：决定要不要去做点什么，并且真的做。
+  try { startIntentClock(); } catch (_) {}
   // 相册/剧情与记忆管理：独立窗口，失败只影响这两页，不阻断主舞台。
   try {
     contentPages = createContentPages({
@@ -1410,10 +1572,61 @@ app.whenReady().then(() => {
     return toggleComposer(expanded);
   });
   ipcMain.on("character:stop-voice", () => {cancelChat();mediaController?.stop();});
-  ipcMain.on("character:tap", () => { contentPages?.bump("touch"); });
+  ipcMain.on("character:tap", () => { contentPages?.bump("touch"); feelSoul("touch"); });
   // query 可选：面板的搜索框透传过来，空查询返回整个曲库
   ipcMain.handle('companion:library',(e,query)=>media().library(query));
   ipcMain.handle('companion:journey',()=>journeys().snapshot());
+  // ── 灵魂 / 花园 / 钓鱼 / 小屋 ──────────────────────────────────
+  // 只认自己的两个窗口（和麦克风权限同一口径），失败一律返回 {ok:false}
+  // 而不是把异常抛过 IPC —— 渲染层拿到的是一个能直接显示的对象。
+  const ownSender = (e) => !!e && !!e.sender && !e.sender.isDestroyed() &&
+    (e.sender === composer?.webContents || e.sender === stage?.webContents);
+  const homesteadHandle = (channel, fn) => ipcMain.handle(channel, (e, ...args) => {
+    if (!ownSender(e)) return { ok: false, error: '无效窗口' };
+    try { return fn(...args); } catch (error) { return { ok: false, error: String((error && error.message) || error) }; }
+  });
+  homesteadHandle('soul:snapshot', () => ({ ok: true, ...soul().snapshot() }));
+  homesteadHandle('soul:note', (text) => soul().note(text));
+  homesteadHandle('homestead:snapshot', () => ({
+    ok: true, soul: soul().snapshot(), garden: garden().snapshot(),
+    fishing: fishing().snapshot(), room: roomPlan().snapshot(),
+    aquarium: aquarium().snapshot(),
+  }));
+  homesteadHandle('garden:plant', (p = {}) => garden().plant(p.plot, p.species));
+  homesteadHandle('garden:water', (p = {}) => garden().water(p.plot));
+  homesteadHandle('garden:harvest', (p = {}) => garden().harvest(p.plot, Date.now(), { receiptId: p.receiptId || null }));
+  homesteadHandle('garden:clear', (p = {}) => garden().clear(p.plot));
+  homesteadHandle('fishing:cast', (p = {}) => {
+    const result = fishing().cast({ spot: p.spot, weather: p.weather || 'clear' });
+    // 钓上来就记一笔：钓鱼是她的性情来源之一。
+    if (result.ok) feelSoul('fish');
+    return result;
+  });
+  homesteadHandle('fishing:take', (p = {}) => fishing().take(p.fish, p.count || 1));
+  homesteadHandle('aquarium:snapshot', () => ({ ok: true, ...aquarium().snapshot() }));
+  homesteadHandle('aquarium:put', (p = {}) => aquarium().put(p.fish));
+  homesteadHandle('aquarium:remove', (p = {}) => aquarium().remove(p.index));
+  homesteadHandle('room:snapshot', () => ({ ok: true, ...roomPlan().snapshot() }));
+  homesteadHandle('room:apply', (p = {}) => {
+    const result = roomPlan().apply(p.plan, { receiptId: p.receiptId || null });
+    if (result && result.ok) broadcastRoomPlan(result);
+    return result;
+  });
+  // 只读预测：问「她现在会想做什么」但不执行 —— 给调试和界面用。
+  homesteadHandle('intent:peek', () => {
+    const now = Date.now();
+    return {
+      ok: true,
+      plan: intent().decide({
+        wants: soul().wants(now, 6),
+        context: { garden: garden().snapshot(now), fishing: fishing().snapshot(now), room: roomPlan().snapshot() },
+        now,
+      }),
+      state: intent().snapshot(),
+    };
+  });
+  // 手动触发一次（验收用：不用等 5 分钟）
+  homesteadHandle('intent:run', async () => ({ ok: true, result: await runIntent() }));
   ipcMain.handle('companion:cover',async(e,p={})=>{
     if(e.sender!==composer?.webContents)return {ok:false,error:'无效窗口'};
     try{
@@ -1514,6 +1727,13 @@ app.whenReady().then(() => {
   });
   // ── 双世界：召唤她到桌面 / 让她回去休息 ──
   ipcMain.handle("companion:windows", async () => winCache);
+  // 渲染层上报「我在哪」。只认舞台窗口，别的窗口冒充无效 ——
+  // 位置会直接进提示词，让她被一个假坐标骗走比不报更糟。
+  ipcMain.on("character:presence", (e, p) => {
+    if (!stage || stage.isDestroyed() || e.sender !== stage.webContents) return;
+    if (!p || typeof p !== "object") return;
+    SELF_AT = { ...p, at: Date.now() };
+  });
   ipcMain.handle("companion:world", async () => openStage("world"));
   ipcMain.handle("companion:summon", async () => openStage("desktop"));
   ipcMain.handle("companion:return", async () => goDormant());

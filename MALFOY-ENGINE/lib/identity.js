@@ -43,12 +43,26 @@ function identityCore(persona) {
   return String(p.system || DEFAULT_CORE).trim();
 }
 
-/** 完整 system prompt = 身份段 + 此刻段 + 记忆段。 */
-function buildSystemPrompt({ persona, mode, memory } = {}) {
+/**
+ * 完整 system prompt = 身份段 + 性格段 + 此刻段 + 位置段 + 记忆段。
+ *
+ * 性格段（soul）是她**长出来的**那部分，由 lib/soul.js 按互动算出来。
+ * 它必须放在身份段之后、此刻段之前，并且两形态完全一致 —— 她有两个形态，
+ * 但不是两个灵魂。所以这段不随 mode 变化，渗不进形态差异。
+ *
+ * 位置段（place）是桌面形态的自我定位，由 lib/presence.js 算出来：
+ * 她在屏幕哪个角落、被谁挡住。它紧贴「此刻」，因为两者说的都是「现在」。
+ *
+ * 三个可选段都为空时，输出与没有这些参数时**逐字节相同**。
+ */
+function buildSystemPrompt({ persona, mode, memory, soul, place } = {}) {
   const core = identityCore(persona);
   const tone = MODE_TONE[mode] || MODE_TONE.world;
   const mem = String(memory || "").trim();
-  return core + "\n\n【此刻】" + tone + (mem ? "\n" + mem : "");
+  const self = String(soul || "").trim();
+  const pl = String(place || "").trim();
+  return core + (self ? "\n\n【你的性格】" + self : "") + "\n\n【此刻】" + tone +
+    (pl ? "\n" + pl : "") + (mem ? "\n" + mem : "");
 }
 
 /**

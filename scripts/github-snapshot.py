@@ -40,6 +40,8 @@ def git(*args: str, env=None, data=None):
 
 def excluded(name: str):
     p = Path(name)
+    if p.name == 'shunguai-hum.m4a' or p.name.startswith('shunguai-reference-'):
+        return 'user reference audio/video: redistribution permission not verified'
     if name.startswith(OMIT_ROOTS):
         return 'local evidence, agent installation or unused sample'
     if any(part in {'node_modules', '.git', '__pycache__', 'data'} for part in p.parts):

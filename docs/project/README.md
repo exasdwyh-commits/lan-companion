@@ -15,6 +15,11 @@
 
 本次统一的是方向、工程入口和交接；完整运行产品尚在整合中，不能把文档整理视为所有功能迁移完成。
 
+## Grok 接手
+
+- [接手与部署手册](GROK-HANDOFF.md)：GitHub/ZIP、网页预览、原生构建、外部依赖与下一步任务。
+- [可复制给 Grok 的任务](GROK-START.md)：直接复制全文，要求新分支与 PR。
+
 ## 阅读顺序
 
 场景开发决定（2026-11-01）：[完整复用茉莉的小房间](updates/2026-11-01-WORLD-MOLI-05-reuse.md)，含四款电视小游戏和生活系统。源码入口 `MALFOY-ENGINE/web/moli-room/`；当前真实混元鲸鱼娘已接连续蒙皮与动作，RIG-15/16/17 续修接地/贴床/被子；小屋已通过 `lanroom://` 接进 App，LAN-08 加入相册/读书/聊天。本次源包核对 180/180 一致，真机声音与加照片对话框仍待验，详见[最新同步](updates/2026-11-01-WORLD-RIG-14-skin-and-app-sync.md)与[功能接入](updates/2026-11-01-WORLD-LAN-08-house-companion.md)。此前程序造型撤回见[纠正记录](updates/2026-11-01-WORLD-LAN-07-model-correction.md)。原[潮汐居规划](WORLD-SCENE-PLAN.md)仅作主题改造参考。

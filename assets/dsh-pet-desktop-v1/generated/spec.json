@@ -1,0 +1,360 @@
+{
+  "reading": {
+    "file": "reading-sheet-v1.png",
+    "label": "看书",
+    "fps": 3,
+    "order": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "repeats": 4,
+    "anchorY": 330,
+    "category": "daily"
+  },
+  "sit": {
+    "file": "sit-sheet-v1.png",
+    "label": "坐着晃腿",
+    "fps": 3,
+    "order": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "repeats": 4,
+    "anchorY": 270,
+    "category": "daily"
+  },
+  "shunguai": {
+    "file": "shunguai-sheet-v2.png",
+    "label": "顺拐舞",
+    "fps": 8.8,
+    "order": [
+      0,
+      1,
+      2,
+      1,
+      3,
+      4,
+      5,
+      4
+    ],
+    "repeats": 8,
+    "anchorY": 330,
+    "category": "dance"
+  },
+  "sad": {
+    "file": "sad-sheet-v1.png",
+    "label": "委屈",
+    "fps": 4,
+    "order": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "repeats": 3,
+    "anchorY": 330,
+    "category": "emotion",
+    "promptSummary": "eyebrows up, lowered gaze, restrained sniffle"
+  },
+  "cry": {
+    "file": "cry-sheet-v1.png",
+    "label": "擦眼泪",
+    "fps": 4,
+    "order": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "repeats": 3,
+    "anchorY": 330,
+    "category": "emotion",
+    "promptSummary": "tears well and roll; wipe one cheek with sleeve; breathe and return"
+  },
+  "smug": {
+    "file": "smug-sheet-v1.png",
+    "label": "小得意",
+    "fps": 4,
+    "order": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "repeats": 3,
+    "anchorY": 330,
+    "category": "emotion",
+    "promptSummary": "hands on hips, chin up, pleased eyebrow, satisfied nod"
+  },
+  "confused": {
+    "file": "confused-sheet-v1.png",
+    "label": "歪头疑惑",
+    "fps": 4,
+    "order": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "repeats": 3,
+    "anchorY": 330,
+    "category": "emotion",
+    "promptSummary": "asymmetric eyebrows, head tilts left, center, look and blink"
+  },
+  "heart": {
+    "file": "heart-sheet-v1.png",
+    "label": "比心",
+    "fps": 4,
+    "order": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "repeats": 3,
+    "anchorY": 330,
+    "category": "emotion",
+    "promptSummary": "both hands form a heart at chest, blush, smile and lower"
+  },
+  "hug": {
+    "file": "hug-sheet-v1.png",
+    "label": "求抱抱",
+    "fps": 4,
+    "order": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "repeats": 3,
+    "anchorY": 330,
+    "category": "emotion",
+    "promptSummary": "open arms toward viewer, open palms, hopeful lean and return"
+  },
+  "kiss": {
+    "file": "kiss-sheet-v1.png",
+    "label": "飞吻",
+    "fps": 4,
+    "order": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "repeats": 3,
+    "anchorY": 330,
+    "category": "emotion",
+    "promptSummary": "hand to mouth, blow one small blue heart, hand returns"
+  },
+  "nod": {
+    "file": "nod-sheet-v1.png",
+    "label": "点头",
+    "fps": 4,
+    "order": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "repeats": 3,
+    "anchorY": 330,
+    "category": "emotion",
+    "promptSummary": "clear affirmative chin down and up, body stays still"
+  },
+  "shake-head": {
+    "file": "shake-head-sheet-v1.png",
+    "label": "摇头",
+    "fps": 4,
+    "order": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "repeats": 3,
+    "anchorY": 330,
+    "category": "emotion",
+    "promptSummary": "face turns left, right, center, body fixed"
+  },
+  "tea": {
+    "file": "tea-sheet-v1.png",
+    "label": "喝茶",
+    "fps": 4,
+    "order": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "repeats": 3,
+    "anchorY": 330,
+    "category": "daily",
+    "promptSummary": "white blue-whale mug, lift, sip, content expression and lower"
+  },
+  "phone": {
+    "file": "phone-sheet-v1.png",
+    "label": "看手机",
+    "fps": 4,
+    "order": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "repeats": 3,
+    "anchorY": 330,
+    "category": "daily",
+    "promptSummary": "blue phone in left hand, right finger swipes, gaze follows and blink"
+  },
+  "draw": {
+    "file": "draw-sheet-v1.png",
+    "label": "画画",
+    "fps": 4,
+    "order": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "repeats": 3,
+    "anchorY": 330,
+    "category": "daily",
+    "promptSummary": "small sketchbook and pencil, wrist draws a whale, inspect and smile"
+  },
+  "cheer": {
+    "file": "cheer-sheet-v1.png",
+    "label": "给你加油",
+    "fps": 4,
+    "order": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "repeats": 3,
+    "anchorY": 330,
+    "category": "emotion",
+    "promptSummary": "small fists by cheeks alternate raising, cheerful nod; no pom-poms"
+  },
+  "apology": {
+    "file": "apology-sheet-v1.png",
+    "label": "鞠躬",
+    "fps": 4,
+    "order": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "repeats": 3,
+    "anchorY": 330,
+    "category": "emotion",
+    "promptSummary": "clasp hands at apron, modest 20 degree upper-body bow and return"
+  },
+  "sneeze": {
+    "file": "sneeze-sheet-v1.png",
+    "label": "打喷嚏",
+    "fps": 4,
+    "order": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "repeats": 3,
+    "anchorY": 330,
+    "category": "daily",
+    "promptSummary": "handkerchief at nose, one head dip sneeze, embarrassed blink"
+  },
+  "umbrella": {
+    "file": "umbrella-sheet-v1.png",
+    "label": "撑伞",
+    "fps": 4,
+    "order": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "repeats": 3,
+    "anchorY": 330,
+    "category": "daily",
+    "promptSummary": "whole navy umbrella inside frame margins, slight shift and blink, no rain"
+  }
+}

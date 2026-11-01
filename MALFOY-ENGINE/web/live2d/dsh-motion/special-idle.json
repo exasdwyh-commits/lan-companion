@@ -1,0 +1,28 @@
+{
+  "defaultTrack": "reference",
+  "tracks": {
+    "reference": {
+      "file": "shunguai-hum.m4a",
+      "label": "参考视频原音",
+      "duration": 15.068005,
+      "sha256": "e185d67f2cd7576cf151496bad7063c45d94a32058f2fc6bc0ccae72f73947d3",
+      "source": "https://www.douyin.com/video/7695469152915747574"
+    },
+    "synth": {
+      "file": "shunguai-hum-synth.m4a",
+      "label": "原有合成哼唱",
+      "duration": 7.464172,
+      "sha256": "132f61f4fb231dd4821ed87672464ea2b5af91bb2af80ccf6180dcf3bdea5426",
+      "source": "assets/whale-chibi-style-v1/dance/hum.m4a"
+    }
+  },
+  "sourceVideo": {
+    "file": "generated/shunguai-reference-7695469152915747574.mp4",
+    "sha256": "c970e8d381eefcc7519abc95475f6a982a5b2dd93bee3d54acbcce4cf33504ec",
+    "author": "香菜鱼丸子",
+    "title": "鲸鱼娘和gpt的日常",
+    "page": "https://www.douyin.com/video/7695469152915747574"
+  },
+  "usage": "User-provided reference, local extraction only; source audio redistribution permission not verified; not dsh-pet/CC artwork license",
+  "process": "Extract complete original audio; 80ms fade in and 280ms fade out, AAC128k; no voice cloning"
+}

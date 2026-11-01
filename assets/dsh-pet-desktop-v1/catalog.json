@@ -1,0 +1,550 @@
+{
+  "idle": {
+    "source": "待机呼吸休闲.webm",
+    "label": "发呆",
+    "category": "daily"
+  },
+  "walk": {
+    "source": "螃蟹走路.webm",
+    "label": "散步",
+    "category": "daily"
+  },
+  "wave": {
+    "source": "点击回应-元气挥手.webm",
+    "label": "挥手",
+    "category": "emotion"
+  },
+  "drag": {
+    "source": "被鼠标拖拽悬空反馈.webm",
+    "label": "拎起来",
+    "category": "daily",
+    "hidden": true
+  },
+  "sleep-in": {
+    "source": "睡觉-开始.webm",
+    "label": "准备睡觉",
+    "category": "daily",
+    "hidden": true
+  },
+  "sleep": {
+    "source": "睡觉-循环.webm",
+    "label": "睡觉",
+    "category": "daily"
+  },
+  "wake": {
+    "source": "睡觉-起来.webm",
+    "label": "起床",
+    "category": "daily"
+  },
+  "thinking": {
+    "source": "工作状态-思考冒泡.webm",
+    "label": "想事情",
+    "category": "work"
+  },
+  "working": {
+    "source": "写代码.webm",
+    "label": "写代码",
+    "category": "work"
+  },
+  "success": {
+    "source": "工作状态-雀跃庆祝.webm",
+    "label": "庆祝",
+    "category": "emotion"
+  },
+  "dance": {
+    "source": "可爱宅舞.webm",
+    "label": "跳舞",
+    "category": "dance"
+  },
+  "sway": {
+    "source": "轻快摇摆舞.webm",
+    "label": "摇摆舞",
+    "category": "dance"
+  },
+  "stretch": {
+    "source": "超大伸懒腰.webm",
+    "label": "伸懒腰",
+    "category": "daily"
+  },
+  "snack": {
+    "source": "大口吃零食.webm",
+    "label": "吃零食",
+    "category": "food"
+  },
+  "cat": {
+    "source": "撸猫.webm",
+    "label": "撸猫",
+    "category": "play"
+  },
+  "magic": {
+    "source": "凭空生花.webm",
+    "label": "变朵花",
+    "category": "fantasy"
+  },
+  "bubbles": {
+    "source": "鲸鱼吐泡泡特效.webm",
+    "label": "吐泡泡",
+    "category": "fantasy"
+  },
+  "shy": {
+    "source": "点击回应-害羞惊讶.webm",
+    "label": "害羞",
+    "category": "emotion"
+  },
+  "happy": {
+    "source": "点击回应-开心跃动.webm",
+    "label": "开心",
+    "category": "emotion"
+  },
+  "game": {
+    "source": "原地专心玩魔方.webm",
+    "label": "玩魔方",
+    "category": "play"
+  },
+  "flute": {
+    "source": "吹笛子.webm",
+    "label": "吹笛子",
+    "category": "music"
+  },
+  "notes": {
+    "source": "轻快记录.webm",
+    "label": "做笔记",
+    "category": "work"
+  },
+  "look": {
+    "source": "东张西望.webm",
+    "label": "张望",
+    "category": "daily"
+  },
+  "whale": {
+    "source": "蓝鲸现世.webm",
+    "label": "小鲸鱼",
+    "category": "fantasy"
+  },
+  "singing": {
+    "source": "悠闲哼歌.webm",
+    "label": "哼歌",
+    "category": "music"
+  },
+  "chat": {
+    "source": "碎碎念-对屏碎碎念.webm",
+    "label": "聊天",
+    "category": "emotion"
+  },
+  "tickle": {
+    "source": "点击回应-挠痒咯咯笑.webm",
+    "label": "咯咯笑",
+    "category": "emotion"
+  },
+  "cuddle": {
+    "source": "点击回应-害羞惊讶.webm",
+    "label": "撒娇",
+    "category": "emotion",
+    "hidden": true
+  },
+  "pout": {
+    "source": "点击回应-傲娇生气.webm",
+    "label": "闹小脾气",
+    "category": "emotion"
+  },
+  "violin": {
+    "source": "小提琴演奏.webm",
+    "label": "拉小提琴",
+    "category": "music"
+  },
+  "swing": {
+    "source": "荡秋千.webm",
+    "label": "荡秋千",
+    "category": "play"
+  },
+  "yawn": {
+    "source": "哈欠连天.webm",
+    "label": "打哈欠",
+    "category": "daily"
+  },
+  "juggle": {
+    "source": "三球抛接.webm",
+    "label": "抛接球",
+    "category": "play"
+  },
+  "gomoku": {
+    "source": "下五子棋.webm",
+    "label": "下五子棋",
+    "category": "play"
+  },
+  "moon-cake": {
+    "source": "中秋赏月吃月饼.webm",
+    "label": "赏月吃月饼",
+    "category": "festival"
+  },
+  "maid-dance": {
+    "source": "优雅女仆舞.webm",
+    "label": "女仆舞",
+    "category": "dance"
+  },
+  "broke": {
+    "source": "余额-分文不剩.webm",
+    "label": "两眼发直",
+    "category": "emotion"
+  },
+  "count-coins": {
+    "source": "余额-数金皱眉.webm",
+    "label": "数金币",
+    "category": "play"
+  },
+  "empty-purse": {
+    "source": "余额-袋空如洗.webm",
+    "label": "空空的钱袋",
+    "category": "play"
+  },
+  "coin-jingle": {
+    "source": "余额-金袋叮当.webm",
+    "label": "金币叮当",
+    "category": "play"
+  },
+  "purse": {
+    "source": "余额-钱袋如常.webm",
+    "label": "掂掂钱袋",
+    "category": "play"
+  },
+  "rich": {
+    "source": "余额-钱袋满溢.webm",
+    "label": "鼓鼓的钱袋",
+    "category": "play"
+  },
+  "caught-snacking": {
+    "source": "偷吃零食被抓住.webm",
+    "label": "偷吃被发现",
+    "category": "emotion"
+  },
+  "calligraphy": {
+    "source": "写福字.webm",
+    "label": "写福字",
+    "category": "festival"
+  },
+  "animals": {
+    "source": "动物环绕.webm",
+    "label": "动物朋友",
+    "category": "fantasy"
+  },
+  "nap": {
+    "source": "原地小憩沉眠.webm",
+    "label": "闭眼小憩",
+    "category": "daily"
+  },
+  "run": {
+    "source": "原地左转奔跑.webm",
+    "label": "跑起来",
+    "category": "daily"
+  },
+  "tap": {
+    "source": "原地敲击桌面互动.webm",
+    "label": "敲敲桌面",
+    "category": "emotion"
+  },
+  "float": {
+    "source": "原地漂浮踏步.webm",
+    "label": "轻轻漂浮",
+    "category": "fantasy"
+  },
+  "jump": {
+    "source": "原地跳跃抓碎头顶物品.webm",
+    "label": "跳起来够星星",
+    "category": "play"
+  },
+  "toy-car": {
+    "source": "原地蹲下玩玩具汽车.webm",
+    "label": "玩小汽车",
+    "category": "play"
+  },
+  "squat": {
+    "source": "原地重力下蹲压缩.webm",
+    "label": "蹲一蹲",
+    "category": "daily"
+  },
+  "dove": {
+    "source": "变鸽子.webm",
+    "label": "变鸽子魔术",
+    "category": "fantasy"
+  },
+  "icecream": {
+    "source": "吃冰淇淋融化.webm",
+    "label": "吃冰淇淋",
+    "category": "food"
+  },
+  "lunch": {
+    "source": "吃午餐.webm",
+    "label": "吃午餐",
+    "category": "food"
+  },
+  "crab": {
+    "source": "吃大闸蟹.webm",
+    "label": "吃大闸蟹",
+    "category": "food"
+  },
+  "rice-cake": {
+    "source": "吃年糕.webm",
+    "label": "吃年糕",
+    "category": "food"
+  },
+  "breakfast": {
+    "source": "吃早餐.webm",
+    "label": "吃早餐",
+    "category": "food"
+  },
+  "dinner": {
+    "source": "吃晚餐.webm",
+    "label": "吃晚餐",
+    "category": "food"
+  },
+  "tangyuan": {
+    "source": "吃汤圆.webm",
+    "label": "吃汤圆",
+    "category": "food"
+  },
+  "rice": {
+    "source": "吃白饭.webm",
+    "label": "吃米饭",
+    "category": "food"
+  },
+  "zongzi": {
+    "source": "吃粽子.webm",
+    "label": "吃粽子",
+    "category": "food"
+  },
+  "tanghulu": {
+    "source": "吃糖葫芦.webm",
+    "label": "吃糖葫芦",
+    "category": "food"
+  },
+  "porridge": {
+    "source": "吃腊八粥.webm",
+    "label": "喝腊八粥",
+    "category": "food"
+  },
+  "watermelon": {
+    "source": "吃西瓜.webm",
+    "label": "吃西瓜",
+    "category": "food"
+  },
+  "chongyang-cake": {
+    "source": "吃重阳糕.webm",
+    "label": "吃重阳糕",
+    "category": "food"
+  },
+  "noodles": {
+    "source": "吃长寿面.webm",
+    "label": "吃长寿面",
+    "category": "food"
+  },
+  "qingtuan": {
+    "source": "吃青团.webm",
+    "label": "吃青团",
+    "category": "food"
+  },
+  "dumplings": {
+    "source": "吃饺子.webm",
+    "label": "吃饺子",
+    "category": "food"
+  },
+  "balloon": {
+    "source": "吹气球.webm",
+    "label": "吹气球",
+    "category": "play"
+  },
+  "snowman": {
+    "source": "堆雪人.webm",
+    "label": "堆雪人",
+    "category": "festival"
+  },
+  "curtsy": {
+    "source": "女仆屈膝礼仪.webm",
+    "label": "提裙行礼",
+    "category": "emotion"
+  },
+  "turn": {
+    "source": "小幅度原地360度旋转展示.webm",
+    "label": "转一圈",
+    "category": "daily"
+  },
+  "pace": {
+    "source": "工作状态-原地踱步张望.webm",
+    "label": "踱步想想",
+    "category": "work"
+  },
+  "sigh": {
+    "source": "工作状态-垂头叹气冒汗.webm",
+    "label": "垂头叹气",
+    "category": "emotion"
+  },
+  "busy-tap": {
+    "source": "工作状态-忙碌点按.webm",
+    "label": "忙碌点按",
+    "category": "work"
+  },
+  "archive": {
+    "source": "工作状态-清点归档.webm",
+    "label": "整理文件",
+    "category": "work"
+  },
+  "cards": {
+    "source": "扑克魔术.webm",
+    "label": "扑克牌魔术",
+    "category": "fantasy"
+  },
+  "startled-awake": {
+    "source": "打瞌睡被惊醒.webm",
+    "label": "瞌睡惊醒",
+    "category": "emotion"
+  },
+  "spinning-top": {
+    "source": "抽陀螺.webm",
+    "label": "玩陀螺",
+    "category": "play"
+  },
+  "gift": {
+    "source": "拆礼物.webm",
+    "label": "拆礼物",
+    "category": "festival"
+  },
+  "chrysanthemum": {
+    "source": "插茱萸赏菊.webm",
+    "label": "插花赏菊",
+    "category": "festival"
+  },
+  "fan": {
+    "source": "摇扇纳凉.webm",
+    "label": "摇扇乘凉",
+    "category": "daily"
+  },
+  "red-envelope": {
+    "source": "收红包.webm",
+    "label": "收红包",
+    "category": "festival"
+  },
+  "sky-lantern": {
+    "source": "放孔明灯.webm",
+    "label": "放孔明灯",
+    "category": "festival"
+  },
+  "river-lantern": {
+    "source": "放河灯.webm",
+    "label": "放河灯",
+    "category": "festival"
+  },
+  "fireworks": {
+    "source": "放烟花.webm",
+    "label": "放烟花",
+    "category": "festival"
+  },
+  "kite": {
+    "source": "放风筝.webm",
+    "label": "放风筝",
+    "category": "play"
+  },
+  "what-to-eat": {
+    "source": "是啊，吃什么.webm",
+    "label": "今天吃什么",
+    "category": "emotion"
+  },
+  "brush-teeth": {
+    "source": "晨间刷牙.webm",
+    "label": "刷牙",
+    "category": "daily"
+  },
+  "hotpot": {
+    "source": "涮火锅.webm",
+    "label": "涮火锅",
+    "category": "food"
+  },
+  "deep-thought": {
+    "source": "深度思考碎碎念.webm",
+    "label": "认真思索",
+    "category": "work"
+  },
+  "mirror": {
+    "source": "照镜子.webm",
+    "label": "照镜子",
+    "category": "daily"
+  },
+  "water-gun": {
+    "source": "玩水枪.webm",
+    "label": "玩水枪",
+    "category": "play"
+  },
+  "game-rage": {
+    "source": "玩游戏气急败坏.webm",
+    "label": "游戏气呼呼",
+    "category": "emotion"
+  },
+  "tail-tap": {
+    "source": "用鲸鱼尾巴拍打地面.webm",
+    "label": "尾巴拍拍",
+    "category": "emotion"
+  },
+  "mumble": {
+    "source": "碎碎念-发呆碎碎念.webm",
+    "label": "发呆嘀咕",
+    "category": "emotion"
+  },
+  "clean": {
+    "source": "碎碎念-擦桌碎碎念.webm",
+    "label": "擦擦桌子",
+    "category": "daily"
+  },
+  "needle": {
+    "source": "穿针乞巧.webm",
+    "label": "穿针乞巧",
+    "category": "festival"
+  },
+  "lion": {
+    "source": "舞狮头.webm",
+    "label": "舞狮子",
+    "category": "festival"
+  },
+  "ghost": {
+    "source": "萌化小幽灵.webm",
+    "label": "小幽灵朋友",
+    "category": "fantasy"
+  },
+  "butterflies": {
+    "source": "蝴蝶蜜蜂环绕头顶开花.webm",
+    "label": "蝴蝶绕绕",
+    "category": "fantasy"
+  },
+  "surprise": {
+    "source": "被吓一跳.webm",
+    "label": "吓一跳",
+    "category": "emotion"
+  },
+  "leaves": {
+    "source": "被落叶淹没.webm",
+    "label": "落叶纷飞",
+    "category": "festival"
+  },
+  "christmas": {
+    "source": "装点圣诞树.webm",
+    "label": "装扮圣诞树",
+    "category": "festival"
+  },
+  "jianzi": {
+    "source": "踢毽子.webm",
+    "label": "踢毽子",
+    "category": "play"
+  },
+  "rocking-horse": {
+    "source": "骑木马.webm",
+    "label": "骑木马",
+    "category": "play"
+  },
+  "tokens": {
+    "source": "吃Token.webm",
+    "label": "吃Token",
+    "category": "fantasy"
+  },
+  "pumpkin": {
+    "source": "讨糖南瓜灯.webm",
+    "label": "提南瓜灯",
+    "category": "festival"
+  }
+}

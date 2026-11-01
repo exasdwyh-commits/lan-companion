@@ -84,8 +84,21 @@ window.createLanCompanion = function ({ scene, THREE, say, lanRoom, pose }) {
       })
     : null;
 
+  // 说话的 RMS 包络要给口型用，但 createMediaElementSource 一旦建在 suspended 的
+  // AudioContext 上，<audio> 会变成哑的。所以等第一次真实点击再接。
+  let audioHooked = false;
+  function hookFaceAudio() {
+    if (audioHooked) return;
+    audioHooked = true;
+    if (window.LanFace && window.LanFace.attachAudio) window.LanFace.attachAudio(audio, { resume: true });
+  }
+  window.addEventListener('pointerdown', hookFaceAudio, { once: true, passive: true });
+  window.addEventListener('keydown', hookFaceAudio, { once: true });
+
   function stopVoice() {
     if (player) player.stop();
+    // 停播就把常驻状态一起收掉，否则胶囊会停在「正在朗读」不动。
+    if (ui) ui.setStatus('');
     else { try { audio.pause(); } catch (_) {} }
     speaking = false;
     if (ui) ui.setSpeaking(null);
@@ -284,7 +297,18 @@ window.createLanCompanion = function ({ scene, THREE, say, lanRoom, pose }) {
       finally { desktopBtn.disabled = false; }
     };
     hud.append(home, soundBtn, desktopBtn);
-    root.append(hud, panel, bubble, chat, toast);
+    // 面板关掉后朗读还在继续，需要一个始终可见的出口（否则「关了」看起来就是「停了」）
+    const status = el('div', 'lc-status');
+    const statusText = el('b', null, '');
+    const statusStop = el('button', null, '停止');
+    statusStop.type = 'button';
+    status.append(statusText, statusStop);
+    statusStop.onclick = () => {
+      stopVoice(); host?.stopVoice?.();
+      void mediaCmd({ action: 'pause' });
+      api.setStatus('');
+    };
+    root.append(hud, panel, bubble, chat, toast, status);
     document.body.append(root);
 
     let bubbleTimer = 0;
@@ -306,8 +330,18 @@ window.createLanCompanion = function ({ scene, THREE, say, lanRoom, pose }) {
         if (ms) bubbleTimer = setTimeout(() => bubble.classList.remove('on'), ms);
       },
       clearBubbleSoon() { clearTimeout(bubbleTimer); bubbleTimer = setTimeout(() => bubble.classList.remove('on'), 1600); },
+      // 常驻状态：朗读/唱歌在播时显示，停了就收起来。和面板开关无关。
+      setStatus(text) {
+        statusText.textContent = text || '';
+        status.classList.toggle('on', !!text);
+      },
       setSpeaking(kind) { chat.classList.toggle('busy', !!kind); chatStatus.textContent = kind ? '澜正在说话 · 可在声音中停止' : busy ? '澜正在想…' : '澜在小屋里'; },
-      setBusy(on) { send.disabled = on; chat.setAttribute('aria-busy', String(on)); chatStatus.textContent = on ? '澜正在想…' : speaking ? '澜正在说话' : '澜在小屋里'; },
+      setBusy(on) {
+        send.disabled = on; chat.setAttribute('aria-busy', String(on));
+        chatStatus.textContent = on ? '澜正在想…' : speaking ? '澜正在说话' : '澜在小屋里';
+        if (on) window.LanFace?.emote?.('think', 8000);
+        else if (!speaking) window.LanFace?.emote?.('neutral', 1200);
+      },
       renderChat() {
         transcript.replaceChildren();
         if (!chatHistory.length) transcript.append(el('div', 'lc-empty', '今天想聊些什么？也可以点书架，接着上次那一章。'));
@@ -589,6 +623,12 @@ window.createLanCompanion = function ({ scene, THREE, say, lanRoom, pose }) {
       const playing = state.status === 'playing' || state.status === 'loading';
       ui.bPlay.textContent = playing ? '正在读…' : state.status === 'paused' ? '接着读' : '读给我听';
     }
+    // 常驻状态胶囊：面板关掉也要看得见「她还在读」。
+    // 这是「关了面板像停止了」那半个问题的正面回答 —— 状态不该只存在于面板里。
+    const live = state.status === 'playing' || state.status === 'loading';
+    if (!live) ui.setStatus('');
+    else if (book) ui.setStatus(`${state.kind === 'singing' ? '在唱歌' : '正在朗读'} ${book.index + 1}/${book.total}`);
+    else ui.setStatus(state.kind === 'singing' ? '在唱歌' : '正在朗读');
     void refreshBooks();
   }
 
@@ -688,6 +728,8 @@ window.createLanCompanion = function ({ scene, THREE, say, lanRoom, pose }) {
       if (!p) return;
       if (p.text) { if (!ui) buildUI(); setReply(p.text); if (!busy && !p.partial) activeReply = null; }
       const audioB64 = p.voice || p.audio;
+      // 口型：整句（非流式片段）才起一条时间轴；带音频的片段逐句接上
+      if (p.text && window.LanFace && (audioB64 || !p.partial)) window.LanFace.say(p.text);
       if (audioB64 && player && voiceAllowed()) {
         const payload = { kind: 'speaking', audio: audioB64, mime: p.mime || 'audio/wav', gain: sound.voiceVolume };
         if (p.chunk) player.enqueue(payload); else player.load(payload);

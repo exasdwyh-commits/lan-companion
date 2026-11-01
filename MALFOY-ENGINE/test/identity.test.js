@@ -54,6 +54,40 @@ test("persona 缺失时用兜底身份，且兜底里没有旧角色名", () => 
   assert.ok(p.startsWith(IDENTITY.DEFAULT_CORE));
 });
 
+// ── 可选段：性格（soul）/ 位置（place） ────────────────────────────
+// 这两段都是「后加的旁注」。它们不许改动身份段，也不许在两个形态之间分叉 ——
+// 她有两个形态，但不是两个灵魂。
+
+test("三个可选段都为空时，输出与没有这些参数时逐字节相同", () => {
+  const a = IDENTITY.buildSystemPrompt({ persona: PERSONA, mode: "world", memory: "M" });
+  const b = IDENTITY.buildSystemPrompt({ persona: PERSONA, mode: "world", memory: "M", soul: "" });
+  const c = IDENTITY.buildSystemPrompt({ persona: PERSONA, mode: "world", memory: "M", soul: "  ", place: "   " });
+  assert.equal(a, b);
+  assert.equal(a, c);
+});
+
+test("性格段在身份段之后、此刻段之前，且两形态共用同一份", () => {
+  const soul = "你的性情偏向温柔、好奇。";
+  const w = IDENTITY.buildSystemPrompt({ persona: PERSONA, mode: "world", memory: "", soul });
+  const d = IDENTITY.buildSystemPrompt({ persona: PERSONA, mode: "desktop", memory: "", soul });
+  const core = IDENTITY.identityCore(PERSONA);
+  assert.ok(w.startsWith(core));
+  assert.ok(w.indexOf("【你的性格】") > core.length, "性格段要接在身份段之后");
+  assert.ok(w.indexOf("【你的性格】") < w.indexOf("【此刻】"), "性格段在此刻段之前");
+  // 性格段本身不许随形态变化
+  const slice = (t) => t.slice(t.indexOf("【你的性格】"), t.indexOf("【此刻】"));
+  assert.equal(slice(w), slice(d));
+});
+
+test("位置段紧贴此刻段，且在记忆段之前", () => {
+  const place = "【你此刻在哪】\n- 屏幕 1440×900，你在屏幕左侧偏下。";
+  const p = IDENTITY.buildSystemPrompt({ persona: PERSONA, mode: "desktop", memory: "【记忆】X", place });
+  assert.ok(p.indexOf("【此刻】") < p.indexOf("【你此刻在哪】"));
+  assert.ok(p.indexOf("【你此刻在哪】") < p.indexOf("【记忆】X"));
+  assert.ok(p.startsWith(IDENTITY.identityCore(PERSONA)));
+});
+
+
 test("没有配置音色时，两形态的默认音色也必须不同", () => {
   assert.equal(IDENTITY.voicesDiffer({}), true, "空 persona 也不能两形态同一条音色");
   assert.notEqual(IDENTITY.DEFAULT_VOICE.world, IDENTITY.DEFAULT_VOICE.desktop);

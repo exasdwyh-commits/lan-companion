@@ -1,6 +1,18 @@
 # 开发任务总表
 
+> **GROK-HANDOFF-01（Codex / 01a191bf，2026-11-02）：完成**
+> 用户要求Grok Bot接手与部署文档。负责交接/部署说明、接手提示词、最小交接包与源码快照导出检查（如需排除原哼唱等未核实再分发素材，限导出规则）；不改业务主线、main/preload、小屋/声音模块。核对远端版本差异、启动/构建依赖与隔离命令，交付可读可上传文档，区分浏览器预览/原生App/真实模型声音。已交付 [接手部署手册](GROK-HANDOFF.md) 与 [启动提示词](GROK-START.md)，公开快照排除原参考视频/原音；验证及同步见 [记录](updates/2026-11-02-GROK-HANDOFF-01.md)。
+
+
 唯一任务入口。**2026-11-01 用户定版三板块：① 茉莉小屋（`web/moli-room/`）为主场景与当前主线 → ② 桌面 Q 版为二阶段模块 → ③ 真人视频（旧马尔福线）为三阶段，见 [PRODUCT](PRODUCT.md#三板块结构2026-11-01-用户定版) 与 [定版记录](updates/2026-11-01-PRODUCT-BOARD-01-three-boards.md)。新功能默认先服务小屋；真人视频板块只修缺陷不加新范围。** 功能路线图见 [ROADMAP-BOARDS](ROADMAP-BOARDS.md)（H1 小屋接入→H2 接续与自主→H3 故事与发布）。主线关键路径：WORLD-RIG-14/15/16/17（骨骼/接地/睡姿已续写，用户认可记录见下方协调声明）→ WORLD-LAN-07/08（小屋入口及相册/读书/聊天已打包；180/180 当前源包一致）→ H1-3 真机语音批次；P1-0 契约冻结（[REBUILD-PLAN §5](LAN-COMPANION-REBUILD-PLAN.md)）可并行领取。跨板块共享受益的语音链路真机验收保持高优：**WAKE-01（代码完成待真机）** → VOICE-02 / VOICE-03 / VOICE-05 / AIRI-REF-01（同批真机验收）→ VOICE-04。其余：DW-01 → DW-02 / DW-03 → DW-04 / DW-05 / DW-06 → DW-07 → DW-08。有明确文件边界、依赖已满足时可并行；本表不代表已分派 agent。
+
+> **DESKTOP-MOTION-22（Codex / 01a191bf，2026-11-01）：完成，原生听感/多屏待复验**
+> 用户要求尽可能多补动作表情。负责 dsh 动作目录/元数据、准备脚本、`dsh-motion.js`、`world.html` 动作搜索分类及闲暇情绪联动、新生成表情序列与专项证据/文档。不改 main/preload、语音/灵魂/小屋骨骼。验收：素材身份/透明/QC，目录全量可播、优先级与坐姿保持、搜索分类、静态检查、构建源包一致；序列帧与连续原片分别标注。 交付125个可选动作（新绘16组），原抖音哼唱已提取，3～6分钟偶发闲置彩蛋及静音/音量/立即播放/打断接好；25专项、125实际解码、16隔离交互、check93/93，414MiB新包与140文件哈希一致。[记录](updates/2026-11-01-DESKTOP-MOTION-22-catalog-idle.md)。
+
+
+> **DESKTOP-MOTION-21（Codex / 01a191bf，2026-11-01）：完成，原生系统窗口待用户复验**
+> 用户要求沿用当前 dsh 桌面造型扩展读书、唱歌、聊天、撒娇、顺拐舞与窗口坐姿。负责 `live2d/world.html`、`dsh-motion.js`、新窗口停靠模块、dsh 真源/运行素材与准备脚本、专项测试/证据/本任务文档。不改 main/preload、SOUL-01、WorkBuddy 语音链路和小屋骨骼。验收：动作匹配、业务活动抢占/恢复、透明与锚点、窗口移动/关闭、隔离浏览器与构建；真实听感、原生多屏另列边界。交付：[桌面动作与窗口坐姿](updates/2026-11-01-DESKTOP-MOTION-21-actions-perch.md)；14项专项与13项隔离浏览器检查通过，新包已构建。
+
 
 > **当前领取：H1-3 语音链路真机验收批次（WorkBuddy / 本聊天 2026-11-01）**
 >
@@ -73,6 +85,93 @@
 > 交付：[WORLD-RIG-19 记录](updates/2026-11-01-WORLD-RIG-19-skirt-mosaic.md)，
 > 证据 `benchmarks/2026-11-01-WORLD-RIG-19/`（`41-legs-red-mid.png` 是决定性断言：
 > 腿染纯红时裙口内零红色，红色只出现在裙外膝盖）。
+
+> **协调声明（2026-11-01 21:50，WorkBuddy / 本聊天）：SOUL-01 灵魂内核（动了 `main.js` / `lib/identity.js`）**
+>
+> 用户给了一份 Gemini 生成的「升级包」（`lan-companion-upgrade-pack.zip`，8 文件 2165 行）。
+> 评审结论：**想法可用、代码不能直接落**（6 个功能 5 个在页面上不出现，自检却打印「全部验证通过」）。
+> 用户拍板「只救灵魂系统」。评审记录见 [WORLD-UPGRADE-REVIEW](updates/2026-11-01-WORLD-UPGRADE-REVIEW.md)。
+>
+> 本次只做灵魂内核，**升级包的其余 7 个文件一行未采用**（含动作控制器 / 换装 / 猫 / 花园 / 钓鱼 /
+> 沙盒 / 街机卡带 / 安装脚本）。改动范围：
+> - 新增 `lib/soul.js`（六维倾向 + 灵魂印记 + 提示词旁注，原子写、目录由调用方给）
+> - 新增 `test/soul.test.js`（17 条）
+> - `lib/identity.js`：`buildSystemPrompt` 增加**可选** `soul` 参数；不传时输出**逐字节不变**
+> - `main.js`：`createSoul(DATA.dir)`、`remember()` 里推进灵魂、`getPersona()` 带旁注、
+>   新增只读 IPC `companion:soul`
+>
+> **Codex 注意**：`main.js` 的改动只有 4 处（require / 常量 / `remember()` / `getPersona()` + 一行 IPC），
+> 不碰窗口策略、聊天链路、音频、翻唱。**没动 `web/moli-room/` 任何文件**（WORLD-UX-20 的
+> `lan-companion.js` / `.css` 原样）。`lib/identity.js` 只加了一个可选参数，身份段与两形态语气一字未改。
+>
+> 交付：[SOUL-01 记录](updates/2026-11-01-SOUL-01-soul-kernel.md)。
+
+> **协调声明（2026-11-01 22:05，WorkBuddy / 本聊天）：DESKTOP-SELF-01 桌面形态的自我定位（动了 `world.html`）**
+>
+> 用户反馈「桌面模式，AI 不能识别自己在哪，让她去左边被遮挡了也不知道，看来它只能对话」。
+> 根因不是模型笨：桌面舞台是 `type:"desktop"` 壁纸层，渲染层知道 `pet.x/y` 和窗口列表，
+> **但拼提示词的主进程完全不知道她位置**。
+>
+> 改动：新增 `lib/presence.js`（纯函数，遮挡/方位推断）与 `lib/reply-tags.js`
+> （`[emo:x]`+`[move:x]` 解析与剥离同源）；`world.html` 加上报 `character:presence`
+> 与 `moveTo()`；`main.js` 加 `SELF_AT` 状态、`presenceDescriptor()`、`DESKTOP_MOVE_HINT`、
+> `applyMove()` 与 `character:presence` 接收；`preload.js` 加 `presence` / `onCharacterMove`；
+> `identity.js` 的 `buildSystemPrompt` 再加**可选** `place` 参数（不传时逐字节不变）。
+>
+> **Codex 注意**：`live2d/world.html` 本次有改动（WORLD-UX-20 你已释放写入权）。
+> 改动集中在四处：`startJump` 之后新增的「听指令走动」段（`coverAt`/`pickSpot`/`moveTo`/`reportPresence`）、
+> `updatePet` 的 3 处判断（早退条件、`held`、`jump` 分支、`walk`/`idle` 分支）、
+> `loop` 的 desktop 块加一行 `reportPresence()`、`Character` 调试对象加 `self`/`moveTo`。
+> **`motion` / `performer` / `presence`（travel 动画）内部一行未动**，`main.js` 不碰窗口策略与音频。
+>
+> 交付：[DESKTOP-SELF-01 记录](updates/2026-11-01-DESKTOP-SELF-01-desktop-self-awareness.md)，
+> 证据 `benchmarks/2026-11-01-DESKTOP-SELF-01/`。
+
+> **协调声明（2026-11-01 23:15，WorkBuddy / 本聊天）：合并 PR #1（Arena Agent 的四引擎 + 口型 + 界面收口）**
+>
+> 用户把 PR #1（`feat/soul-homestead-engines` → `main`，4 commits / 33 文件 / +4983−9，HEAD `31af97b`）
+> 合进本地工作区。**PR 的基线 `a0a1427` 与本地的 `index.html` / `lan-companion.js` /
+> `project_audit.py` 逐字节相同**，所以这三份直接取 PR 版本；`identity.js` / `main.js` 手工合并。
+>
+> **关键决定：灵魂用 PR 那份，我 21:50 写的那份删除。** 理由：PR 版有**真实时间漂回 baseline**
+> （12h 半衰）、receipts 幂等、自我描述 note、drives/wants 派生、settle 独处推进，而且下游
+> （花园/钓鱼/改造）已经接上；我那份是单调渐近，长期只会往一个方向走。两份灵魂并存正是
+> SOUL-01 记录里写的「四份人格互相打架」。删掉 `lib/soul.js` 旧版与对应测试，测试换成 PR 的 11 条。
+>
+> 合并时改的三处 PR 代码（都在 `main.js`）：
+> ① `runIntent` 的 decorate 生成从 `llmChat` 换成 `llmRaw` —— `llmChat` 会把模型回复
+> 当台词送进 `character:say` 念出来，等于让她把一坨 JSON 念给用户听；且 `llmChat` 不返回 `ok`，
+> PR 里 `r.ok` 永远 false，改造分支其实**从来没成功过**。
+> ② `rest` 分支改静默 —— 夜里 `decide()` 返回 rest，只受 20 分钟全局冷却约束，整夜每 20 分钟
+> 说一句「我在这儿安静待一会儿」是打扰不是陪伴。
+> ③ `ui-skin.css` 补 `nav.bar button.ic` —— `.bar button.ic` 在 `index.html` 里写死 46px
+> （两个类，优先级高于 `nav.bar button`），不点名就是 38/46 混排，正是这次要收掉的毛病。
+>
+> 我保留的：`lib/presence.js` + `lib/reply-tags.js` + `world.html` 的上报与 `moveTo`
+> + `identity.js` 的 `place` 参数（PR 的 soul 段放身份段之后、此刻段之前，place 段接在此刻段之后）。
+>
+> 交付：[PR1 合并记录](updates/2026-11-01-PR1-MERGE.md)。
+
+> **协调声明（2026-11-01 23:55，WorkBuddy / 本聊天）：ROOM-DIALOG-01 小屋面板遮挡（动了 `lan-companion.css`）**
+>
+> 用户反馈「对话/读书那个对话框遮挡，关了还直接停止了」。实测 960×540 下面板 x=432/w=510、
+> 她的投影位置 x=457（半宽 17）—— **整个人被盖住**。改 `.lc-panel{width:min(400px,40vw)}`，
+> 左边缘推到 558，`overlapsHero:false`。
+>
+> **「关了还停止」没有复现**：包了 `CompanionPlayback.Player` 的全部方法记录调用，
+> 关面板后没有任何额外 `stop`，也没有 `host.media` / `host.stopVoice` —— 关面板不会停播。
+> 但「播放状态只存在于面板里」本身是缺陷，故新增常驻状态胶囊「正在朗读 4/120 · 停止」，
+> 面板关着也看得见。顺带把 `body.lc-panel-open nav.bar{display:none}` 改成 `display:flex`
+> （面板一开底栏整条消失，只能靠 × 找回）。
+>
+> **Codex / WORLD-UX-20 注意**：`lan-companion.css` 本次改三处（`.lc-panel` 宽度注释、`≤780` 的
+> `nav.bar`、文件末尾新增 `.lc-status` 段）；`lan-companion.js` 改四处（`buildUI` 建胶囊、
+> `api.setStatus`、`applyReading` 里驱动它、`stopVoice` 里清掉）。
+> **`lan-companion.js` 里那套 `CSS` 常量是用 `head.prepend()` 注入的，排在 `lan-companion.css` 之前，
+> 同属性一律被覆盖** —— 以后改尺寸/颜色请直接改 `.css`，别改 JS 里那段（我第一次就改错了）。
+>
+> 交付：[ROOM-DIALOG-01 记录](updates/2026-11-01-ROOM-DIALOG-01.md)，
+> 证据 `benchmarks/2026-11-01-ROOM-DIALOG/`。
 
  > **WORLD-UX-20（Codex / 01a191bf，2026-11-01）：完成，释放本轮 UI 写入权**
 >
@@ -326,3 +425,49 @@ BMAD-01 安装校验补充（Codex / 本聊天，已完成）：新增 `scripts/
 用户追加：眼睛/表情不自然、人物偏胖与个头过大。同期负责 main/preload/world/chibi-face 的默认等比尺寸、托盘大小选项和独立眼睛绘制修正；不横向压扁原画，不改他人素材。
 
 本轮修正完成并重新构建：[运行复查、尺寸与眼睛](updates/2026-10-30-DW-03-runtime-size-face.md)。原生图标展开和 Ego 视频/表情已验；麦克风、完整原生桌面观感与多屏继续待验。
+
+### SOUL-HOMESTEAD-01：灵魂与家园四引擎（2026-11-01，Arena Agent / 用户授权，引擎层）【完成，界面层未接】
+
+- 用户本轮需求：3D 动作自然度、场景与元素更丰富、室内玩法扩展、外出旅行、更多服装、多款猫、钓鱼、花园种花草、更多小游戏、她更智能且能自己改造小屋（类似我的世界）、有一个可通过互动调整的灵魂。
+- 本轮只做**能自动验证的规则层**，四项：`lib/soul.js`（五轴性情 + 真实时间半衰回归 + 事件表 + 自我描述 + 想要什么）、`lib/garden.js`（6 地 6 种、按真实时间推算生长、浇水打折、月光花夜间窗口、收获还种子）、`lib/fishing.js`（4 钓点作息 + 8 种鱼 4 档稀有度 + 可注入 rng + 图鉴）、`lib/room-plan.js`（14×9 格 + 22 件家具 + 原子 apply + 结构化错误回灌大模型）。
+- 接入不是摆设：`buildSystemPrompt` 增加共用性格段（两形态同一份，身份段逐字节不变）、`getPersona()` 注入、戳她/聊天成功各记一笔、启动 `settle()` 对账、12 个 IPC（窗口校验与麦克风权限同口径）。
+- 验收：新增 41 单测全 PASS；全量 336 用例 325 PASS，11 项失败均为既有缺 fixture；`main.js` 语法通过；`project.sh check` 不再在干净 clone 上崩（修 `ROOT.parent` 硬假设与文档链接检查口径），剩余 10 项为未发布素材缺失。
+- **未做且必须真机做**：3D 动作自然度、场景/室内元素、旅行与服装、多款猫、新小游戏、以及上述四引擎的**渲染与界面层**。这几项都需要 macOS + 母体 App + WebGL 迭代，本环境无法验证，硬写等于交付不可测代码。下一项 `SOUL-HOMESTEAD-02`：小屋与花园界面 + `lib/intent.js`（把 `soul().wants()` 接进闲置调度，让行为由性情驱动）。
+- 影响：无新增外部依赖、无新素材、运行入口不变；新增 4 个数据目录 JSON 状态。
+
+### SOUL-HOMESTEAD-01 第二批：主动行为 + 改造闭环（2026-11-01，Arena Agent）【完成，界面层未接】
+
+- `lib/intent.js`：从 `soul().wants()` 派发到「真的去做」。可行性优先于意愿（屋里摆满就不硬改）、夜里只休息、每动作独立冷却 + 全局 20 分钟闸、时钟回拨不会被当成永久冷却。
+- `lib/decorator.js`：模型出 `plan` → `room-plan.apply` 原子校验 → `describeErrors` 把错误翻成人话回灌 → 重试 ≤3 轮 → 不成则房间保持原样。`generate` 注入，无网络可测；`extractPlan` 只认括号配平的 JSON，不宽松解析。
+- 主进程：`startIntentClock()`（默认 5 分钟，`INTENT_TICK_MS` 可调）+ `runIntent()` 执行真实后果 + `intent:peek`/`intent:run` 两个 IPC。台词走 `character:say` 且不碰 `seq`，不打断正在进行的对话。
+- 新增 `docs/project/AGENT-SCOPE.md`：把「可以独立做完、靠单测验收」与「必须 macOS + 母体 App + WebGL 才能验」分成 A/B 两类，并给出 3D 动作自然度的诊断→归类→改法流程（不盲改 `lan-model.js` 里按实测定死的姿势常数）。
+- 验收：6 个新模块测试合计 62/62 PASS；全量 357 用例 346 PASS，11 项失败均为既有缺 fixture；`main.js`/`lib/*.js` 语法全通过。
+
+### WORLD-FX-01：画面元素（2026-11-01，Arena Agent）【已交付，量感待人眼确认】
+
+- 新增 `web/moli-room/scene-extras.js`：窗光柱（沿太阳方向挤出的楔形 + 软边/衰减/噪声着色器）、浮尘（420 点，漂移全在顶点着色器）、玻璃雨（水珠网格 + 拖尾 + 薄雾）、夜萤（窗外锥内 46 点，脉冲）。全部只读 `W` 与 `world.altDeg`，构建失败即降级、房间行为不变。
+- 接入 `index.html` 三处：script 标签、`sceneExtras` 初始化（`?fx=0` 可关，`window.__lanFx` 为验收句柄）、主循环 `composer.render` 前一行 update。
+- 新增 `tools/room-fx-probe.py`：在 headless Chromium + SwiftShader 里跑**真实房间页含完整后处理链**，用 `?at=`/`?wx=`/`?cam=` 固定条件，在同一次加载内开关特效。断言用几何投影覆盖率（无噪声），像素差仅作参考。
+- **方法论更正**：像素差在调色 pass 的动态颗粒 + 窗外动态海面前不可用；块平均可消颗粒但消不掉海面动画。最终判定改为「顶点投影到屏幕的 NDC 包围盒覆盖面积」，`area=0` 即「没画在画面里」。
+- 验收：4/4 场景通过（dawn/noon/rain/night），无脚本错误，各元素在画面内且面积合理、雨面积 <35%（不糊满屏）；全量 node 测试 357 用例与本次无关（11 项既有缺 fixture）。
+- 调参记录：初版强度 0.85 / 长度 6 → 整间房被暖雾洗白；改 0.30 / 上限 4 / 横向 2.2 次方后成为窗边一层光。
+
+### WORLD-FACE-01：口型与表情（2026-11-01，Arena Agent）【已交付，无头工装验收】
+
+- 用户本轮需求之一：「角色可以互动说话，模型表情和说话要同步有动画」。
+- 资产事实：单一 skinned GLB（`rigVersion 15`），**没有 morph target、没有面部骨骼**。所以口型只能是**附加覆盖层**，不是 blend shape。改模型需要重新绑定与权重，超出「改代码」范围。
+- 新增 `web/moli-room/lan-face.js`：2D canvas 覆盖层，每帧把 `lan-head` 骨骼投影成锚点，并用「沿镜头右向量走一米」算每米像素数，所有尺寸以**世界米**表达，跟机位/窗口无关。嘴 / 腮 / 眉 / 笑眼用 `multiply` 混色画出墨感。
+- 同步三条驱动：真实语音 RMS 包络（`AnalyserNode`，首次点击后才接，避免 suspended 上下文把 `<audio>` 静音）、中文音节时间轴（元音决定开口度、标点算停顿）、真实 `audio.duration` 缩放整条时间轴。每帧取 `max(时间轴, 包络)`，起音 20ms / 落音 90ms 不对称平滑。
+- 表情状态机 7 种（neutral/happy/shy/sad/surprise/think/sleepy），从回复文本关键词自动推，也可 `LanFace.emote(name, ms)` 外部指定；`setBusy(true)` 进 think。
+- `?face=1` 是标定层：画嘴/眼/眉/腮四条标尺 + 0.05m 刻度，用来对着真脸校 `TUNE`。实测 `lan-head` 落在**眼睛高度**（不是颈根），嘴在锚点下方 8mm——这个结论已写进代码注释，换模型必须重量。
+- 新增 `tools/face-probe.py`：真实房间页 + headless Chromium + SwiftShader，一次加载内 11 项断言（锚点可见/在画面内/ppm 合理、说话有峰有起伏、停下 2s 内归零、shy 腮红显著高于 neutral、无脚本错误）。`python3 tools/face-probe.py` 全绿。
+- 验收取舍：口型有确切数值状态，**不做像素比对**（本屋动态颗粒 + 窗外海浪会污染阈值，同 `WORLD-FX-01` 的结论）；截图只作 `--keep` 人工参考。
+- 已知限制：GLB 无眼睑几何 → **不做眨眼**（硬画会盖掉她原本的眼睛），要做得换贴图不能做加法。默认机位下她只有 90px 高，嘴是 8px 一条线，这是分辨率下限。说话时的身体动作仍归 `lan-model.js` 的 `pose()`，本次一个常数都没动。
+
+### WORLD-UX-21：界面收口（2026-11-01，Arena Agent）【已交付，量感待人眼确认】
+
+- 用户本轮需求之二、三：「把不好看的 UI 都优化了，更符合成熟商业化美化」「把太大遮挡都要考虑到」。
+- 先把问题数清楚：底栏 89×40 文字胶囊与 46×46 图标方块混排、右上两颗原生感按钮、底栏+聊天条+气泡在 540 高的窗口里吃掉下方 35%、左下提示语与版权行重叠、`已连接` 常驻小字压画面。
+- 新增 `web/moli-room/ui-skin.css` + `ui-skin.js`（在 `lan-companion.css` 之后加载，只加 class 不动逻辑）：全部入口统一成 38px 图标 + `data-tip` 浮标；五个 CSS 变量驱动全部浮层的咬合；闲置 3.6s 退场到 30% 且悬停/指针立刻唤醒（`?uiidle=0` 常驻）；聊天条收窄成药丸；夜晚转深色玻璃；小窗口与电视模式各自让位。
+- `ui-skin.js` 按中英标签把后注入的「相册/书架/看澜」也换成图标，认不出就原样保留——宁可难看，不要猜错功能。`window.__lanUI.dockIcons` 暴露每颗按钮的尺寸与提示，供无头断言。
+- 未做：面板内部版式（`lan-companion.css` 已有的排版语言本次不动）、设计稿级别的美化。**尺寸与遮挡**是可量的，已保证；审美判断仍是 B 类，需人眼。

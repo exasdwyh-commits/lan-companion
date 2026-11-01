@@ -179,6 +179,11 @@ def main():
                       ROOT / "docs/DEVELOPMENT.md", ROOT / "docs/ASSETS.md",
                       assets / "README.md", album_dir / "README.md",
                       route(config["styleReferences"]) / "README.md"]
+        # 上面这批里有几份是"父工作区"才有的（ROOT.parent 的 README/AGENTS）：
+        # 单独 clone 这个仓库时它们根本不存在。原来直接 read_text，一个不存在
+        # 的路径就让整轮 check 以 FileNotFoundError 收场 —— 外部 clone 永远跑不了
+        # 自检。存在才检查，是这里唯一正确的口径。
+        documents = [document for document in documents if document.is_file()]
         bad_links = []
         for document in documents:
             body = re.sub(r"```.*?```", "", document.read_text(encoding="utf-8"), flags=re.S)
@@ -187,7 +192,15 @@ def main():
                 if re.match(r"^[a-zA-Z][a-zA-Z0-9+.-]*:", target) or target.startswith("#"):
                     continue
                 target = unquote(target.split("#", 1)[0])
-                if target and not (document.parent / target).exists():
+                if not target:
+                    continue
+                resolved = (document.parent / target).resolve()
+                # 只校验仓库内的链接。docs 里大量 ../../benchmarks/ 指向本地工作区的
+                # 体检产物，本来就不随仓库发布；把它们算成坏链，等于让 check 在
+                # 任何一份干净的 clone 上永远失败 —— 检查器该管的是仓库自己不散架。
+                if not resolved.is_relative_to(ROOT.resolve()):
+                    continue
+                if not resolved.exists():
                     bad_links.append(f"{document.relative_to(ROOT.parent)} -> {target}")
         check("current documentation link targets", not bad_links, "; ".join(bad_links))
         node = shutil.which("node")

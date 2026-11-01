@@ -9,7 +9,12 @@
 .lc-home-dot{width:6px;height:6px;background:#709c8e;border-radius:50%;box-shadow:0 0 0 4px #709c8e14}
 .lc-hud-btn{pointer-events:auto;border:1px solid #ffffffab;background:#faf8f1ed;color:#36565e;border-radius:24px;padding:10px 15px;font-size:12px;cursor:pointer;box-shadow:0 3px 18px #1b393317}
 .lc-hud-btn:hover{background:#fff}.lc-desktop{background:#294c55;color:#fff;border-color:#52727a}.lc-desktop:hover{background:#386570}
-.lc-panel{top:68px;right:18px;width:min(510px,calc(100vw - 36px));max-height:calc(100vh - 190px);border:1px solid #fff9;border-radius:19px;background:#faf8f1f7;box-shadow:0 18px 60px #142e3630,0 2px 8px #142e3615;backdrop-filter:blur(24px);color:var(--lc-ink)}
+/* 宽度必须给「她」留位置：面板贴右 18px，960 宽的窗口里 510px 会把左边缘压到 x=432，
+   而澜站在 x≈457（实测投影坐标）—— 等于整个盖在她身上。
+   改成 40vw 上限 400px：960 时左边缘落到 558，她连身体一起露在外面。
+   注意：lan-companion.js 里那套 CSS 是 head.prepend() 插的，排在本文之后，
+   同属性一律被这里覆盖 —— 改尺寸只改这个文件才有效。 */
+.lc-panel{top:68px;right:18px;width:min(400px,40vw);max-height:calc(100vh - 190px);border:1px solid #fff9;border-radius:19px;background:#faf8f1f7;box-shadow:0 18px 60px #142e3630,0 2px 8px #142e3615;backdrop-filter:blur(24px);color:var(--lc-ink)}
 .lc-panel.on{animation:lc-enter .2s ease-out}
 .lc-head{background:#f4f3ec;border-bottom:1px solid var(--lc-line);padding:9px 10px;gap:6px;flex-shrink:0}
 .lc-tabs{gap:3px}.lc-tab{font-size:12px;font-weight:500;background:transparent;color:#63746f;padding:8px 12px;border-radius:9px;white-space:nowrap}.lc-tab.on{background:#2f5660;color:#fff;box-shadow:0 2px 5px #183b4020}.lc-x{font-size:21px;color:#6b7b77;padding:4px 8px}
@@ -62,7 +67,9 @@ body .hint{top:auto;bottom:42px;left:18px;right:auto;font-size:9px;opacity:.6;co
  .lc-panel{max-height:calc(100vh - 68px)}
  .lc-panel[data-tab="chat"]{max-height:calc(100vh - 162px)}
  .lc-panel[data-tab="chat"].on~.lc-chat{display:flex}
- body.lc-panel-open nav.bar{display:none}
+ /* 面板一开就把底栏整条藏掉，等于「关掉面板才找得回来」——导航不该被面板绑架。
+    面板在小窗口里最高只到 (100vh-68)，底栏在它下面，本来就不重叠。 */
+ body.lc-panel-open nav.bar{display:flex}
  .lc-books{gap:12px}
  .lc-book-cover{aspect-ratio:4/5}
  .lc-album-hero{padding-bottom:10px;margin-bottom:10px}
@@ -70,3 +77,16 @@ body .hint{top:auto;bottom:42px;left:18px;right:auto;font-size:9px;opacity:.6;co
  .lc-filters{margin:8px 0 10px}
 }
 .lc-reading-card{margin:10px 0 15px;padding:12px 14px}.lc-reading-card summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:12px;align-items:center}.lc-reading-card summary::-webkit-details-marker{display:none}.lc-reading-card summary .lc-row{margin:0;flex:1;gap:4px}.lc-reading-card summary strong{font-size:13px}.lc-reading-card summary .lc-note{font-size:9px}.lc-reading-card[open] summary{margin-bottom:12px}.lc-reading-card summary:focus-visible{outline:2px solid #398192;outline-offset:4px;border-radius:4px}
+
+/* 面板关掉之后朗读/回复还在继续 —— 必须有个地方能看见它。
+   否则「关了面板」看起来就等于「停止了」，这是用户实际反馈的那半个问题。 */
+/* 放左下、聊天条正上方：左上角是 .lc-hud 与天气块，放那儿会压字（实拍确认过）。 */
+.lc-status{position:absolute;left:18px;bottom:126px;display:none;align-items:center;gap:8px;pointer-events:auto;
+  background:#faf8f1f0;border:1px solid #fff9;border-radius:999px;padding:5px 7px 5px 12px;
+  font-size:12px;color:var(--lc-ink);box-shadow:0 6px 20px #142e3618;backdrop-filter:blur(18px);max-width:46vw}
+.lc-status.on{display:flex}
+.lc-status b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lc-status button{border:0;border-radius:999px;background:#1d1a22;color:#fdf7e6;font:inherit;font-size:11.5px;
+  padding:4px 10px;cursor:pointer;flex:none}
+.lc-status button:hover{background:#3a3350}
+@media(max-width:780px),(max-height:460px){.lc-status{left:10px;bottom:118px;max-width:60vw}}

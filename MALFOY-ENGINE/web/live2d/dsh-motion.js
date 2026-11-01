@@ -2,16 +2,25 @@
  * A decoded next frame replaces the current frame; generation guards late loads.
  */
 (function (root, factory) {
-  const api = factory();
+  const api = factory(typeof module === 'object' && module.exports ? require('./dsh-catalog') : root.DshCatalog);
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.DshMotion = api;
-})(globalThis, function () {
+})(globalThis, function (catalog) {
   'use strict';
-  const LABELS = { idle:'发呆',wave:'挥手',walk:'散步',sleep:'睡觉',wake:'起床',thinking:'想事情',working:'写代码',success:'庆祝',dance:'跳舞',sway:'摇摆舞',stretch:'伸懒腰',snack:'吃零食',cat:'撸猫',magic:'变朵花',bubbles:'吐泡泡',shy:'害羞',happy:'开心',game:'玩魔方',flute:'吹笛子',reading:'做笔记',look:'张望',whale:'小鲸鱼' };
+  const LABELS=Object.fromEntries(Object.entries(catalog).map(([key,item])=>[key,item.label]));
+  // Compatibility cue is hidden from the catalog, not counted as new art.
+  const COMPAT={cuddle:'shy'};
+  const BUSINESS={thinking:'thinking',working:'working',reading:'reading',singing:'singing',speaking:'chat'};
+  const ANCHORS=Object.fromEntries(Object.entries(catalog).map(([key,item])=>[key,item.anchorY||330]));
+  const EMOTIONS={happy:'happy',joy:'tickle',excited:'cheer',shy:'shy',sad:'sad',cry:'cry',angry:'pout',surprised:'surprise',curious:'confused',confused:'confused',love:'heart',affectionate:'hug',proud:'smug',smug:'smug',sleepy:'yawn',sorry:'apology'};
   function semantic(c) {
     if(c.dragging)return 'drag';
+    if(BUSINESS[c.activity])return BUSINESS[c.activity];
+    if(c.activity==null&&BUSINESS[c.scene])return BUSINESS[c.scene];
     if(c.locomotion==='walk')return 'walk';
-    return ({thinking:'thinking',working:'working',reading:'reading',singing:'dance',speaking:'wave',waving:'wave',celebrating:'success',shy:'shy',happy:'happy',sleeping:'sleep'})[c.scene] || 'idle';
+    if(c.perched)return 'sit';
+    if(c.emotionAge>=0 && c.emotionAge<5 && EMOTIONS[c.emotion])return EMOTIONS[c.emotion];
+    return BUSINESS[c.scene] || ({dance:'shunguai',waving:'wave',celebrating:'success',shy:'shy',happy:'happy',sad:'sad',surprised:'surprise',sleeping:'sleep'})[c.scene] || 'idle';
   }
   class Player {
     constructor({container,createVideo=()=>document.createElement('video'),onReady=()=>{},onError=()=>{}}) {
@@ -20,11 +29,11 @@
       for(const video of this.videos){video.muted=true;video.autoplay=false;video.playsInline=true;video.preload='auto';video.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;pointer-events:none;';container.append(video);}
       this.set('idle',{loop:true});
     }
-    set(key,{loop=false,done=null}={}) {
-      if(this.pending===key || this.key===key && !this.pending)return;
+    set(key,{loop=false,done=null,restart=false}={}) {
+      if(!restart&&(this.pending===key || this.key===key && !this.pending))return;
       const own=++this.generation, index=1-this.front, video=this.videos[index];
       this.pending=key;video.pause();video.onloadeddata=null;video.onended=null;video.onerror=null;
-      video.src='./dsh-motion/'+key+'.webm';video.loop=loop;video.load();
+      video.playbackRate=1;video.src='./dsh-motion/'+key+'.webm';video.loop=loop;video.load();
       const fail=()=>{if(own!==this.generation)return;this.pending=null;if(!this.ready){this.enabled=false;this.onError(key);}else{this.manual=false;this.sleeping=false;this.lastAuto=null;this.onError(key);}};
       video.onerror=fail;
       video.onloadeddata=()=>{
@@ -34,32 +43,35 @@
           if(own!==this.generation){video.pause();return;}
           const old=this.videos[this.front];old.style.opacity='0';old.pause();
           video.style.opacity='1';this.front=index;this.key=key;this.pending=null;this.ready=true;this.onReady();
-          video.onended=()=>{if(own!==this.generation)return;if(done)done();else{this.manual=false;this.set('idle',{loop:true});}};
+          video.onended=()=>{if(own!==this.generation)return;if(done)done();else{this.manual=false;this.lastAuto=null;this.set('idle',{loop:true});}};
         }).catch(fail);
       };
     }
-    play(key) {
+    play(key,{loop=false}={}) {
+      key=COMPAT[key]||key;
       if(key==='sleep'){this.sleep();return;}
       if(key==='wake'){this.wake();return;}
       if(!LABELS[key])return;
-      this.sleeping=false;this.manual=true;this.set(key,{loop:key==='idle'});
+      this.sleeping=false;this.manual=true;this.lastAuto=null;this.set(key,{loop:loop||['idle','reading','sit'].includes(key),restart:true});
     }
     sleep(){this.sleeping=true;this.manual=true;this.set('sleep-in',{done:()=>{if(this.sleeping)this.set('sleep',{loop:true});}});}
     wake(){this.sleeping=false;this.manual=true;this.set('wake',{done:()=>{this.manual=false;this.set('idle',{loop:true});}});}
+    release(){this.manual=false;this.sleeping=false;this.lastAuto=null;}
     tick(c){
       if(!this.enabled)return;
       if(c.dragging){if(this.sleeping)this.sleeping=false;this.manual=false;this.lastAuto='drag';this.set('drag',{loop:true});return;}
+      if(this.manual && (BUSINESS[c.activity]||(c.activity==null&&BUSINESS[c.scene])))this.release();
       if(this.manual)return;
       const key=semantic(c);
       if(key===this.lastAuto)return;
       this.lastAuto=key;
       if(key==='sleep'){this.sleep();return;}
-      this.set(key,{loop:['idle','walk','working','reading','thinking'].includes(key)});
+      this.set(key,{loop:['idle','walk','working','reading','thinking','singing','chat','sit'].includes(key)});
     }
     place(x,y,height,visible){
       this.container.style.display=visible&&this.enabled&&this.ready?'block':'none';
       this.container.style.width=(height*640/270)+'px';this.container.style.height=(height*360/270)+'px';
-      this.container.style.left=x+'px';this.container.style.top=(y-height*330/270)+'px';
+      this.container.style.left=x+'px';this.container.style.top=(y-height*(ANCHORS[this.key]||330)/270)+'px';
       if(!visible)for(const v of this.videos)v.pause();
       else if(this.ready){const v=this.videos[this.front];if(v.paused&&!v.ended)v.play().catch(()=>{});}
     }
@@ -75,5 +87,5 @@
     stop(){this.generation++;this.pending=null;for(const v of this.videos)v.pause();}
     get snapshot(){return {key:this.key,pending:this.pending,ready:this.ready,enabled:this.enabled,sleeping:this.sleeping,manual:this.manual};}
   }
-  return {Player,LABELS,semantic};
+  return {Player,LABELS,semantic,ANCHORS,catalog,EMOTIONS};
 });

@@ -85,24 +85,21 @@
       root.updateWorldMatrix(true,true);
       skinnedMesh.bind(new T.Skeleton(bones));
       /* The dress is a SINGLE-SIDED sheet: its back faces are culled, so looking
-         up from the hem (lying with her feet toward the camera, or orbiting low
-         while she sits on the bed) sees straight through the skirt wall onto her
-         skin -- that is the "走光" the user hit. Re-draw only the skirt faces
-         from the inside with a mosaic ("打码") material, and give her a pair of
-         safety shorts inside the hem. Both ride the skirt bone, so nothing has
-         to be re-skinned and the outside silhouette cannot change. */
+         up from the hem sees straight through onto skin. Re-draw skirt-dominated
+         faces from the inside as matching navy fabric, and add soft fabric
+         shorts inside the hem. No mosaic — that read as censorship, not clothing.
+         Both ride the skirt bone so the outer silhouette stays unchanged. */
+      let bloomersMesh = null;
       try {
-        const mosaic = skirtMosaicTexture();
+        const navy = new T.Color(0x1b2747);
+        const navySoft = new T.Color(0x243352);
         const skirtFaces = buildSkirtLining(geo, bones, bonesByName.skirt);
         if (skirtFaces) {
           const liningMat = new T.MeshStandardMaterial({
-            map: mosaic, roughness: .95, metalness: 0, skinning: true, side: T.BackSide,
-            /* The inside of a hem facing the mattress gets no key light, so a plain
-               map renders as a black void and the mosaic is invisible. Feeding the
-               same tile into emissiveMap keeps the blocks legible in shadow without
-               lighting up the room: it is occluded by the cloth from every outside
-               angle anyway. */
-            emissiveMap: mosaic, emissive: new T.Color(0x4a5468), emissiveIntensity: .5
+            color: navy, roughness: .92, metalness: 0, skinning: true, side: T.BackSide,
+            /* Hem facing the mattress gets almost no key light; a tiny solid
+               emissive keeps the lining readable as cloth instead of a black void. */
+            emissive: navySoft, emissiveIntensity: .22
           });
           const lining = new T.SkinnedMesh(skirtFaces, liningMat);
           lining.name = 'lan-skirt-lining'; lining.frustumCulled = false;
@@ -110,35 +107,29 @@
           lining.bind(skinnedMesh.skeleton, skinnedMesh.bindMatrix);
           holder.add(lining);
         }
-        /* Inside the hem: a "censor blob" around her hips, always smaller than the
-           skirt's own radius at that height, so it can never poke through the cloth.
-           Sphere UVs run around the pole and smear any tile into stripes, so they
-           are re-projected orthographically (x/y in the hz plane) -- the camera
-           looking into the hem then sees a regular grid of squares, not bands. */
-        const blobGeo = new T.SphereGeometry(1, 12, 9);
-        {
-          const bp = blobGeo.attributes.position, buv = new Float32Array(bp.count * 2);
-          for (let i = 0; i < bp.count; i++) {
-            buv[i * 2] = bp.getX(i) * 0.5 + 0.5;
-            buv[i * 2 + 1] = bp.getY(i) * 0.5 + 0.5;
-          }
-          blobGeo.setAttribute('uv', new T.BufferAttribute(buv, 2));
-        }
-        /* MeshBasicMaterial on purpose: the inside of a hem never receives key light,
-           so anything lit turns into a black void. A censor patch should not be lit
-           either -- its whole job is to be a flat, unreadable block. */
-        const bloomers = new T.Mesh(blobGeo, new T.MeshBasicMaterial({ map: mosaic, fog: true }));
+        /* Soft fabric shorts: short cylinder (not a mosaic blob). Radius stays
+           well under the skirt hem (~0.22 m) so it never pokes outside. */
+        const shortGeo = new T.CylinderGeometry(1, 1.05, 1, 16, 1, false);
+        const bloomers = new T.Mesh(shortGeo, new T.MeshStandardMaterial({
+          color: new T.Color(0x152038), roughness: .9, metalness: 0,
+          emissive: new T.Color(0x1a2438), emissiveIntensity: .18
+        }));
         bloomers.name = 'lan-bloomers'; bloomers.castShadow = false; bloomers.receiveShadow = true;
-        bloomers.position.set(0, -.072 * kGeom, -.012 * kGeom);
-        bloomers.scale.set(.128 * kGeom, .100 * kGeom, .112 * kGeom);
+        bloomers.position.set(0, -.078 * kGeom, -.010 * kGeom);
+        bloomers.scale.set(.118 * kGeom, .055 * kGeom, .108 * kGeom);
         bonesByName.skirt.add(bloomers);
-        info.costume = { liningFaces: skirtFaces ? skirtFaces.index.count / 3 : 0, bloomers: true, mosaic: true };
+        bloomersMesh = bloomers;
+        info.costume = {
+          liningFaces: skirtFaces ? skirtFaces.index.count / 3 : 0,
+          bloomers: true, mosaic: false, fabric: true
+        };
       } catch (error) {
         // A cosmetic addition must never cost the whole model: fall back to the
         // bare dress and say so, instead of tripping the loader's fail() path.
         info.costume = { error: String(error && error.message || error) };
         console.warn('Lan skirt lining unavailable', error);
       }
+      info._bloomers = () => bloomersMesh;
       // The room's blanket solver asks syncBlanketProxy() to place a world-space
       // box over her lying silhouette before it raycasts (it used to measure the
       // hidden ink body, which lies at a different height than this mesh).
@@ -171,34 +162,6 @@
       out.setAttribute('skinWeight', sw);
       out.setIndex(new T.BufferAttribute(new Uint32Array(keep), 1));
       return out;
-    }
-
-    /* A censored-pixel ("马赛克") tile for the inside of the hem. The lining UV
-       covers the full 0..1 range (measured: 0.0004..0.9996 on both axes), so one
-       tile spans the whole skirt; at 8 blocks across a ~0.52 m hem each block is
-       roughly 6 cm, i.e. clearly a block on screen instead of noise. 128x128 keeps
-       it power-of-two so repeat + mipmaps stay legal on WebGL1. magFilter is
-       Nearest (hard block edges up close), mipmaps are kept so the blocks melt
-       into a soft patch at distance -- "模糊马赛克", not sparkle. */
-    function skirtMosaicTexture() {
-      const N = 8, PX = 16, S = N * PX;
-      const cv = document.createElement('canvas');
-      cv.width = cv.height = S;
-      const g = cv.getContext('2d');
-      const shades = ['#4a5568', '#5f6b80', '#38404f', '#77839a', '#2b323d', '#8e9ab0', '#525d70', '#6a768b'];
-      for (let y = 0; y < N; y++) {
-        for (let x = 0; x < N; x++) {
-          g.fillStyle = shades[(Math.random() * shades.length) | 0];
-          g.fillRect(x * PX, y * PX, PX, PX);
-        }
-      }
-      const tex = new T.CanvasTexture(cv);
-      tex.wrapS = tex.wrapT = T.RepeatWrapping;
-      tex.magFilter = T.NearestFilter;
-      if (T.sRGBEncoding !== undefined) tex.encoding = T.sRGBEncoding;
-      tex.anisotropy = 1;
-      tex.needsUpdate = true;
-      return tex;
     }
 
     async function loadWeights(geo, bones) {
@@ -371,6 +334,13 @@
       // Any extra twist stands the bell up and pushes it through the quilt, so
       // the lying term is left at zero and only the seated tilt remains.
       b.skirt.rotation.set(-seated*.25*(1-lying),0,Math.sin(time*1.1)*.008*(1-lying));
+      /* Lying: thicken the fabric shorts slightly so a low camera into the hem
+         still reads cloth, without changing standing silhouette. */
+      const bloomers = info._bloomers && info._bloomers();
+      if (bloomers) {
+        const t = .55 + .45 * lying;
+        bloomers.scale.set(.118 * G * (1 + .12 * lying), .055 * G * t, .108 * G * (1 + .10 * lying));
+      }
     }
     return {root,info,ready,pose,dbg,
       // Place `mesh` as a world-space box wrapping her lying body, derived from
@@ -417,7 +387,8 @@
         const len = pelvis.distanceTo(head) - 0.12;
         mesh.position.copy(pelvis).add(head).multiplyScalar(0.5).addScaledVector(up, 0.06).add(V3(0, 0.05, 0));
         mesh.quaternion.setFromUnitVectors(V3(0, 1, 0), up.clone().normalize());
-        mesh.scale.set(1.14, len, 0.48);
+        /* Hip width 1.28 (was 1.14): covers more of the hem cone from low angles. */
+        mesh.scale.set(1.28, len, 0.48);
         mesh.updateMatrixWorld(true);
         return true;
       },
