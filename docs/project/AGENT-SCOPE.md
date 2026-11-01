@@ -23,6 +23,8 @@
 | 性格段注入 system prompt | ✅ 已交付 | `lib/identity.js` + `main.js` | 不传时逐字节不变 |
 | `project.sh check` 在干净 clone 上崩溃 | ✅ 已修 | `scripts/project_audit.py` | 能跑完整轮 |
 | 画面元素：窗光柱 / 浮尘 / 玻璃雨 / 夜萤 | ✅ 已交付 | `web/moli-room/scene-extras.js` | `tools/room-fx-probe.py` 4/4；真实房间页无头渲染 |
+| 口型 + 表情（与语音同步） | ✅ 已交付 | `web/moli-room/lan-face.js` | `tools/face-probe.py` 11/11 |
+| 界面收口（尺寸 / 遮挡 / 闲置退场） | ✅ 已交付（审美待人眼） | `web/moli-room/ui-skin.{css,js}` | `__lanUI.dockIcons` 全为 38×38 且有提示 |
 
 ### 还能在 A 类里继续做（不需要你任何输入）
 
